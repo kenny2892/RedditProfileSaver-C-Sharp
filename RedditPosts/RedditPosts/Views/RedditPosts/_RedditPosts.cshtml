@@ -1,0 +1,207 @@
+﻿@model IEnumerable<RedditPosts.Models.RedditPost>
+
+@foreach (var item in Model)
+{
+    <tr style="width:100%">
+        <td style="width:100%">
+            <h1 style="text-align:center">
+                @Html.DisplayFor(modelItem => item.Title)
+            </h1>
+
+            <h2 style="text-align:center">
+                r/@Html.DisplayFor(modelItem => item.Subreddit) - @Html.DisplayFor(modelItem => item.Author) - @Html.DisplayFor(modelItem => item.Date)
+            </h2>
+
+            @* CONTENT *@
+
+            @switch (item.GetContentType())
+            {
+                case ContentType.Blank:
+                    /* TEXT POST */
+                    break;
+
+                case ContentType.Image:
+                    @* Source: https://getbootstrap.com/docs/4.5/components/modal/ *@
+
+                    string id = "a" + item.ID;
+                    string modal = id + "Modal";
+                    string modalTarget = "#" + modal;
+                    string modalLabel = id + "Label";
+
+                    <!-- Button trigger modal -->
+                    <a data-toggle="modal" data-target=@modalTarget>
+                        <h2 style="text-align:center">
+                            <img src="@Url.Content(item.UrlContent)" alt="@Html.DisplayFor(modelItem => item.Title)" style="height:auto; width:auto; max-height:720px; max-width:100%" />
+                        </h2>
+                    </a>
+
+                    <!-- Modal -->
+                    <div class="modal fade" id=@modal tabindex="-1" aria-labelledby=@modalLabel aria-hidden="true">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content" style="background-color: black">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id=@modalLabel>@Html.DisplayTextFor(modelItem => item.Title)</h5>
+                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <h2 style="text-align:center">
+                                        <img src=@Url.Content(item.UrlContent) alt=@Html.DisplayTextFor(modelItem => item.Title) style="height:auto; width:auto; max-height:720px; max-width:100%" />
+                                    </h2>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    break;
+
+                case ContentType.ImgurGallery:
+                    /*
+                    <div style="text-align:center">
+                        <blockquote class="imgur-embed-pub" lang="en" data-id=@Url.Content(item.GetImgurId()) data-context="false">
+                            <a href=@Url.Content(item.UrlContent)>@Url.Content(item.Title)</a>
+                        </blockquote>
+                        <script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+                    </div>
+                    */
+
+                    <div style="text-align:center">
+                        <iframe allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" class="imgur-embed-iframe-pub imgur-embed-iframe-pub-a-@Url.Content(item.GetImgurIdNum())-false-540" scrolling="no" src="https://imgur.com/a/@Url.Content(item.GetImgurIdNum())/embed?pub=true&amp;ref=https%3A%2F%2Flocalhost%3A44358%2F&amp;context=false&amp;w=540" id="imgur-embed-iframe-pub-a-@Url.Content(item.GetImgurIdNum())" style="height: auto; width: 100%; "></iframe>
+                        <script async="" src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+                    </div>
+                    break;
+
+                case ContentType.RedGifWatch:
+                    <div style="text-align:center">
+                        <a href="@Url.Content(item.UrlContent)" style="font-size:32px">Video Link</a>
+                    </div>
+                    break;
+
+                case ContentType.GfyCat:
+                    <div style='position:relative; padding-bottom:calc(70.80% + 44px)'>
+                        <iframe src="@Url.Content(item.UrlContent)?autoplay=0&hd=1" frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen />
+                    </div>
+                    break;
+
+                case ContentType.Gifv:
+                case ContentType.Mp4:
+                    <video style="width:80%; height:auto; margin-left: auto; margin-right: auto; display: block;" controls muted>
+                        <source src="@Url.Content(item.UrlContent)" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                    break;
+
+                case ContentType.Youtube:
+                    <div class="youtube">
+                        <iframe src="@Url.Content(item.UrlContent).Replace("https://youtu.be/", "https://www.youtube.com/embed/")">
+                        </iframe>
+                    </div>
+                    break;
+
+                case ContentType.Gallery:
+                    string num = "a" + item.ID;
+                    string hashNum = "#" + num;
+                    int count = 0;
+                    int total = item.GetGalleryUrls().Count();
+
+                    <div id=@num class="carousel slide" data-interval="false">
+
+                        <!-- Indicators -->
+                        <ul class="carousel-indicators">
+                            @for (int i = 0; i < total; i++)
+                            {
+                                if (i == 0)
+                                {
+                                    <li data-target=@hashNum data-slide-to=@i class="active"></li>
+                                }
+
+                                else
+                                {
+                                    <li data-target=@hashNum data-slide-to=@i></li>
+                                }
+                            }
+                        </ul>
+
+                        <!-- The slideshow -->
+                        <div class="carousel-inner">
+                            @foreach (string url in item.GetGalleryUrls())
+                            {
+                                if (count == 0)
+                                {
+                                    <div class="carousel-item active">
+                                        <img class="d-block w-100 galleryImg" src=@url alt="Slide">
+                                    </div>
+                                }
+
+                                else
+                                {
+                                    <div class="carousel-item">
+                                        <img class="d-block w-100 galleryImg" src=@url alt="Slide">
+                                    </div>
+                                }
+                                count++;
+                            }
+                        </div>
+
+                        <!-- Left and right controls -->
+                        <a class="carousel-control-prev" href=@hashNum data-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </a>
+                        <a class="carousel-control-next" href=@hashNum data-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </a>
+
+                    </div>
+                    break;
+
+                case ContentType.Vreddit:
+                    <blockquote class="reddit-card">
+                        <a href="@Url.Content(item.UrlPost)">
+                    </blockquote>
+                    <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>
+                    break;
+            }
+
+            @* LINKS *@
+            @if (item.UrlThumbnail == "image")
+            {
+                <h3 style="text-align:center">
+                    <a href="@Html.DisplayFor(modelItem => item.UrlContent)">Content Link</a> | <a href="@Html.DisplayFor(modelItem => item.UrlPost)">Post Link</a>
+                </h3>
+            }
+
+            else
+            {
+                <h3 style="text-align:center">
+                    <a href="@Html.DisplayFor(modelItem => item.UrlContent)">Content Link</a> | <a href="@Html.DisplayFor(modelItem => item.UrlPost)">Post Link</a> | <a href="@Html.DisplayFor(modelItem => item.UrlThumbnail)">Thumbnail Link</a>
+                </h3>
+            }
+
+            <div style="text-align:center; font-size:32px;">
+                @if (item.IsSaved && item.IsNsfw)
+                {
+                    <p><b><span style="color: forestgreen">Saved</span> | <span style="color: darkred">NSFW</span></b></p>
+                }
+
+                else if (item.IsSaved)
+                {
+                    <p style="color: forestgreen"><b>Saved</b></p>
+                }
+
+                else if (item.IsNsfw)
+                {
+                    <p style="color: darkred"><b>NSFW</b></p>
+                }
+            </div>
+
+            <h6 style="text-align:center">
+                <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+            </h6>
+        </td>
+    </tr>
+}

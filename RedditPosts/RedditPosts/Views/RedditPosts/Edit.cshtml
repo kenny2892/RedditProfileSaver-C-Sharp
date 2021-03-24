@@ -1,0 +1,79 @@
+﻿@model RedditPosts.Models.RedditPost
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>RedditPost</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ID" />
+            <div class="form-group">
+                <label asp-for="Number" class="control-label"></label>
+                <input asp-for="Number" class="form-control" />
+                <span asp-validation-for="Number" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Author" class="control-label"></label>
+                <input asp-for="Author" class="form-control" />
+                <span asp-validation-for="Author" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Subreddit" class="control-label"></label>
+                <input asp-for="Subreddit" class="form-control" />
+                <span asp-validation-for="Subreddit" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Date" class="control-label"></label>
+                <input asp-for="Date" class="form-control" />
+                <span asp-validation-for="Date" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UrlContent" class="control-label"></label>
+                <input asp-for="UrlContent" class="form-control" />
+                <span asp-validation-for="UrlContent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UrlPost" class="control-label"></label>
+                <input asp-for="UrlPost" class="form-control" />
+                <span asp-validation-for="UrlPost" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UrlThumbnail" class="control-label"></label>
+                <input asp-for="UrlThumbnail" class="form-control" />
+                <span asp-validation-for="UrlThumbnail" class="text-danger"></span>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsSaved" /> @Html.DisplayNameFor(model => model.IsSaved)
+                </label>
+            </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="IsNsfw" /> @Html.DisplayNameFor(model => model.IsNsfw)
+                </label>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

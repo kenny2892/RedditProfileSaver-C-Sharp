@@ -1,0 +1,83 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome to the Reddit Profiler</h1>
+    <h2>
+        <img src="https://cdn3.iconfinder.com/data/icons/2018-social-media-logotypes/1000/2018_social_media_popular_app_logo_reddit-512.png" alt="Reddit Logo" style="width:25%" />
+    </h2>
+
+    <p>Created by Kelly: <a href="https://github.com/kenny2892">Github</a></p>
+    <button class="retrieveUpvoteBtn" onclick="retrieveUpvotes()">Retrieve Upvotes</button>
+    <h3 id="loadingMsg"></h3>
+    <!-- <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Retrieve">Retrieve Upvotes</a> TODO-->
+</div>
+
+@section Scripts
+{
+    <script> // Source for using method: https://stackoverflow.com/a/25605074
+        var count = 1;
+        var words = "Retrieving Upvotes";
+        var textArea = document.getElementById("loadingMsg");
+        var isRetrieving = false;
+
+        function retrieveUpvotes()
+        {
+            if(isRetrieving)
+            {
+                console.log("Button not active");
+                return;
+            }
+
+            isRetrieving = true;
+            $.ajax // Launch the retrieval Python Script
+            ({
+                url: "/Home/Retrieve",
+                data: {}
+            });
+
+            const interval = setInterval(function ()
+            {
+                $.ajax
+                ({
+                    url: "/Home/isRetrievingUpvotes",
+                    data: {},
+                    success: function (data, textStatus, jqXHR) // Data is the return value
+                    {
+                        // console.log("Recieved");
+                        if(data)
+                        {
+                            textArea.textContent = words;
+                            for(var i = 0; i < count; i++)
+                            {
+                                textArea.textContent += ".";
+                            }
+
+                            count++;
+
+                            if(count == 4)
+                            {
+                                count = 0;
+                            }
+                        }
+
+                        else
+                        {
+                            textArea.textContent = "";
+                            isRetrieving = false;
+
+                            $.ajax // Add new posts to the database
+                            ({
+                                url: "/Home/UpdatePosts",
+                                data: {}
+                            });
+
+                            clearInterval(interval);
+                        }
+                    },
+                });
+            }, 1000);
+        }
+    </script>
+}

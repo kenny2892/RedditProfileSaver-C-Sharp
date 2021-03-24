@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Password";
+}
+
+<h1>Password Lock</h1>
+
+<form asp-controller="Password" asp-action="Index" method="get">
+    <label for="password">Password: </label>
+    @Html.Password("password")
+    <input type="submit" value="Submit">
+</form>
+
+@section Scripts
+{
+    
+}

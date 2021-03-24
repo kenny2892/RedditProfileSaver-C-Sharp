@@ -1,0 +1,82 @@
+﻿@model RedditPosts.ViewModels.RedditViewModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a> | <button data-toggle="collapse" data-target="#inputFields">Show Filters</button>
+</p>
+
+<div id="inputFields" class="collapse">
+    <form asp-controller="RedditPosts" asp-action="Index" method="get">
+        <h3>Text Searches</h3>
+        @if(Model.IsMobile)
+        {
+            <p>Title: @Html.TextBoxFor(vm => vm.TitleFilter)</p>
+            <p>Author: @Html.TextBoxFor(vm => vm.AuthorFilter)</p>
+            <p>Subreddit: @Html.TextBoxFor(vm => vm.SubredditFilter)</p>
+        }
+
+        else
+        {
+            <p>Title: @Html.TextBoxFor(vm => vm.TitleFilter) | Author: @Html.TextBoxFor(vm => vm.AuthorFilter) | Subreddit: @Html.TextBoxFor(vm => vm.SubredditFilter)</p>
+        }
+
+        <hr />
+        <h3>Toggles</h3>
+        @if(Model.IsMobile)
+        {
+            <p>Saved Only: @Html.CheckBoxFor(vm => vm.SavedOnly) | Randomize: @Html.CheckBoxFor(vm => vm.Randomize)</p>
+            <p>Current Seed: @Html.EditorFor(vm => vm.RandomizeSeed)</p>
+        }
+
+        else
+        {
+            <p>Saved Only: @Html.CheckBoxFor(vm => vm.SavedOnly) | Randomize: @Html.CheckBoxFor(vm => vm.Randomize) | Current Seed: @Html.EditorFor(vm => vm.RandomizeSeed)</p>
+        }
+
+        <hr />
+        <h3>Dropdowns</h3>
+        <p>Nsfw: @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings))))</p>
+        <hr />
+        <h3>Content Types</h3>
+        <p>
+            Mp4: @Html.CheckBoxFor(vm => vm.Mp4, true) |
+            Youtube: @Html.CheckBoxFor(vm => vm.Youtube, true) |
+            Image: @Html.CheckBoxFor(vm => vm.Image, true) |
+            Gifv: @Html.CheckBoxFor(vm => vm.Gifv, true) |
+            ImgurGallery: @Html.CheckBoxFor(vm => vm.ImgurGallery, true) |
+            GfyCat: @Html.CheckBoxFor(vm => vm.GfyCat, true) |
+            RedGifWatch: @Html.CheckBoxFor(vm => vm.RedGifWatch, true) |
+            Gallery: @Html.CheckBoxFor(vm => vm.Gallery, true) |
+            Vreddit: @Html.CheckBoxFor(vm => vm.Vreddit, true) |
+            Blank: @Html.CheckBoxFor(vm => vm.Blank, true)
+        </p>
+        <p><input type="submit" value="Submit" /></p>
+    </form>
+</div>
+
+<button onclick="topFunction()" id="topScrollBtn" title="Go to top">Top</button>
+
+<table id="postTable" class="table" style="width:100%">
+    <tbody>
+    </tbody>
+</table>
+
+@section Scripts
+{
+    <script src="~/js/RedditPosts.js" asp-append-version="true"></script>
+
+    <script>
+        function topFunction()
+        {
+            document.body.scrollTop = 0;
+            document.documentElement.scrollTop = 0;
+        }
+
+        var scrolling = new Scrolling("postTable", "/RedditPosts/_RedditPosts", { vm:@Html.Raw(Json.Serialize(Model)) });
+    </script>
+}
