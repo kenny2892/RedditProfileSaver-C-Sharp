@@ -45,19 +45,19 @@
         <h3>Content Types</h3>
         <p><button type="button" id="selectTypesBtn">Select All</button> | <button type="button" id="deselectTypesBtn">Deselect All</button></p>
         <p>
-            Mp4: @Html.CheckBoxFor(vm => vm.Mp4, true) |
-            Youtube: @Html.CheckBoxFor(vm => vm.Youtube, true) |
-            Twitter: @Html.CheckBoxFor(vm => vm.Twitter, true) |
-            Image: @Html.CheckBoxFor(vm => vm.Image, true) |
-            Gif: @Html.CheckBoxFor(vm => vm.Gif, true) |
-            Gifv: @Html.CheckBoxFor(vm => vm.Gifv, true) |
-            ImgurGallery: @Html.CheckBoxFor(vm => vm.ImgurGallery, true) |
-            GfyCat: @Html.CheckBoxFor(vm => vm.GfyCat, true) |
-            RedGifWatch: @Html.CheckBoxFor(vm => vm.RedGifWatch, true) |
-            Gallery: @Html.CheckBoxFor(vm => vm.Gallery, true) |
-            Vreddit: @Html.CheckBoxFor(vm => vm.Vreddit, true) |
-            UrlPreview: @Html.CheckBoxFor(vm => vm.UrlPreview, true) |
-            Blank: @Html.CheckBoxFor(vm => vm.Blank, true)
+            @for(int i = 0; i < Model.ContentTypes.Count; i++)
+            {
+                List<ContentType> types = Enum.GetValues(typeof(ContentType)).Cast<ContentType>().ToList();
+
+                <span>@types[i].ToString()</span>
+                <span>:</span>
+                <span>@Html.CheckBoxFor(vm => vm.ContentTypes[i], true)</span>
+
+                if(i + 1 < Model.ContentTypes.Count - 1)
+                {
+                    <span>|</span>
+                }
+            }
         </p>
         <p><input type="submit" value="Submit" /></p>
     </form>
@@ -81,7 +81,9 @@
             document.documentElement.scrollTop = 0;
         }
 
-        var scrolling = new Scrolling("postTable", "/RedditPosts/_RedditPosts", { vm:@Html.Raw(Json.Serialize(Model)) });
-        var selectTypes = new SetSelect();
+        var scrolling = new Scrolling("postTable", "/RedditPosts/_RedditPosts", {vm:@Html.Raw(Json.Serialize(Model)) });
+
+        var contentTypeEnum = @(EnumHelper.EnumToString<ContentType>());
+        var selectTypes = new SetSelect(contentTypeEnum);
     </script>
 }

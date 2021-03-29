@@ -183,74 +183,21 @@ namespace RedditPosts.Controllers
 
         private List<RedditPost> ContentTypeWhiteList(List<RedditPost> posts)
         {
+            List<ContentType> types = Enum.GetValues(typeof(ContentType)).Cast<ContentType>().ToList();
+
             for(int i = posts.Count - 1; i >= 0; i--)
             {
                 RedditPost post = posts[i];
                 ContentType type = post.GetContentType();
 
-                if(!RedditViewModel.Mp4 && type == ContentType.Mp4)
+                for(int j = 0; j < types.Count; j++)
                 {
-                    posts.RemoveAt(i);
-                }
+                    bool isWhitelisted = RedditViewModel.ContentTypes[j];
 
-                else if(!RedditViewModel.Twitter && type == ContentType.Twitter)
-                {
-                    posts.RemoveAt(i);
-                }
-
-                else if(!RedditViewModel.Youtube && type == ContentType.Youtube)
-                {
-                    posts.RemoveAt(i);
-                }
-
-                else if(!RedditViewModel.Image && type == ContentType.Image)
-                {
-                    posts.RemoveAt(i);
-                }
-
-                else if(!RedditViewModel.Gif && type == ContentType.Gif)
-                {
-                    posts.RemoveAt(i);
-                }
-
-                else if(!RedditViewModel.Gifv && type == ContentType.Gifv)
-                {
-                    posts.RemoveAt(i);
-                }
-
-                else if(!RedditViewModel.ImgurGallery && type == ContentType.ImgurGallery)
-                {
-                    posts.RemoveAt(i);
-                }
-
-                else if(!RedditViewModel.GfyCat && type == ContentType.GfyCat)
-                {
-                    posts.RemoveAt(i);
-                }
-
-                else if(!RedditViewModel.RedGifWatch && type == ContentType.RedGifWatch)
-                {
-                    posts.RemoveAt(i);
-                }
-
-                else if(!RedditViewModel.Gallery && type == ContentType.Gallery)
-                {
-                    posts.RemoveAt(i);
-                }
-
-                else if(!RedditViewModel.Vreddit && type == ContentType.Vreddit)
-                {
-                    posts.RemoveAt(i);
-                }
-
-                else if(!RedditViewModel.UrlPreview && type == ContentType.UrlPreview)
-                {
-                    posts.RemoveAt(i);
-                }
-
-                else if(!RedditViewModel.Blank && type == ContentType.Blank)
-                {
-                    posts.RemoveAt(i);
+                    if(!isWhitelisted && types[j] == type)
+                    {
+                        posts.RemoveAt(i);
+                    }
                 }
             }
 

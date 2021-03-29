@@ -75,9 +75,13 @@ function Scrolling(iTable, iAction, iParams)
     this.AddTableLines(0);
 }
 
-function SetSelect() 
+function SetSelect(jsonObj) 
 {
-    var contentIds = ["Mp4", "Twitter", "Youtube", "Image", "Gif", "Gifv", "ImgurGallery", "GfyCat", "RedGifWatch", "Gallery", "Vreddit", "UrlPreview", "Blank"];
+    var types = [];
+    for(var i in jsonObj) // Source: https://stackoverflow.com/a/14528472
+    {
+        types.push(jsonObj[i]);
+    }
 
     var deselectBtn = document.getElementById("deselectTypesBtn");
     var selectBtn = document.getElementById("selectTypesBtn");
@@ -90,7 +94,7 @@ function SetSelect()
 
     selectBtn.onclick = function() 
     {
-        contentIds.forEach(function(item, index) 
+        types.forEach(function(item, index) 
         {
             setSelectCheckbox(true, item, index)
         });
@@ -98,7 +102,7 @@ function SetSelect()
 
     deselectBtn.onclick = function() 
     {
-        contentIds.forEach(function(item, index) 
+        types.forEach(function(item, index) 
         {
             setSelectCheckbox(false, item, index)
         });
