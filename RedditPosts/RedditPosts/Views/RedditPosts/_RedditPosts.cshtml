@@ -20,6 +20,16 @@
                     /* TEXT POST */
                     break;
 
+                case ContentType.UrlPreview:
+                    <a href="@Url.Content(item.UrlContent)" target="_blank">
+                        <div class="urlBox">
+                            <div>
+                                <img src="@Url.Content(item.UrlThumbnail)" alt="@Html.DisplayFor(modelItem => item.Title)" style="width:190px; height:190px; object-fit:cover; display:block; margin-left:auto; margin-right: auto;" />
+                            </div>
+                        </div>
+                    </a>
+                    break;
+
                 case ContentType.Image:
                     @* Source: https://getbootstrap.com/docs/4.5/components/modal/ *@
 
@@ -96,7 +106,7 @@
 
                 case ContentType.Youtube:
                     <div class="youtube">
-                        <iframe src="@Url.Content(item.UrlContent).Replace("https://youtu.be/", "https://www.youtube.com/embed/")">
+                        <iframe src="@Url.Content(item.GetYoutubeUrl())">
                         </iframe>
                     </div>
                     break;

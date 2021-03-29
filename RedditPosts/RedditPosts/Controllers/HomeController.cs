@@ -23,6 +23,7 @@ namespace RedditPosts.Controllers
         private static bool RetrievingUpvotes { get; set; } = false;
         private static bool RunningScript { get; set; } = false;
         private static bool FinishedScript { get; set; } = false;
+        private static int UpvoteCount { get; set; }
 
         public HomeController(RedditPostContext context, IConfiguration configuration)
         {
@@ -49,6 +50,11 @@ namespace RedditPosts.Controllers
         public bool IsRetrievingUpvotes()
         {
             return RetrievingUpvotes;
+        }
+
+        public int RetrieveUpvoteCount()
+        {
+            return UpvoteCount;
         }
 
         public void Retrieve()
@@ -151,7 +157,12 @@ namespace RedditPosts.Controllers
             var lastLine = System.IO.File.ReadLines(txtPath).Last();
             System.Diagnostics.Debug.WriteLine(lastLine);
 
-            if(lastLine == "Completed")
+            if (lastLine.Contains("as been stored."))
+            {
+                UpvoteCount++;
+            }
+
+            if (lastLine == "Completed")
             {
                 FinishedScript = true;
             }
@@ -173,6 +184,7 @@ namespace RedditPosts.Controllers
                 System.Diagnostics.Debug.WriteLine("Added Posts");
             }
 
+            UpvoteCount = 0;
             EmptyResultsFile();
         }
 

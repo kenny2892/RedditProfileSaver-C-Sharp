@@ -16,6 +16,7 @@ namespace RedditPosts.Models
         RedGifWatch,
         Gallery,
         Vreddit,
+        UrlPreview,
         Blank
     }
 }

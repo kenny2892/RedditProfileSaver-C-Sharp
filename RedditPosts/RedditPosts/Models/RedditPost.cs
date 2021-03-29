@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace RedditPosts.Models
 {
@@ -19,16 +17,16 @@ namespace RedditPosts.Models
                 StringBuilder sb = new StringBuilder();
                 string[] words = title.Split(" ");
 
-                for (int i = 0; i < words.Count(); i++)
+                for(int i = 0; i < words.Count(); i++)
                 {
                     string word = words[i];
 
-                    if (word.Length > 15)
+                    if(word.Length > 15)
                     {
                         word = word.Substring(0, word.Length / 2) + "-\n" + word.Substring(word.Length / 2);
                     }
 
-                    if (i != 0)
+                    if(i != 0)
                     {
                         word = " " + word;
                     }
@@ -80,6 +78,11 @@ namespace RedditPosts.Models
                     return urlContent.Replace("https://imgur.com/", "https://i.imgur.com/") + ".png";
                 }
 
+                else if(urlContent.Contains("http://imgur.com/") && !urlContent.Contains("/a/")) // An Imgur pic that wasn't posted with the direct link
+                {
+                    return urlContent.Replace("http://imgur.com/", "http://i.imgur.com/") + ".png";
+                }
+
                 return urlContent;
             }
 
@@ -105,47 +108,67 @@ namespace RedditPosts.Models
                 type = ContentType.Gallery;
             }
 
-            else if (UrlContent.Contains(".jpg") || UrlContent.Contains(".png") || UrlContent.Contains(".jpeg") || (UrlContent.Contains(".gif") && !UrlContent.Contains(".gifv")))
+            else if(UrlContent.Contains(".jpg") || UrlContent.Contains(".png") || UrlContent.Contains(".jpeg") || (UrlContent.Contains(".gif") && !UrlContent.Contains(".gifv")))
             {
                 type = ContentType.Image;
             }
 
-            else if (UrlContent.Contains(".mp4"))
+            else if(UrlContent.Contains(".mp4"))
             {
                 type = ContentType.Mp4;
             }
 
-            else if (UrlContent.Contains("redgifs") && UrlContent.Contains("watch"))
+            else if(UrlContent.Contains("redgifs") && UrlContent.Contains("watch"))
             {
                 type = ContentType.RedGifWatch;
             }
 
-            else if (UrlContent.Contains("youtu.be"))
+            else if(UrlContent.Contains("youtu.be") || UrlContent.Contains("youtube.com"))
             {
                 type = ContentType.Youtube;
             }
 
-            else if (UrlContent.Contains("gifv"))
+            else if(UrlContent.Contains("gifv"))
             {
                 type = ContentType.Gifv;
             }
 
-            else if (UrlContent.Contains("v.redd.it"))
+            else if(UrlContent.Contains("v.redd.it"))
             {
                 type = ContentType.Vreddit;
             }
 
-            else if (UrlContent.Contains("gfycat.com"))
+            else if(UrlContent.Contains("gfycat.com"))
             {
                 type = ContentType.GfyCat;
             }
 
-            else if (UrlContent.Contains("https://imgur.com/a/"))
+            else if(UrlContent.Contains("imgur.com/a/"))
             {
                 type = ContentType.ImgurGallery;
             }
 
+            else if(!UrlThumbnail.Contains("self") && !UrlThumbnail.Contains("default"))
+            {
+                type = ContentType.UrlPreview;
+            }
+
             return type;
+        }
+
+        public string GetYoutubeUrl()
+        {
+            if(GetContentType() != ContentType.Youtube)
+            {
+                return "";
+            }
+
+            else if(UrlContent.Contains("youtu.be"))
+            {
+                return UrlContent.Replace("https://youtu.be/", "https://www.youtube.com/embed/");
+            }
+
+            return UrlContent.Replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/");
         }
 
         public string[] GetGalleryUrls()
@@ -165,17 +188,27 @@ namespace RedditPosts.Models
                 return "";
             }
 
-            return UrlContent.Replace("https://imgur.com/", "");
+            else if(UrlContent.Contains("https"))
+            {
+                return UrlContent.Replace("https://imgur.com/", "");
+            }
+
+            return UrlContent.Replace("http://imgur.com/", "");
         }
 
         public string GetImgurIdNum()
         {
-            if (GetContentType() != ContentType.ImgurGallery)
+            if(GetContentType() != ContentType.ImgurGallery)
             {
                 return "";
             }
 
-            return UrlContent.Replace("https://imgur.com/a/", "");
+            else if(UrlContent.Contains("https"))
+            {
+                return UrlContent.Replace("https://imgur.com/a/", "");
+            }
+
+            return UrlContent.Replace("http://imgur.com/a/", "");
         }
 
         public string GetMobileTitle()
@@ -201,6 +234,19 @@ namespace RedditPosts.Models
             }
 
             return sb.ToString();
+        }
+
+        public string GetShortContentLink()
+        {
+            int maxLength = 30;
+            string toReturn = UrlContent;
+
+            if(toReturn.Length > maxLength)
+            {
+                toReturn = toReturn.Substring(0, maxLength) + "...";
+            }
+
+            return toReturn;
         }
     }
 }

@@ -43,6 +43,7 @@
         <p>Nsfw: @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings))))</p>
         <hr />
         <h3>Content Types</h3>
+        <p><button type="button" id="selectTypesBtn">Select All</button> | <button type="button" id="deselectTypesBtn">Deselect All</button></p>
         <p>
             Mp4: @Html.CheckBoxFor(vm => vm.Mp4, true) |
             Youtube: @Html.CheckBoxFor(vm => vm.Youtube, true) |
@@ -53,6 +54,7 @@
             RedGifWatch: @Html.CheckBoxFor(vm => vm.RedGifWatch, true) |
             Gallery: @Html.CheckBoxFor(vm => vm.Gallery, true) |
             Vreddit: @Html.CheckBoxFor(vm => vm.Vreddit, true) |
+            UrlPreview: @Html.CheckBoxFor(vm => vm.UrlPreview, true) |
             Blank: @Html.CheckBoxFor(vm => vm.Blank, true)
         </p>
         <p><input type="submit" value="Submit" /></p>
@@ -78,5 +80,6 @@
         }
 
         var scrolling = new Scrolling("postTable", "/RedditPosts/_RedditPosts", { vm:@Html.Raw(Json.Serialize(Model)) });
+        var selectTypes = new SetSelect();
     </script>
 }

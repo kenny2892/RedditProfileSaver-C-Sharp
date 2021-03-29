@@ -1,13 +1,15 @@
 ﻿// Infinite Scroll Source: https://stackoverflow.com/a/64730174
 // To the Top Button: https://www.w3schools.com/howto/howto_js_scroll_to_top.asp
 
-function Scrolling(iTable, iAction, iParams) {
+function Scrolling(iTable, iAction, iParams) 
+{
     this.table = iTable;        // Reference to the table where data should be added
     this.action = iAction;      // Name of the conrtoller action
     this.params = iParams;      // Additional parameters to pass to the controller
     this.loading = false;       // true if asynchronous loading is in process
 
-    this.AddTableLines = function (firstItem) {
+    this.AddTableLines = function(firstItem) 
+    {
         this.loading = true;
         this.params.firstItem = firstItem;
         // $("#footer").css("display", "block"); // show loading info
@@ -17,45 +19,88 @@ function Scrolling(iTable, iAction, iParams) {
             data: self.params,
             dataType: "html"
         })
-        .done(function (result) {
-            if (result) {
+        .done(function(result) 
+        {
+            if(result) 
+            {
                 $("#" + self.table).append(result);
                 self.loading = false;
             }
         })
-        .fail(function (xhr, ajaxOptions, thrownError) {
+        .fail(function(xhr, ajaxOptions, thrownError) 
+        {
             console.log("Error in AddTableLines:", thrownError);
         })
-        .always(function () {
+        .always(function() 
+        {
             // $("#footer").css("display", "none"); // hide loading info
         });
     }
 
     var self = this;
-    window.onscroll = function ()
+    window.onscroll = function() 
     {
         onScrollTopBtnShow();
         onScrollInfinite();
     };
 
-    function onScrollInfinite() {
-        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+    function onScrollInfinite() 
+    {
+        if((window.innerHeight + window.scrollY) >= document.body.offsetHeight) 
+        {
             //User is currently at the bottom of the page
-            if (!self.loading) {
+            if(!self.loading) 
+            {
                 var itemCount = $('#' + self.table + ' tr').length - 1;
                 self.AddTableLines(itemCount);
             }
         }
     }
-    
+
     // When the user scrolls down 20px from the top of the document, show the button
-    function onScrollTopBtnShow() {
-        if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    function onScrollTopBtnShow() 
+    {
+        if(document.body.scrollTop > 20 || document.documentElement.scrollTop > 20)
+        {
+
             mybutton.style.display = "block";
-        } else {
+        }
+
+        else
+        {
             mybutton.style.display = "none";
         }
     }
 
     this.AddTableLines(0);
+}
+
+function SetSelect() 
+{
+    var contentIds = ["Mp4", "Youtube", "Image", "Gifv", "ImgurGallery", "GfyCat", "RedGifWatch", "Gallery", "Vreddit", "UrlPreview", "Blank"];
+
+    var deselectBtn = document.getElementById("deselectTypesBtn");
+    var selectBtn = document.getElementById("selectTypesBtn");
+
+    function setSelectCheckbox(isSelected, item, index) 
+    {
+        var checkbox = document.getElementById(item);
+        checkbox.checked = isSelected;
+    }
+
+    selectBtn.onclick = function() 
+    {
+        contentIds.forEach(function(item, index) 
+        {
+            setSelectCheckbox(true, item, index)
+        });
+    }
+
+    deselectBtn.onclick = function() 
+    {
+        contentIds.forEach(function(item, index) 
+        {
+            setSelectCheckbox(false, item, index)
+        });
+    }
 }

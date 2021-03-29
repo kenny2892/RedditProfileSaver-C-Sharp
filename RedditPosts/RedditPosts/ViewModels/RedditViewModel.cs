@@ -28,6 +28,7 @@ namespace RedditPosts.ViewModels
         public bool RedGifWatch { get; set; } = true;
         public bool Gallery { get; set; } = true;
         public bool Vreddit { get; set; } = true;
+        public bool UrlPreview { get; set; } = true;
         public bool Blank { get; set; } = true;
 
         public RedditViewModel()
