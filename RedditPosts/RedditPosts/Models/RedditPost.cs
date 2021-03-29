@@ -111,7 +111,7 @@ namespace RedditPosts.Models
                 type = ContentType.Gallery;
             }
 
-            else if(UrlContent.Contains(".jpg") || UrlContent.Contains(".png") || UrlContent.Contains(".jpeg") || (UrlContent.Contains(".gif") && !UrlContent.Contains(".gifv")))
+            else if(UrlContent.Contains(".jpg") || UrlContent.Contains(".png") || UrlContent.Contains(".jpeg"))
             {
                 type = ContentType.Image;
             }
@@ -139,6 +139,11 @@ namespace RedditPosts.Models
             else if(UrlContent.Contains("gifv"))
             {
                 type = ContentType.Gifv;
+            }
+
+            else if(UrlContent.Contains("gif"))
+            {
+                type = ContentType.Gif;
             }
 
             else if(UrlContent.Contains("v.redd.it"))

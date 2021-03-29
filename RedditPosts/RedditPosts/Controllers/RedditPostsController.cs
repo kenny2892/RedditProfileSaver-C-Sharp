@@ -208,6 +208,11 @@ namespace RedditPosts.Controllers
                     posts.RemoveAt(i);
                 }
 
+                else if(!RedditViewModel.Gif && type == ContentType.Gif)
+                {
+                    posts.RemoveAt(i);
+                }
+
                 else if(!RedditViewModel.Gifv && type == ContentType.Gifv)
                 {
                     posts.RemoveAt(i);

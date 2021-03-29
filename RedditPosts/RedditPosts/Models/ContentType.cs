@@ -11,6 +11,7 @@ namespace RedditPosts.Models
         Twitter,
         Youtube,
         Image,
+        Gif,
         Gifv,
         ImgurGallery,
         GfyCat,

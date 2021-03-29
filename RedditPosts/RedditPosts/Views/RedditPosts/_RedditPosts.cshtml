@@ -68,6 +68,14 @@
                     </div>
                     break;
 
+                case ContentType.Gif:
+                    <a href="@Url.Content(item.UrlContent)">
+                        <h2 style="text-align:center">
+                            <img src="@Url.Content(item.UrlContent)" alt="@Html.DisplayFor(modelItem => item.Title)" style="height:auto; width:auto; max-height:720px; max-width:100%" />
+                        </h2>
+                    </a>
+                    break;
+
                 case ContentType.ImgurGallery:
                     /*
                     <div style="text-align:center">
@@ -175,7 +183,7 @@
 
                 case ContentType.Vreddit:
                     <blockquote class="reddit-card">
-                        <a href="@Url.Content(item.UrlPost)"/>
+                        <a href="@Url.Content(item.UrlPost)" />
                     </blockquote>
                     <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>
                     break;

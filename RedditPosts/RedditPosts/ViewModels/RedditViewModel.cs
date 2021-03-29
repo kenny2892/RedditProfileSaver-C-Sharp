@@ -23,6 +23,7 @@ namespace RedditPosts.ViewModels
         public bool Twitter { get; set; } = true;
         public bool Youtube { get; set; } = true;
         public bool Image { get; set; } = true;
+        public bool Gif { get; set; } = true;
         public bool Gifv { get; set; } = true;
         public bool ImgurGallery { get; set; } = true;
         public bool GfyCat { get; set; } = true;

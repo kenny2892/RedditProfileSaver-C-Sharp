@@ -77,7 +77,7 @@ function Scrolling(iTable, iAction, iParams)
 
 function SetSelect() 
 {
-    var contentIds = ["Mp4", "Twitter", "Youtube", "Image", "Gifv", "ImgurGallery", "GfyCat", "RedGifWatch", "Gallery", "Vreddit", "UrlPreview", "Blank"];
+    var contentIds = ["Mp4", "Twitter", "Youtube", "Image", "Gif", "Gifv", "ImgurGallery", "GfyCat", "RedGifWatch", "Gallery", "Vreddit", "UrlPreview", "Blank"];
 
     var deselectBtn = document.getElementById("deselectTypesBtn");
     var selectBtn = document.getElementById("selectTypesBtn");
