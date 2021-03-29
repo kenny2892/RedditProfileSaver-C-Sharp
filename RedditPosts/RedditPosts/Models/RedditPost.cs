@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 
 namespace RedditPosts.Models
@@ -123,6 +126,11 @@ namespace RedditPosts.Models
                 type = ContentType.RedGifWatch;
             }
 
+            else if(UrlContent.Contains("twitter.com/"))
+            {
+                type = ContentType.Twitter;
+            }
+
             else if(UrlContent.Contains("youtu.be") || UrlContent.Contains("youtube.com"))
             {
                 type = ContentType.Youtube;
@@ -236,17 +244,49 @@ namespace RedditPosts.Models
             return sb.ToString();
         }
 
-        public string GetShortContentLink()
+        public string GetTwitterHtml()
         {
-            int maxLength = 30;
-            string toReturn = UrlContent;
+            string toReturn = "<b>TWITTER DEFAULT HTML</b>";
 
-            if(toReturn.Length > maxLength)
+            try
             {
-                toReturn = toReturn.Substring(0, maxLength) + "...";
+                if(GetContentType() == ContentType.Twitter)
+                {
+                    string url = @"https://publish.twitter.com/oembed?theme=dark&align=center&dnt=true&url=" + UrlContent;
+
+                    string jsonContent = GetContentsOfUrl(url);
+                    JObject jsonObject = JObject.Parse(jsonContent);
+
+                    foreach(var element in jsonObject)
+                    {
+                        if(element.Key == "html")
+                        {
+                            toReturn = element.Value.ToString();
+                            break;
+                        }
+                    }
+                }
+            }
+
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
             }
 
             return toReturn;
+        }
+
+        private string GetContentsOfUrl(string uri)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+            using(HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using(Stream stream = response.GetResponseStream())
+            using(StreamReader reader = new StreamReader(stream))
+            {
+                return reader.ReadToEnd();
+            }
         }
     }
 }

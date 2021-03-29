@@ -152,7 +152,7 @@ namespace RedditPosts.Controllers
                 firstItem += 1;
             }
 
-            List<RedditPost> postList = contentTypeWhiteList(posts.ToList());
+            List<RedditPost> postList = ContentTypeWhiteList(posts.ToList());
 
             if (RedditViewModel.Randomize)
             {
@@ -181,7 +181,7 @@ namespace RedditPosts.Controllers
             return PartialView(RedditViewModel.RedditPosts);
         }
 
-        private List<RedditPost> contentTypeWhiteList(List<RedditPost> posts)
+        private List<RedditPost> ContentTypeWhiteList(List<RedditPost> posts)
         {
             for(int i = posts.Count - 1; i >= 0; i--)
             {
@@ -189,6 +189,11 @@ namespace RedditPosts.Controllers
                 ContentType type = post.GetContentType();
 
                 if(!RedditViewModel.Mp4 && type == ContentType.Mp4)
+                {
+                    posts.RemoveAt(i);
+                }
+
+                else if(!RedditViewModel.Twitter && type == ContentType.Twitter)
                 {
                     posts.RemoveAt(i);
                 }
@@ -229,6 +234,11 @@ namespace RedditPosts.Controllers
                 }
 
                 else if(!RedditViewModel.Vreddit && type == ContentType.Vreddit)
+                {
+                    posts.RemoveAt(i);
+                }
+
+                else if(!RedditViewModel.UrlPreview && type == ContentType.UrlPreview)
                 {
                     posts.RemoveAt(i);
                 }

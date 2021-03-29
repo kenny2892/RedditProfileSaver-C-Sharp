@@ -14,7 +14,7 @@
 
             @* CONTENT *@
 
-            @switch (item.GetContentType())
+            @switch(item.GetContentType())
             {
                 case ContentType.Blank:
                     /* TEXT POST */
@@ -98,10 +98,16 @@
 
                 case ContentType.Gifv:
                 case ContentType.Mp4:
-                    <video style="width:80%; height:auto; margin-left: auto; margin-right: auto; display: block;" controls muted>
+                    <video style="height: auto; width: auto; max-height: 720px; max-width: 100%; margin-left: auto; margin-right: auto; display: block;" controls muted loop poster="@item.UrlThumbnail">
                         <source src="@Url.Content(item.UrlContent)" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
+                    break;
+
+                case ContentType.Twitter:
+                    <div style="width:80%; height:auto; margin-left: auto; margin-right: auto; display: block;">
+                        @Html.Raw(item.GetTwitterHtml())
+                    </div>
                     break;
 
                 case ContentType.Youtube:
@@ -121,9 +127,9 @@
 
                         <!-- Indicators -->
                         <ul class="carousel-indicators">
-                            @for (int i = 0; i < total; i++)
+                            @for(int i = 0; i < total; i++)
                             {
-                                if (i == 0)
+                                if(i == 0)
                                 {
                                     <li data-target=@hashNum data-slide-to=@i class="active"></li>
                                 }
@@ -137,9 +143,9 @@
 
                         <!-- The slideshow -->
                         <div class="carousel-inner">
-                            @foreach (string url in item.GetGalleryUrls())
+                            @foreach(string url in item.GetGalleryUrls())
                             {
-                                if (count == 0)
+                                if(count == 0)
                                 {
                                     <div class="carousel-item active">
                                         <img class="d-block w-100 galleryImg" src=@url alt="Slide">
@@ -169,14 +175,14 @@
 
                 case ContentType.Vreddit:
                     <blockquote class="reddit-card">
-                        <a href="@Url.Content(item.UrlPost)">
+                        <a href="@Url.Content(item.UrlPost)"/>
                     </blockquote>
                     <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>
                     break;
             }
 
             @* LINKS *@
-            @if (item.UrlThumbnail == "image")
+            @if(item.UrlThumbnail == "image")
             {
                 <h3 style="text-align:center">
                     <a href="@Html.DisplayFor(modelItem => item.UrlContent)">Content Link</a> | <a href="@Html.DisplayFor(modelItem => item.UrlPost)">Post Link</a>
@@ -191,17 +197,17 @@
             }
 
             <div style="text-align:center; font-size:32px;">
-                @if (item.IsSaved && item.IsNsfw)
+                @if(item.IsSaved && item.IsNsfw)
                 {
                     <p><b><span style="color: forestgreen">Saved</span> | <span style="color: darkred">NSFW</span></b></p>
                 }
 
-                else if (item.IsSaved)
+                else if(item.IsSaved)
                 {
                     <p style="color: forestgreen"><b>Saved</b></p>
                 }
 
-                else if (item.IsNsfw)
+                else if(item.IsNsfw)
                 {
                     <p style="color: darkred"><b>NSFW</b></p>
                 }

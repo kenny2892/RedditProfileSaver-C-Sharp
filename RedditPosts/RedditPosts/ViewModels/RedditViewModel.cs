@@ -20,6 +20,7 @@ namespace RedditPosts.ViewModels
         public bool IsMobile { get; set; } = false;
 
         public bool Mp4 { get; set; } = true;
+        public bool Twitter { get; set; } = true;
         public bool Youtube { get; set; } = true;
         public bool Image { get; set; } = true;
         public bool Gifv { get; set; } = true;

@@ -8,6 +8,7 @@ namespace RedditPosts.Models
     public enum ContentType
     {
         Mp4,
+        Twitter,
         Youtube,
         Image,
         Gifv,
