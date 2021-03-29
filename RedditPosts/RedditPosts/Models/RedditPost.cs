@@ -259,7 +259,7 @@ namespace RedditPosts.Models
                 {
                     string url = @"https://publish.twitter.com/oembed?theme=dark&align=center&dnt=true&url=" + UrlContent;
 
-                    string jsonContent = GetContentsOfUrl(url);
+                    string jsonContent = Utility.GetContentsOfUrl(url);
                     JObject jsonObject = JObject.Parse(jsonContent);
 
                     foreach(var element in jsonObject)
@@ -279,19 +279,6 @@ namespace RedditPosts.Models
             }
 
             return toReturn;
-        }
-
-        private string GetContentsOfUrl(string uri)
-        {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(uri);
-            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
-
-            using(HttpWebResponse response = (HttpWebResponse)request.GetResponse())
-            using(Stream stream = response.GetResponseStream())
-            using(StreamReader reader = new StreamReader(stream))
-            {
-                return reader.ReadToEnd();
-            }
         }
     }
 }

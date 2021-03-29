@@ -43,6 +43,16 @@
             {
                 $.ajax
                 ({
+                    url: "/Home/RetrieveUpvoteCount",
+                    data: {},
+                    success: function (data, textStatus, jqXHR) // Data is the return value
+                    {
+                        upvoteDisplay.textContent = "Posts Retrieved: " + data;
+                    },
+                });
+
+                $.ajax
+                ({
                     url: "/Home/isRetrievingUpvotes",
                     data: {},
                     success: function (data, textStatus, jqXHR) // Data is the return value
@@ -80,16 +90,6 @@
                         }
                     },
                 });
-
-                $.ajax
-                    ({
-                        url: "/Home/RetrieveUpvoteCount",
-                        data: {},
-                        success: function (data, textStatus, jqXHR) // Data is the return value
-                        {
-                            upvoteDisplay.textContent = "Posts Retrieved: " + data;
-                        },
-                    });
             }, 1000);
         }
     </script>

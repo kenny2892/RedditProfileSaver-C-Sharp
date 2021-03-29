@@ -83,7 +83,7 @@
 
         var scrolling = new Scrolling("postTable", "/RedditPosts/_RedditPosts", {vm:@Html.Raw(Json.Serialize(Model)) });
 
-        var contentTypeEnum = @(EnumHelper.EnumToString<ContentType>());
+        var contentTypeEnum = @(Utility.EnumToString<ContentType>());
         var selectTypes = new SetSelect(contentTypeEnum);
     </script>
 }
