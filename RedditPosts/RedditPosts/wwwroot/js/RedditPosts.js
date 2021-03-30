@@ -7,6 +7,7 @@ function Scrolling(iTable, iAction, iParams)
     this.action = iAction;      // Name of the conrtoller action
     this.params = iParams;      // Additional parameters to pass to the controller
     this.loading = false;       // true if asynchronous loading is in process
+    var topScrollBtn = document.getElementById("topScrollBtn");
 
     this.AddTableLines = function(firstItem) 
     {
@@ -36,9 +37,6 @@ function Scrolling(iTable, iAction, iParams)
             // $("#footer").css("display", "none"); // hide loading info
         });
     }
-
-    // To the Top Button: https://www.w3schools.com/howto/howto_js_scroll_to_top.asp
-    var topScrollBtn = document.getElementById("topScrollBtn");
 
     var self = this;
     window.onscroll = function() 

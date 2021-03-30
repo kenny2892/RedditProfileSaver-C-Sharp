@@ -5,15 +5,24 @@
 <h1>Password Lock</h1>
 
 <form asp-controller="Password" asp-action="Index" method="get">
-    <label for="password">Password: </label>
-    @Html.Password("password")
+    <div>
+        <label for="password">Password: </label>
+        @Html.Password("password")
+    </div>
+
+    <div>
+        <input type="checkbox" onclick="togglePassword()" id="showPassword">
+        <label for="showPassword"> Show Password</label>
+    </div>
+
     <input type="submit" value="Submit">
 </form>
 
 @section Scripts
 {
-    <script> // Source: https://stackoverflow.com/a/210764
-        var password = document.getElementById("password");
-        password.focus();
+    <script src="~/js/Password.js" asp-append-version="true"></script>
+
+    <script>
+        var passwordSetup = new PasswordSetup();
     </script>
 }
