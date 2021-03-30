@@ -30,6 +30,7 @@ namespace RedditPosts
             services.AddSingleton<IConfiguration>(Configuration);
             services.AddControllersWithViews();
             services.AddDbContext<RedditPostContext>(options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<SubredditInfoContext>(options => options.UseSqlite(Configuration.GetConnectionString("SubredditIconConnection")));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

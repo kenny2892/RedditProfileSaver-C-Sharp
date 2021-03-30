@@ -1,6 +1,6 @@
 ﻿@model IEnumerable<RedditPosts.Models.RedditPost>
 
-@foreach (var item in Model)
+@foreach(var item in Model)
 {
     <tr style="width:100%">
         <td style="width:100%">
@@ -96,7 +96,7 @@
 
                 case ContentType.GfyCat:
                     <div style='position:relative; padding-bottom:calc(70.80% + 44px)'>
-                        <iframe src="@Url.Content(item.UrlContent)?autoplay=0&hd=1" frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen />
+                        <iframe src='@Url.Content(item.UrlContent)?autoplay=0&hd=1&controls=1' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe>
                     </div>
                     break;
 
@@ -189,10 +189,10 @@
 
             <div class="container-fluid">
                 <div class="row">
-                    <div class="col-5" style="padding-left: 0px; padding-right: 0px;">
+                    <div class="col-6" style="padding-left: 0px; padding-right: 0px;">
                         <img src="@(Utility.GetSubredditIcon(item.Subreddit))" alt="" align="right" style="width:50px; height:auto;" />
                     </div>
-                    <div class="col-7" style="padding-left: 5px; padding-right: 0px;">
+                    <div class="col-6" style="padding-left: 5px; padding-right: 0px;">
                         <h2>r/@Html.DisplayFor(modelItem => item.Subreddit)</h2>
                     </div>
                 </div>

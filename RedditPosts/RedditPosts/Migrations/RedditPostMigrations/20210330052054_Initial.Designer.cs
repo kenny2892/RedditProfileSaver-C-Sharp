@@ -6,10 +6,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RedditPosts.Data;
 
-namespace RedditPosts.Migrations
+namespace RedditPosts.Migrations.RedditPostMigrations
 {
     [DbContext(typeof(RedditPostContext))]
-    [Migration("20210314020057_Initial")]
+    [Migration("20210330052054_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,9 +37,6 @@ namespace RedditPosts.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Number")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("ShuffleNum")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("Subreddit")

@@ -17,16 +17,20 @@ namespace RedditPosts.Controllers
 {
     public class RedditPostsController : Controller
     {
-        private readonly RedditPostContext _context;
+        private readonly RedditPostContext _redditPostContext;
+        private readonly SubredditInfoContext _subredditContext;
         private readonly IConfiguration _configuration;
         private const int BATCH_SIZE = 25;
 
         private RedditViewModel RedditViewModel { get; set; }
 
-        public RedditPostsController(RedditPostContext context, IConfiguration configuration)
+        public RedditPostsController(RedditPostContext redditPostContext, SubredditInfoContext subredditContext, IConfiguration configuration)
         {
-            _context = context;
+            _redditPostContext = redditPostContext;
+            _subredditContext = subredditContext;
             _configuration = configuration;
+
+            Utility.Initialize(_subredditContext);
             RedditViewModel = new RedditViewModel();
         }
 
@@ -83,7 +87,7 @@ namespace RedditPosts.Controllers
             }
 
             RedditViewModel = vm;
-            var postsQuery = from m in _context.RedditPost select m;
+            var postsQuery = from m in _redditPostContext.RedditPost select m;
             var posts = postsQuery.ToList().AsEnumerable();
 
             if (!String.IsNullOrEmpty(RedditViewModel.TitleFilter))
@@ -212,7 +216,7 @@ namespace RedditPosts.Controllers
                 return NotFound();
             }
 
-            var redditPost = await _context.RedditPost
+            var redditPost = await _redditPostContext.RedditPost
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (redditPost == null)
             {
@@ -237,8 +241,8 @@ namespace RedditPosts.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(redditPost);
-                await _context.SaveChangesAsync();
+                _redditPostContext.Add(redditPost);
+                await _redditPostContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(redditPost);
@@ -252,7 +256,7 @@ namespace RedditPosts.Controllers
                 return NotFound();
             }
 
-            var redditPost = await _context.RedditPost.FindAsync(id);
+            var redditPost = await _redditPostContext.RedditPost.FindAsync(id);
             if (redditPost == null)
             {
                 return NotFound();
@@ -276,8 +280,8 @@ namespace RedditPosts.Controllers
             {
                 try
                 {
-                    _context.Update(redditPost);
-                    await _context.SaveChangesAsync();
+                    _redditPostContext.Update(redditPost);
+                    await _redditPostContext.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -303,7 +307,7 @@ namespace RedditPosts.Controllers
                 return NotFound();
             }
 
-            var redditPost = await _context.RedditPost
+            var redditPost = await _redditPostContext.RedditPost
                 .FirstOrDefaultAsync(m => m.ID == id);
             if (redditPost == null)
             {
@@ -318,15 +322,15 @@ namespace RedditPosts.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var redditPost = await _context.RedditPost.FindAsync(id);
-            _context.RedditPost.Remove(redditPost);
-            await _context.SaveChangesAsync();
+            var redditPost = await _redditPostContext.RedditPost.FindAsync(id);
+            _redditPostContext.RedditPost.Remove(redditPost);
+            await _redditPostContext.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool RedditPostExists(int id)
         {
-            return _context.RedditPost.Any(e => e.ID == id);
+            return _redditPostContext.RedditPost.Any(e => e.ID == id);
         }
     }
 }

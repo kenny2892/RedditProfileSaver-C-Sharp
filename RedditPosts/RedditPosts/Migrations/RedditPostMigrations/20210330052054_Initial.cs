@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace RedditPosts.Migrations
+namespace RedditPosts.Migrations.RedditPostMigrations
 {
     public partial class Initial : Migration
     {

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RedditPosts.Data;
 
-namespace RedditPosts.Migrations
+namespace RedditPosts.Migrations.RedditPostMigrations
 {
     [DbContext(typeof(RedditPostContext))]
     partial class RedditPostContextModelSnapshot : ModelSnapshot

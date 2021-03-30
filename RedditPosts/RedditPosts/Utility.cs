@@ -4,6 +4,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Reddit;
 using Reddit.Controllers;
+using RedditPosts.Data;
+using RedditPosts.Models;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,9 +18,13 @@ namespace RedditPosts
     public class Utility // Source: https://stackoverflow.com/a/54167231
     {
         private static IConfiguration Configuration { get; set; }
+        private static SubredditInfoContext _subredditInfoContext;
         private static RedditClient RedditClient { get; set; }
 
-        private static Dictionary<string, string> SubredditIconUrls = new Dictionary<string, string>();
+        public static void Initialize(SubredditInfoContext subredditInfoContext)
+        {
+            _subredditInfoContext = subredditInfoContext;
+        }
 
         public static HtmlString EnumToString<T>()
         {
@@ -39,18 +45,56 @@ namespace RedditPosts
         {
             string toReturn = "https://b.thumbs.redditmedia.com/iTldIIlQVSoH6SPlH9iiPZZVzFWubJU7cOM__uqSOqU.png"; // Default to Reddit Announcements Icon
 
-            if(!CreateConfiguration())
+            if(_subredditInfoContext is null || !CreateConfiguration())
             {
                 return toReturn;
             }
 
-            if(!SubredditIconUrls.ContainsKey(subredditName))
+            var subsQuery = from m in _subredditInfoContext.SubredditInfo select m;
+            var results = subsQuery.Where(sub => sub.SubredditName == subredditName);
+
+            if(results.Count() != 1)
+            {
+                SubredditInfo subredditInfo = RetrieveSubredditInfo(subredditName);
+
+                if(!(subredditInfo is null))
+                {
+                    _subredditInfoContext.Add(subredditInfo);
+                    _subredditInfoContext.SaveChanges();
+                }    
+            }
+
+            else
+            {
+                toReturn = results.ToList().Cast<SubredditInfo>().ElementAt(0).IconUrl;
+            }
+
+            return toReturn;
+        }
+
+        public static bool UpdateSubredditIcons()
+        {
+            if(_subredditInfoContext is null || !CreateConfiguration())
+            {
+                return false;
+            }
+
+            var subsQuery = from m in _subredditInfoContext.SubredditInfo select m;
+            var subredditList = subsQuery.Select((name, url) => name);
+
+            return true;
+        }
+
+        private static SubredditInfo RetrieveSubredditInfo(string subredditName)
+        {
+            try
             {
                 System.Diagnostics.Debug.WriteLine("GETTING SUBREDDIT: " + subredditName);
 
                 Subreddit subredditAbout = RedditClient.Subreddit(subredditName).About();
                 string communityIcon = subredditAbout.SubredditData.CommunityIcon;
                 string iconImg = "";
+                string url = "https://b.thumbs.redditmedia.com/iTldIIlQVSoH6SPlH9iiPZZVzFWubJU7cOM__uqSOqU.png";
 
                 if(!(subredditAbout.SubredditData.IconImg is null))
                 {
@@ -64,17 +108,16 @@ namespace RedditPosts
 
                 if(!String.IsNullOrEmpty(iconImg) || !String.IsNullOrEmpty(communityIcon))
                 {
-                    toReturn = !String.IsNullOrEmpty(iconImg) ? iconImg : communityIcon;
-                    SubredditIconUrls.Add(subredditName, toReturn);
+                    url = !String.IsNullOrEmpty(iconImg) ? iconImg : communityIcon;
                 }
+
+                return new SubredditInfo { SubredditName = subredditName, IconUrl = url };
             }
 
-            else
+            catch(Exception e)
             {
-                toReturn = SubredditIconUrls.GetValueOrDefault(subredditName);
+                return null;
             }
-
-            return toReturn;
         }
 
         private static bool CreateConfiguration()
@@ -136,50 +179,6 @@ namespace RedditPosts
             }
 
             return true;
-        }
-
-        private static string Old_GetSubredditIcon(string subreddit)
-        {
-            string toReturn = "https://b.thumbs.redditmedia.com/iTldIIlQVSoH6SPlH9iiPZZVzFWubJU7cOM__uqSOqU.png"; // Default to Reddit Announcements Icon
-
-            if(!SubredditIconUrls.ContainsKey(subreddit))
-            {
-                string url = "https://www.reddit.com/r/" + subreddit + "/about.json";
-                string jsonContent = Utility.GetContentsOfUrl(url);
-                JObject jsonObject = JObject.Parse(jsonContent);
-
-                foreach(var topElement in jsonObject)
-                {
-                    if(topElement.Key == "data")
-                    {
-                        JObject dataJson = JObject.Parse(topElement.Value.ToString());
-                        foreach(var data in dataJson)
-                        {
-                            if(data.Key == "icon_img" && !String.IsNullOrEmpty(data.Value.ToString()))
-                            {
-                                toReturn = data.Value.ToString();
-                                SubredditIconUrls.Add(subreddit, toReturn);
-                                break;
-                            }
-
-                            else if(data.Key == "community_icon" && !String.IsNullOrEmpty(data.Value.ToString()))
-                            {
-                                toReturn = data.Value.ToString();
-                                SubredditIconUrls.Add(subreddit, toReturn);
-                                break;
-                            }
-                        }
-                        break;
-                    }
-                }
-            }
-
-            else
-            {
-                toReturn = SubredditIconUrls.GetValueOrDefault(subreddit);
-            }
-
-            return toReturn;
         }
 
         public static string GetContentsOfUrl(string url)
