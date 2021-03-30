@@ -17,7 +17,8 @@ namespace RedditPosts.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly RedditPostContext _context;
+        private readonly RedditPostContext _redditPostContext;
+        private readonly SubredditInfoContext _subredditInfoContext;
         private readonly IConfiguration _configuration;
 
         private static bool RetrievingUpvotes { get; set; } = false;
@@ -25,10 +26,13 @@ namespace RedditPosts.Controllers
         private static bool FinishedScript { get; set; } = false;
         private static int UpvoteCount { get; set; }
 
-        public HomeController(RedditPostContext context, IConfiguration configuration)
+        public HomeController(RedditPostContext redditPostContext, SubredditInfoContext subredditInfoContext, IConfiguration configuration)
         {
-            _context = context;
+            _redditPostContext = redditPostContext;
+            _subredditInfoContext = subredditInfoContext;
             _configuration = configuration;
+
+            Utility.Initialize(_subredditInfoContext);
         }
 
         public IActionResult Index()
@@ -173,19 +177,24 @@ namespace RedditPosts.Controllers
             List<RedditPost> posts = SeedData.generatePosts();
 
             var newIds = posts.Select(p => p.Number).Distinct().ToArray();
-            var oldIds = _context.RedditPost.Where(p => newIds.Contains(p.Number)).Select(p => p.Number).ToArray();
+            var oldIds = _redditPostContext.RedditPost.Where(p => newIds.Contains(p.Number)).Select(p => p.Number).ToArray();
             var idsToAdd = posts.Where(p => !oldIds.Contains(p.Number)).ToList();
 
             if (idsToAdd.Count > 0)
             {
-                _context.RedditPost.AddRange(idsToAdd);
-                _context.SaveChanges();
+                _redditPostContext.RedditPost.AddRange(idsToAdd);
+                _redditPostContext.SaveChanges();
 
                 System.Diagnostics.Debug.WriteLine("Added Posts");
             }
 
             UpvoteCount = 0;
             EmptyResultsFile();
+        }
+
+        public bool UpdateIcons()
+        {
+            return Utility.UpdateSubredditIcons();
         }
 
         public string GetPythonExePath()

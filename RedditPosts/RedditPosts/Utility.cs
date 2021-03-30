@@ -80,7 +80,14 @@ namespace RedditPosts
             }
 
             var subsQuery = from m in _subredditInfoContext.SubredditInfo select m;
-            var subredditList = subsQuery.Select((name, url) => name);
+            var subredditList = subsQuery.Select(subreddit => subreddit.SubredditName);
+
+            foreach(string subredditName in subredditList)
+            {
+                SubredditInfo subInfo = RetrieveSubredditInfo(subredditName);
+                _subredditInfoContext.Update(subInfo);
+                _subredditInfoContext.SaveChanges();
+            }
 
             return true;
         }

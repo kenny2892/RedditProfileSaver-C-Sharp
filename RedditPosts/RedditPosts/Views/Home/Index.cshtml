@@ -12,6 +12,8 @@
     <button class="retrieveUpvoteBtn" onclick="retrieveUpvotes()">Retrieve Upvotes</button>
     <h3 id="loadingMsg"></h3>
     <h3 id="upvoteCounter"></h3>
+    <button class="updateIconsBtn" onclick="updateIcons()">Update Subreddit Icons</button>
+    <h3 id="iconRetrieving"></h3>
     <!-- <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Retrieve">Retrieve Upvotes</a> TODO-->
 </div>
 
@@ -22,6 +24,7 @@
         var words = "Retrieving Upvotes";
         var textArea = document.getElementById("loadingMsg");
         var upvoteDisplay = document.getElementById("upvoteCounter");
+        var iconDisplay = document.getElementById("iconRetrieving");
         var isRetrieving = false;
 
         function retrieveUpvotes()
@@ -91,6 +94,34 @@
                     },
                 });
             }, 1000);
+        }
+
+        function updateIcons()
+        {
+            iconDisplay.textContent = "Updating Icons";
+
+            $.ajax // Launch the retrieval Python Script
+            ({
+                url: "/Home/UpdateIcons",
+                data: {}
+            })
+            .done(function(result) 
+            {
+                if(result) 
+                {
+                    iconDisplay.textContent = "";
+                }
+
+                else
+                {
+                    iconDisplay.textContent = "FAILED";
+                }
+            })
+            .fail(function(xhr, ajaxOptions, thrownError) 
+            {
+                iconDisplay.textContent = "FAILED";
+                console.log("Error in updateIcons:", thrownError);
+            });
         }
     </script>
 }
