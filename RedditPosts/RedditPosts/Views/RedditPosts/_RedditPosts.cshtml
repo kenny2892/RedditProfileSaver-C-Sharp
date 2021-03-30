@@ -8,21 +8,6 @@
                 @Html.DisplayFor(modelItem => item.Title)
             </h1>
 
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-5" style="padding-left: 0px; padding-right: 0px;">
-                        <img src="@(Utility.GetSubredditIcon(item.Subreddit))" alt="" align="right" style="width:50px; height:auto;" />
-                    </div>
-                    <div class="col-7" style="padding-left: 5px; padding-right: 0px;">
-                        <h2>r/Announcements</h2>
-                    </div>
-                </div>
-            </div>
-
-            <h2 style="text-align:center">
-                @Html.DisplayFor(modelItem => item.Author) - @Html.DisplayFor(modelItem => item.Date)
-            </h2>
-
             @* CONTENT *@
 
             @switch(item.GetContentType())
@@ -199,6 +184,23 @@
                     <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>
                     break;
             }
+
+            @* POST DATA *@
+
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-5" style="padding-left: 0px; padding-right: 0px;">
+                        <img src="@(Utility.GetSubredditIcon(item.Subreddit))" alt="" align="right" style="width:50px; height:auto;" />
+                    </div>
+                    <div class="col-7" style="padding-left: 5px; padding-right: 0px;">
+                        <h2>r/@Html.DisplayFor(modelItem => item.Subreddit)</h2>
+                    </div>
+                </div>
+            </div>
+
+            <h2 style="text-align:center">
+                @Html.DisplayFor(modelItem => item.Author) - @Html.DisplayFor(modelItem => item.Date)
+            </h2>
 
             @* LINKS *@
             @if(item.UrlThumbnail == "image")
