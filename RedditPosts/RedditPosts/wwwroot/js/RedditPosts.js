@@ -37,6 +37,9 @@ function Scrolling(iTable, iAction, iParams)
         });
     }
 
+    // To the Top Button: https://www.w3schools.com/howto/howto_js_scroll_to_top.asp
+    var topScrollBtn = document.getElementById("topScrollBtn");
+
     var self = this;
     window.onscroll = function() 
     {
@@ -63,12 +66,12 @@ function Scrolling(iTable, iAction, iParams)
         if(document.body.scrollTop > 20 || document.documentElement.scrollTop > 20)
         {
 
-            mybutton.style.display = "block";
+            topScrollBtn.style.display = "block";
         }
 
         else
         {
-            mybutton.style.display = "none";
+            topScrollBtn.style.display = "none";
         }
     }
 
