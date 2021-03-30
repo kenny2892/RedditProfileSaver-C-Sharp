@@ -72,15 +72,17 @@
 
                     else
                     {
-                        textArea.textContent = "";
+                        textArea.textContent = "Adding Posts to Database";
                         upvoteDisplay.textContent = "";
-                        isRetrieving = false;
 
                         $.ajax // Add new posts to the database
                         ({
                             url: "/Home/UpdatePosts",
                             data: {}
                         });
+
+                        textArea.textContent = "";
+                        isRetrieving = false;
 
                         clearInterval(interval);
                     }
@@ -94,26 +96,26 @@
         iconDisplay.textContent = "Updating Icons";
 
         $.ajax // Launch the retrieval Python Script
-            ({
-                url: "/Home/UpdateIcons",
-                data: {}
-            })
-            .done(function(result) 
+        ({
+            url: "/Home/UpdateIcons",
+            data: {}
+        })
+        .done(function(result) 
+        {
+            if(result) 
             {
-                if(result) 
-                {
-                    iconDisplay.textContent = "";
-                }
+                iconDisplay.textContent = "";
+            }
 
-                else
-                {
-                    iconDisplay.textContent = "FAILED";
-                }
-            })
-            .fail(function(xhr, ajaxOptions, thrownError) 
+            else
             {
                 iconDisplay.textContent = "FAILED";
-                console.log("Error in updateIcons:", thrownError);
-            });
+            }
+        })
+        .fail(function(xhr, ajaxOptions, thrownError) 
+        {
+            iconDisplay.textContent = "FAILED";
+            console.log("Error in updateIcons:", thrownError);
+        });
     }
 }
