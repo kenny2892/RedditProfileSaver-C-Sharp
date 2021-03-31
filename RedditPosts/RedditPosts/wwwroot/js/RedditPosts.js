@@ -14,7 +14,7 @@ function Scrolling(iTable, iAction, iParams)
     {
         this.loading = true;
         this.params.firstItem = firstItem;
-        loadingPostsDisplay.display = "block"; // show loading info
+        loadingPostsDisplay.textContent = "LOADING POSTS"; // show loading info
 
         $.ajax({
             type: 'POST',
@@ -36,7 +36,7 @@ function Scrolling(iTable, iAction, iParams)
         })
         .always(function() 
         {
-            loadingPostsDisplay.display = "none"; // hide loading info
+            loadingPostsDisplay.textContent = ""; // hide loading info
         });
     }
 
@@ -54,7 +54,7 @@ function Scrolling(iTable, iAction, iParams)
             //User is currently at the bottom of the page
             if(!self.loading) 
             {
-                var itemCount = $('#' + self.table + ' tr').length - 1;
+                var itemCount = $('#' + self.table + ' tr').length;
                 self.AddTableLines(itemCount);
             }
         }
@@ -129,7 +129,7 @@ function AutoScrollSetup() // Source: https://stackoverflow.com/a/9837823
         {
             window.scrollBy(0, 3);
             scrolldelay = setTimeout(AutoScroll, 10);
-            autoScrollBtn.textContent = "Stop"
+            autoScrollBtn.textContent = "Stop Scroll"
         }
 
         else
@@ -137,4 +137,27 @@ function AutoScrollSetup() // Source: https://stackoverflow.com/a/9837823
             autoScrollBtn.textContent = "Auto Scroll"
         }
     }
+}
+
+function HidePostToggle(id)
+{
+    var hideBtn = document.getElementById("hidePostBtn_" + id);
+
+    $.ajax
+    ({
+        url: "/RedditPosts/Hide",
+        data: {id},
+        success: function(data, textStatus, jqXHR) // Data is the return value
+        {
+            if(data)
+            {
+                hideBtn.textContent = "Show Post";
+            }
+
+            else
+            {
+                hideBtn.textContent = "Hide Post";
+            }
+        },
+    });
 }

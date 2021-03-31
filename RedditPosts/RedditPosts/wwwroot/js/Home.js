@@ -30,10 +30,10 @@
 
         isRetrieving = true;
         $.ajax // Launch the retrieval Python Script
-            ({
-                url: "/Home/Retrieve",
-                data: {}
-            });
+        ({
+            url: "/Home/Retrieve",
+            data: {}
+        });
 
         const interval = setInterval(function()
         {

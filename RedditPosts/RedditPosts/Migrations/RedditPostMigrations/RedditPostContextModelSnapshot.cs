@@ -40,6 +40,9 @@ namespace RedditPosts.Migrations.RedditPostMigrations
                     b.Property<string>("Subreddit")
                         .HasColumnType("TEXT");
 
+                    b.Property<bool>("Hidden")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("Title")
                         .HasColumnType("TEXT");
 

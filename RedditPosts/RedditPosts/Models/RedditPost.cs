@@ -44,6 +44,7 @@ namespace RedditPosts.Models
         }
         public string Author { get; set; }
         public string Subreddit { get; set; }
+        public bool Hidden { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }

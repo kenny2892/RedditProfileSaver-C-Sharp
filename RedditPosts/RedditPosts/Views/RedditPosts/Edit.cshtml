@@ -33,6 +33,11 @@
                 <input asp-for="Subreddit" class="form-control" />
                 <span asp-validation-for="Subreddit" class="text-danger"></span>
             </div>
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    <input class="form-check-input" asp-for="Hidden" /> @Html.DisplayNameFor(model => model.Hidden)
+                </label>
+            </div>
             <div class="form-group">
                 <label asp-for="Date" class="control-label"></label>
                 <input asp-for="Date" class="form-control" />

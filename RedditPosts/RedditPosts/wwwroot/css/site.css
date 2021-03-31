@@ -133,6 +133,16 @@ hr {
     z-index: 98;
 }
 
+.hidePostBtn {
+    font-size: 18px;
+    border: none;
+    outline: none;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
 .retrieveUpvoteBtn, .updateIconsBtn {
     box-shadow: inset 0px 1px 0px 0px #cf866c;
     background: linear-gradient(to bottom, #d0451b 5%, #bc3315 100%);

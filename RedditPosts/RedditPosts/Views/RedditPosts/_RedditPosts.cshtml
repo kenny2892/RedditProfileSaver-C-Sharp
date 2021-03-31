@@ -230,7 +230,21 @@
                 {
                     <p style="color: darkred"><b>NSFW</b></p>
                 }
+                
+                <p>
+                    @if(item.Hidden)
+                    {
+                    <button onclick="HidePostToggle(@item.ID)" class="hidePostBtn" id="hidePostBtn_@item.ID">Show Post</button>
+                    }
+
+                    else
+                    {
+                    <button onclick="HidePostToggle(@item.ID)" class="hidePostBtn" id="hidePostBtn_@item.ID">Hide Post</button>
+                    }
+                </p>
             </div>
+
+            
 
             <h6 style="text-align:center">
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

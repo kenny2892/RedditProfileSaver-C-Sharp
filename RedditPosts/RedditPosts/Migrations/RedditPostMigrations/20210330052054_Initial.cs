@@ -17,6 +17,7 @@ namespace RedditPosts.Migrations.RedditPostMigrations
                     Title = table.Column<string>(nullable: true),
                     Author = table.Column<string>(nullable: true),
                     Subreddit = table.Column<string>(nullable: true),
+                    Hidden = table.Column<bool>(nullable: true),
                     Date = table.Column<DateTime>(nullable: false),
                     UrlContent = table.Column<string>(nullable: true),
                     UrlPost = table.Column<string>(nullable: true),

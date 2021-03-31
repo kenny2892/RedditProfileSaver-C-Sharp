@@ -22,8 +22,6 @@ namespace RedditPosts.Controllers
         private readonly IConfiguration _configuration;
         private const int BATCH_SIZE = 25;
 
-        private RedditViewModel RedditViewModel { get; set; }
-
         public RedditPostsController(RedditPostContext redditPostContext, SubredditInfoContext subredditContext, IConfiguration configuration)
         {
             _redditPostContext = redditPostContext;
@@ -31,7 +29,6 @@ namespace RedditPosts.Controllers
             _configuration = configuration;
 
             Utility.Initialize(_subredditContext);
-            RedditViewModel = new RedditViewModel();
         }
 
         private bool HasPasswordAlready()
@@ -73,9 +70,8 @@ namespace RedditPosts.Controllers
                 return RedirectToAction("Index", "Password");
             }
 
-            RedditViewModel = vm;
-            RedditViewModel.IsMobile = IsMobile();
-            return View(RedditViewModel);
+            vm.IsMobile = IsMobile();
+            return View(vm);
         }
 
         [HttpPost]
@@ -86,47 +82,46 @@ namespace RedditPosts.Controllers
                 return RedirectToAction("Index", "ShowPassword");
             }
 
-            RedditViewModel = vm;
             var postsQuery = from m in _redditPostContext.RedditPost select m;
             var posts = postsQuery.ToList().AsEnumerable();
 
-            if (!String.IsNullOrEmpty(RedditViewModel.TitleFilter))
+            if (!String.IsNullOrEmpty(vm.TitleFilter))
             {
-                List<string> keywords = new List<string> { RedditViewModel.TitleFilter };
+                List<string> keywords = new List<string> { vm.TitleFilter };
 
-                if(RedditViewModel.TitleFilter.Contains(" "))
+                if(vm.TitleFilter.Contains(" "))
                 {
-                    keywords = RedditViewModel.TitleFilter.Split(" ").ToList();
+                    keywords = vm.TitleFilter.Split(" ").ToList();
                 }
 
                 posts = posts.Where(post => keywords.Any(word => post.Title.ToLower().Contains(word.ToLower())));
             }
 
-            if (!String.IsNullOrEmpty(RedditViewModel.AuthorFilter))
+            if (!String.IsNullOrEmpty(vm.AuthorFilter))
             {
-                List<string> keywords = new List<string> { RedditViewModel.AuthorFilter };
+                List<string> keywords = new List<string> { vm.AuthorFilter };
 
-                if (RedditViewModel.AuthorFilter.Contains(" "))
+                if (vm.AuthorFilter.Contains(" "))
                 {
-                    keywords = RedditViewModel.AuthorFilter.Split(" ").ToList();
+                    keywords = vm.AuthorFilter.Split(" ").ToList();
                 }
 
                 posts = posts.Where(post => keywords.Any(word => post.Author.ToLower().Contains(word.ToLower())));
             }
 
-            if (!String.IsNullOrEmpty(RedditViewModel.SubredditFilter))
+            if (!String.IsNullOrEmpty(vm.SubredditFilter))
             {
-                List<string> keywords = new List<string> { RedditViewModel.SubredditFilter };
+                List<string> keywords = new List<string> { vm.SubredditFilter };
 
-                if (RedditViewModel.SubredditFilter.Contains(" "))
+                if (vm.SubredditFilter.Contains(" "))
                 {
-                    keywords = RedditViewModel.SubredditFilter.Split(" ").ToList();
+                    keywords = vm.SubredditFilter.Split(" ").ToList();
                 }
 
                 posts = posts.Where(post => keywords.Any(word => post.Subreddit.ToLower().Contains(word.ToLower())));
             }
 
-            switch (RedditViewModel.NsfwSetting)
+            switch (vm.NsfwSetting)
             {
                 case NsfwSettings.No_Filter:
                     break;
@@ -140,27 +135,21 @@ namespace RedditPosts.Controllers
                     break;
             }
 
-            if (RedditViewModel.SavedOnly)
+            if (vm.SavedOnly)
             {
                 posts = posts.Where(s => s.IsSaved == true);
             }
 
-            // Extract a portion of data
-            if (posts.Count() > 1 && posts.Count() - 1 == firstItem && BATCH_SIZE >= posts.Count())
+            if(!vm.ShowHidden)
             {
-                firstItem = posts.Count();
+                posts = posts.Where(s => s.Hidden == false);
             }
 
-            if (firstItem != 0)
-            {
-                firstItem += 1;
-            }
+            List<RedditPost> postList = ContentTypeWhiteList(posts.ToList(), vm);
 
-            List<RedditPost> postList = ContentTypeWhiteList(posts.ToList());
-
-            if (RedditViewModel.Randomize)
+            if (vm.Randomize)
             {
-                Random r = new Random(RedditViewModel.RandomizeSeed);
+                Random r = new Random(vm.RandomizeSeed);
 
                 int curr = postList.Count;
                 while (curr > 1)
@@ -181,11 +170,10 @@ namespace RedditPosts.Controllers
             var model = postList.Skip(firstItem).Take(BATCH_SIZE).ToList();
             if (model.Count() == 0) return StatusCode(204);  // 204 := "No Content"
 
-            RedditViewModel.RedditPosts = model;
-            return PartialView(RedditViewModel.RedditPosts);
+            return PartialView(model);
         }
 
-        private List<RedditPost> ContentTypeWhiteList(List<RedditPost> posts)
+        private List<RedditPost> ContentTypeWhiteList(List<RedditPost> posts, RedditViewModel vm)
         {
             List<ContentType> types = Enum.GetValues(typeof(ContentType)).Cast<ContentType>().ToList();
 
@@ -196,7 +184,7 @@ namespace RedditPosts.Controllers
 
                 for(int j = 0; j < types.Count; j++)
                 {
-                    bool isWhitelisted = RedditViewModel.ContentTypes[j];
+                    bool isWhitelisted = vm.ContentTypes[j];
 
                     if(!isWhitelisted && types[j] == type)
                     {
@@ -248,6 +236,27 @@ namespace RedditPosts.Controllers
             return View(redditPost);
         }
 
+        public bool Hide(int? id)
+        {
+            if(id == null)
+            {
+                return false;
+            }
+
+            var redditPost = _redditPostContext.RedditPost.Find(id);
+            if(redditPost == null)
+            {
+                return false;
+            }
+
+            redditPost.Hidden = !redditPost.Hidden;
+            _redditPostContext.Update(redditPost);
+            _redditPostContext.SaveChangesAsync();
+
+            System.Diagnostics.Debug.WriteLine("Hide Toggled for Post Id:" + id + " Post Hidden Value: " + redditPost.Hidden);
+            return redditPost.Hidden;
+        }
+
         // GET: RedditPosts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -269,7 +278,7 @@ namespace RedditPosts.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ID,Number,ShuffleNum,Title,Author,Subreddit,Date,UrlContent,UrlPost,UrlThumbnail,IsSaved,IsNsfw")] RedditPost redditPost)
+        public async Task<IActionResult> Edit(int id, [Bind("ID,Number,Title,Author,Subreddit,Hidden,Date,UrlContent,UrlPost,UrlThumbnail,IsSaved,IsNsfw")] RedditPost redditPost)
         {
             if (id != redditPost.ID)
             {
