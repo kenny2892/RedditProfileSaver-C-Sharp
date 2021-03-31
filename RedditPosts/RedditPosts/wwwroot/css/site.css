@@ -212,3 +212,8 @@ hr {
 #right-box h4 {
     margin-top: 30px;
 }
+
+.hide_post_modal .modal-dialog .modal-content {
+    background-color: black !important;
+}
+

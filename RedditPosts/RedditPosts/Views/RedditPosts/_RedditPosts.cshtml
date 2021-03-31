@@ -234,17 +234,41 @@
                 <p>
                     @if(item.Hidden)
                     {
-                    <button onclick="HidePostToggle(@item.ID)" class="hidePostBtn" id="hidePostBtn_@item.ID">Show Post</button>
+                        <button class="hidePostBtn" id="hidePostBtn_@item.ID" data-toggle="modal" data-target="#HideModal_@item.ID">Show Post</button>
                     }
 
                     else
                     {
-                    <button onclick="HidePostToggle(@item.ID)" class="hidePostBtn" id="hidePostBtn_@item.ID">Hide Post</button>
+                        <button class="hidePostBtn" id="hidePostBtn_@item.ID" data-toggle="modal" data-target="#HideModal_@item.ID">Hide Post</button>
                     }
                 </p>
-            </div>
 
-            
+                <!-- The Modal -->
+                <div class="modal hide_post_modal" id="HideModal_@item.ID">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <!-- Modal Header -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">Hide Post</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+
+                            <!-- Modal body -->
+                            <div class="modal-body">
+                                Are you sure you want to hide / unhide this post?
+                            </div>
+
+                            <!-- Modal footer -->
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" onclick="HidePostToggle(@item.ID)">Confirm</button>
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <h6 style="text-align:center">
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |

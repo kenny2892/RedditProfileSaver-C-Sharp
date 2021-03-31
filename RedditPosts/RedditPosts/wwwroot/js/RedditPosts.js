@@ -158,6 +158,8 @@ function HidePostToggle(id)
             {
                 hideBtn.textContent = "Hide Post";
             }
+
+            $('#' + 'HideModal_' + id).modal('hide');
         },
     });
 }
