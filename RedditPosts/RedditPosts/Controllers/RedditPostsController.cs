@@ -75,7 +75,8 @@ namespace RedditPosts.Controllers
         }
 
         [HttpPost]
-        public IActionResult _RedditPosts(RedditViewModel vm, int firstItem = 0) // Source for Keyword Search: https://stackoverflow.com/a/31383256 & https://stackoverflow.com/a/57971185
+        // Source for Keyword Search: https://stackoverflow.com/a/31383256 & https://stackoverflow.com/a/57971185
+        public IActionResult _RedditPosts(RedditViewModel vm, int firstItem = 0)
         {
             if (!HasPasswordAlready())
             {
@@ -83,117 +84,15 @@ namespace RedditPosts.Controllers
             }
 
             var postsQuery = from m in _redditPostContext.RedditPost select m;
-            var posts = postsQuery.ToList().AsEnumerable();
+            var postsEnumerable = postsQuery.ToList().AsEnumerable();
 
-            if (!String.IsNullOrEmpty(vm.TitleFilter))
-            {
-                List<string> keywords = new List<string> { vm.TitleFilter };
+            RedditPostFilter filter = new RedditPostFilter(vm, postsEnumerable);
+            postsEnumerable = filter.FilterPosts();
 
-                if(vm.TitleFilter.Contains(" "))
-                {
-                    keywords = vm.TitleFilter.Split(" ").ToList();
-                }
-
-                posts = posts.Where(post => keywords.Any(word => post.Title.ToLower().Contains(word.ToLower())));
-            }
-
-            if (!String.IsNullOrEmpty(vm.AuthorFilter))
-            {
-                List<string> keywords = new List<string> { vm.AuthorFilter };
-
-                if (vm.AuthorFilter.Contains(" "))
-                {
-                    keywords = vm.AuthorFilter.Split(" ").ToList();
-                }
-
-                posts = posts.Where(post => keywords.Any(word => post.Author.ToLower().Contains(word.ToLower())));
-            }
-
-            if (!String.IsNullOrEmpty(vm.SubredditFilter))
-            {
-                List<string> keywords = new List<string> { vm.SubredditFilter };
-
-                if (vm.SubredditFilter.Contains(" "))
-                {
-                    keywords = vm.SubredditFilter.Split(" ").ToList();
-                }
-
-                posts = posts.Where(post => keywords.Any(word => post.Subreddit.ToLower().Contains(word.ToLower())));
-            }
-
-            switch (vm.NsfwSetting)
-            {
-                case NsfwSettings.No_Filter:
-                    break;
-
-                case NsfwSettings.Nsfw_Only:
-                    posts = posts.Where(s => s.IsNsfw);
-                    break;
-
-                case NsfwSettings.No_Nsfw:
-                    posts = posts.Where(s => !s.IsNsfw);
-                    break;
-            }
-
-            if (vm.SavedOnly)
-            {
-                posts = posts.Where(s => s.IsSaved == true);
-            }
-
-            if(!vm.ShowHidden)
-            {
-                posts = posts.Where(s => s.Hidden == false);
-            }
-
-            List<RedditPost> postList = ContentTypeWhiteList(posts.ToList(), vm);
-
-            if (vm.Randomize)
-            {
-                Random r = new Random(vm.RandomizeSeed);
-
-                int curr = postList.Count;
-                while (curr > 1)
-                {
-                    curr--;
-                    int toSwap = r.Next(curr + 1);
-                    RedditPost value = postList[toSwap];
-                    postList[toSwap] = postList[curr];
-                    postList[curr] = value;
-                }
-            }
-
-            else
-            {
-                postList = postList.OrderByDescending(post => post.Number).ToList();
-            }
-
-            var model = postList.Skip(firstItem).Take(BATCH_SIZE).ToList();
+            var model = postsEnumerable.Skip(firstItem).Take(BATCH_SIZE).ToList();
             if (model.Count() == 0) return StatusCode(204);  // 204 := "No Content"
 
             return PartialView(model);
-        }
-
-        private List<RedditPost> ContentTypeWhiteList(List<RedditPost> posts, RedditViewModel vm)
-        {
-            List<ContentType> types = Enum.GetValues(typeof(ContentType)).Cast<ContentType>().ToList();
-
-            for(int i = posts.Count - 1; i >= 0; i--)
-            {
-                RedditPost post = posts[i];
-                ContentType type = post.GetContentType();
-
-                for(int j = 0; j < types.Count; j++)
-                {
-                    bool isWhitelisted = vm.ContentTypes[j];
-
-                    if(!isWhitelisted && types[j] == type)
-                    {
-                        posts.RemoveAt(i);
-                    }
-                }
-            }
-
-            return posts;
         }
 
         // GET: RedditPosts/Details/5
