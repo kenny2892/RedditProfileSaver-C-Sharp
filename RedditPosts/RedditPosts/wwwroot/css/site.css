@@ -104,12 +104,9 @@ hr {
     background-color: #212121;
 }
 
-#topScrollBtn {
-    display: none;
+#topScrollBtn, #autoScrollBtn {
     position: fixed;
     bottom: 20px;
-    right: 30px;
-    z-index: 99;
     font-size: 18px;
     border: none;
     outline: none;
@@ -120,8 +117,20 @@ hr {
     border-radius: 4px;
 }
 
-#topScrollBtn:hover {
+#topScrollBtn:hover, #autoScrollBtn:hover {
     background-color: #555;
+}
+
+#topScrollBtn {
+    display: none;
+    right: 30px;
+    z-index: 99;
+}
+
+#autoScrollBtn {
+    display: block;
+    left: 30px;
+    z-index: 98;
 }
 
 .retrieveUpvoteBtn, .updateIconsBtn {
@@ -178,7 +187,7 @@ hr {
 
 #left-box {
     text-align: right;
-    width: 50%;
+    width: 45%;
 }
 
 #left-box img {
@@ -187,7 +196,7 @@ hr {
 
 #right-box {
     text-align: left;
-    width: 50%;
+    width: 55%;
 }
 
 #right-box h4 {

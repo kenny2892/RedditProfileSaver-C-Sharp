@@ -8,12 +8,14 @@ function Scrolling(iTable, iAction, iParams)
     this.params = iParams;      // Additional parameters to pass to the controller
     this.loading = false;       // true if asynchronous loading is in process
     var topScrollBtn = document.getElementById("topScrollBtn");
+    var loadingPostsDisplay = document.getElementById("loadingPosts");
 
     this.AddTableLines = function(firstItem) 
     {
         this.loading = true;
         this.params.firstItem = firstItem;
-        // $("#footer").css("display", "block"); // show loading info
+        loadingPostsDisplay.display = "block"; // show loading info
+
         $.ajax({
             type: 'POST',
             url: self.action,
@@ -34,7 +36,7 @@ function Scrolling(iTable, iAction, iParams)
         })
         .always(function() 
         {
-            // $("#footer").css("display", "none"); // hide loading info
+            loadingPostsDisplay.display = "none"; // hide loading info
         });
     }
 
@@ -107,5 +109,32 @@ function SetSelect(jsonObj)
         {
             setSelectCheckbox(false, item, index)
         });
+    }
+}
+
+function AutoScrollSetup() // Source: https://stackoverflow.com/a/9837823
+{
+    var autoScrollBtn = document.getElementById("autoScrollBtn");
+    autoScrollBtn.onclick = function()
+    {
+        isAutoScrolling = !isAutoScrolling;
+        AutoScroll();
+    }
+
+    var isAutoScrolling = false;
+
+    function AutoScroll()
+    {
+        if(isAutoScrolling)
+        {
+            window.scrollBy(0, 3);
+            scrolldelay = setTimeout(AutoScroll, 10);
+            autoScrollBtn.textContent = "Stop"
+        }
+
+        else
+        {
+            autoScrollBtn.textContent = "Auto Scroll"
+        }
     }
 }

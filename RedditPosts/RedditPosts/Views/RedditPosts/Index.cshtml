@@ -63,12 +63,15 @@
     </form>
 </div>
 
+<button type="button" id="autoScrollBtn">Auto Scroll</button>
 <button onclick="topFunction()" id="topScrollBtn" title="Go to top">Top</button>
 
 <table id="postTable" class="table" style="width:100%">
     <tbody>
     </tbody>
 </table>
+
+<h1 id="loadingPosts" style="text-align: center">LOADING POSTS</h1>
 
 @section Scripts
 {
@@ -85,5 +88,6 @@
 
         var contentTypeEnum = @(Utility.EnumToString<ContentType>());
         var selectTypes = new SetSelect(contentTypeEnum);
+        var autoScroll = new AutoScrollSetup();
     </script>
 }
