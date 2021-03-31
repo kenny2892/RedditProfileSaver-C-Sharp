@@ -159,3 +159,37 @@ hr {
     margin-left: auto;
     margin-right: auto;
 }
+
+/* Source for HBox: https://stackoverflow.com/a/11931374 */
+
+#horizontal-box {
+    height: 100%;
+    width: 100%;
+    font-size: 0;
+}
+
+#left-box, #right-box {
+    display: inline-block;
+    *display: inline;
+    zoom: 1;
+    vertical-align: top;
+    font-size: 12px;
+}
+
+#left-box {
+    text-align: right;
+    width: 50%;
+}
+
+#left-box img {
+    margin-right: 5px;
+}
+
+#right-box {
+    text-align: left;
+    width: 50%;
+}
+
+#right-box h4 {
+    margin-top: 30px;
+}
