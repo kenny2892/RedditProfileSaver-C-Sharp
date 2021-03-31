@@ -12,13 +12,13 @@ namespace RedditPosts.Models
     {
         public int ID { get; set; }
         public int Number { get; set; }
-        private string title = "";
-        public string Title // If word is to long, split it in half as to avoid the table being to wide for mobile display
+        public string Title { get; set; }
+        public string DisplayTitle // If word is to long, split it in half as to avoid the table being to wide for mobile display
         {
             get
             {
                 StringBuilder sb = new StringBuilder();
-                string[] words = title.Split(" ");
+                string[] words = Title.Split(" ");
 
                 for(int i = 0; i < words.Count(); i++)
                 {
@@ -39,11 +39,23 @@ namespace RedditPosts.Models
 
                 return sb.ToString();
             }
-
-            set { title = value; }
         }
         public string Author { get; set; }
         public string Subreddit { get; set; }
+        public string DisplaySubreddit // If word is to long, split it to avoid the table being to wide for mobile display
+        {
+            get
+            {
+                string toReturn = Subreddit;
+
+                if(toReturn.Length > 15)
+                {
+                    toReturn = toReturn.Substring(0, 12) + "...";
+                }
+
+                return toReturn;
+            }
+        }
         public bool Hidden { get; set; }
 
         [DataType(DataType.Date)]

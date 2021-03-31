@@ -5,7 +5,7 @@
     <tr style="width:100%">
         <td style="width:100%">
             <h1 style="text-align:center">
-                @Html.DisplayFor(modelItem => item.Title)
+                @Html.DisplayFor(modelItem => item.DisplayTitle)
             </h1>
 
             @* CONTENT *@
@@ -192,7 +192,7 @@
                     <img src="@(Utility.GetSubredditIcon(item.Subreddit))" alt="" style="width:100px; height:auto;" />
                 </div>
                 <div id="right-box">
-                    <h4>r/@Html.DisplayFor(modelItem => item.Subreddit)</h4>
+                    <h4>r/@Html.DisplayFor(modelItem => item.DisplaySubreddit)</h4>
                 </div>
             </div>
 
