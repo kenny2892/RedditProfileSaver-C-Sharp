@@ -7,7 +7,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a> | <button data-toggle="collapse" data-target="#inputFields">Show Filters</button>
+    <a asp-action="Create">Create New</a> | <button class="night-mode-btn" data-toggle="collapse" data-target="#inputFields">Show Filters</button>
 </p>
 
 <div id="inputFields" class="collapse">
@@ -43,7 +43,7 @@
         <p>Nsfw: @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings))))</p>
         <hr />
         <h3>Content Types</h3>
-        <p><button type="button" id="selectTypesBtn">Select All</button> | <button type="button" id="deselectTypesBtn">Deselect All</button></p>
+        <p><button class="night-mode-btn" type="button" id="selectTypesBtn">Select All</button> | <button class="night-mode-btn" type="button" id="deselectTypesBtn">Deselect All</button></p>
         <p>
             @for(int i = 0; i < Model.ContentTypes.Count; i++)
             {

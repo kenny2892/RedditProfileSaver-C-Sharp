@@ -217,3 +217,12 @@ hr {
     background-color: black !important;
 }
 
+.night-mode-btn {
+    border: none;
+    outline: none;
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+}
