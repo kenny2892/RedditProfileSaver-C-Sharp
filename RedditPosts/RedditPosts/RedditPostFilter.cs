@@ -3,6 +3,8 @@ using RedditPosts.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
 using System.Threading.Tasks;
 
 namespace RedditPosts
@@ -34,92 +36,17 @@ namespace RedditPosts
 
         private void TitleFilter()
         {
-            (List<string>, List<string>, List<string>) inputs = RetreiveKeywords(Vm.TitleFilter);
-
-            List<string> keywords = inputs.Item1;
-            List<string> requiredKeywords = inputs.Item2;
-            List<string> bannedKeywords = inputs.Item3;
-
-            if(keywords.Count() > 0)
-            {
-                PostsToFilter = PostsToFilter.Where(post => keywords.Any(word => post.Title.ToLower().Contains(word.ToLower())));
-            }
-
-            if(requiredKeywords.Count() > 0)
-            {
-                foreach(string requiredWord in requiredKeywords)
-                {
-                    PostsToFilter = PostsToFilter.Where(post => post.Title.ToLower().Contains(requiredWord.ToLower()));
-                }
-            }
-
-            if(bannedKeywords.Count() > 0)
-            {
-                foreach(string bannedWord in bannedKeywords)
-                {
-                    PostsToFilter = PostsToFilter.Where(post => !post.Title.ToLower().Contains(bannedWord.ToLower()));
-                }
-            }
+            FilterKeywords("Title", RetreiveKeywords(Vm.TitleFilter));
         }
 
         private void AuthorFilter()
         {
-            (List<string>, List<string>, List<string>) inputs = RetreiveKeywords(Vm.AuthorFilter);
-
-            List<string> keywords = inputs.Item1;
-            List<string> requiredKeywords = inputs.Item2;
-            List<string> bannedKeywords = inputs.Item3;
-
-            if(keywords.Count() > 0)
-            {
-                PostsToFilter = PostsToFilter.Where(post => keywords.Any(word => post.Author.ToLower().Contains(word.ToLower())));
-            }
-
-            if(requiredKeywords.Count() > 0)
-            {
-                foreach(string requiredWord in requiredKeywords)
-                {
-                    PostsToFilter = PostsToFilter.Where(post => post.Author.ToLower().Contains(requiredWord.ToLower()));
-                }
-            }
-
-            if(bannedKeywords.Count() > 0)
-            {
-                foreach(string bannedWord in bannedKeywords)
-                {
-                    PostsToFilter = PostsToFilter.Where(post => !post.Author.ToLower().Contains(bannedWord.ToLower()));
-                }
-            }
+            FilterKeywords("Author", RetreiveKeywords(Vm.AuthorFilter));
         }
 
         private void SubredditFilter()
         {
-            (List<string>, List<string>, List<string>) inputs = RetreiveKeywords(Vm.SubredditFilter);
-
-            List<string> keywords = inputs.Item1;
-            List<string> requiredKeywords = inputs.Item2;
-            List<string> bannedKeywords = inputs.Item3;
-
-            if(keywords.Count() > 0)
-            {
-                PostsToFilter = PostsToFilter.Where(post => keywords.Any(word => post.Subreddit.ToLower().Contains(word.ToLower())));
-            }
-
-            if(requiredKeywords.Count() > 0)
-            {
-                foreach(string requiredWord in requiredKeywords)
-                {
-                    PostsToFilter = PostsToFilter.Where(post => post.Subreddit.ToLower().Contains(requiredWord.ToLower()));
-                }
-            }
-
-            if(bannedKeywords.Count() > 0)
-            {
-                foreach(string bannedWord in bannedKeywords)
-                {
-                    PostsToFilter = PostsToFilter.Where(post => !post.Subreddit.ToLower().Contains(bannedWord.ToLower()));
-                }
-            }
+            FilterKeywords("Subreddit", RetreiveKeywords(Vm.SubredditFilter));
         }
 
         private void NsfwFilter()
@@ -245,6 +172,41 @@ namespace RedditPosts
             }
 
             return (keywords, requiredKeywords, bannedKeywords);
+        }
+
+        // Source for abstract properties: https://stackoverflow.com/a/11431611
+        private void FilterKeywords(string propertyName, (List<string>, List<string>, List<string>) keywordSplits)
+        {
+            if(typeof(RedditPost).GetProperty(propertyName) == null)
+            {
+                return;
+            }
+
+            PropertyInfo property = typeof(RedditPost).GetProperties().Single(u => u.Name == propertyName);
+            List<string> keywords = keywordSplits.Item1;
+            List<string> requiredKeywords = keywordSplits.Item2;
+            List<string> bannedKeywords = keywordSplits.Item3;
+
+            if(keywords.Count() > 0)
+            {
+                PostsToFilter = PostsToFilter.Where(post => keywords.Any(word => property.GetValue(post).ToString().ToLower().Contains(word.ToLower())));
+            }
+
+            if(requiredKeywords.Count() > 0)
+            {
+                foreach(string requiredWord in requiredKeywords)
+                {
+                    PostsToFilter = PostsToFilter.Where(post => property.GetValue(post).ToString().ToLower().Contains(requiredWord.ToLower()));
+                }
+            }
+
+            if(bannedKeywords.Count() > 0)
+            {
+                foreach(string bannedWord in bannedKeywords)
+                {
+                    PostsToFilter = PostsToFilter.Where(post => !property.GetValue(post).ToString().ToLower().Contains(bannedWord.ToLower()));
+                }
+            }
         }
     }
 }
