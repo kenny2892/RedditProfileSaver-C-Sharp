@@ -3,7 +3,6 @@ using RedditPosts.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -182,7 +181,7 @@ namespace RedditPosts
                 return;
             }
 
-            PropertyInfo property = typeof(RedditPost).GetProperties().Single(u => u.Name == propertyName);
+            PropertyInfo property = typeof(RedditPost).GetProperty(propertyName);
             List<string> keywords = keywordSplits.Item1;
             List<string> requiredKeywords = keywordSplits.Item2;
             List<string> bannedKeywords = keywordSplits.Item3;
