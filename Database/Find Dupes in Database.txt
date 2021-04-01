@@ -1,0 +1,1 @@
+SELECT Number, count(*) c FROM RedditPost GROUP BY Number HAVING c > 1
