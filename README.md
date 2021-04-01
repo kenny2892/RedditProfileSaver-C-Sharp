@@ -1,4 +1,4 @@
-# Reddit - Profile Saver - C# Website Edition
+# Reddit - Profile Saver - C# Asp.Net Core Edition
 
 This is a C# Asp.Net Core website that I made to help me keep a list of posts I upvote on Reddit.com and allow me to filter and view them. The reason for this is because Reddit only allows you to view the most recent 1000 posts you have upvoted and doesn't allow for any searching system. This allows you to store as many posts as you want in a Json and Sqlite file that can be parsed and viewed by the website. I made this as a continuation of my [Java App](https://github.com/kenny2892/RedditProfileSaver-Java). This is because of various reasons that can be found on the projects page.
 
