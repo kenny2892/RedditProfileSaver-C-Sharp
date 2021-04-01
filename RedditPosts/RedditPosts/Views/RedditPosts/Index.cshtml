@@ -1,10 +1,10 @@
 ﻿@model RedditPosts.ViewModels.RedditViewModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Upvoted Posts";
 }
 
-<h1>Index</h1>
+<h1>Upvoted Posts</h1>
 
 <p>
     <a asp-action="Create">Create New</a> | <button class="night-mode-btn" data-toggle="collapse" data-target="#inputFields">Show Filters</button>
@@ -78,14 +78,7 @@
     <script src="~/js/RedditPosts.js" asp-append-version="true"></script>
 
     <script>
-        function topFunction()
-        {
-            document.body.scrollTop = 0;
-            document.documentElement.scrollTop = 0;
-        }
-
         var scrolling = new Scrolling("postTable", "/RedditPosts/_RedditPosts", {vm:@Html.Raw(Json.Serialize(Model)) });
-
         var contentTypeEnum = @(Utility.EnumToString<ContentType>());
         var selectTypes = new SetSelect(contentTypeEnum);
         var autoScroll = new AutoScrollSetup();
