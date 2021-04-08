@@ -79,10 +79,23 @@
                         ({
                             url: "/Home/UpdatePosts",
                             data: {}
-                        });
+                        })
+                        .done(function(result) 
+                        {
+                            if(result) 
+                            {
+                                textArea.textContent = "";
+                                upvoteDisplay.textContent = "";
+                                isRetrieving = false;
+                            }
 
-                        textArea.textContent = "";
-                        isRetrieving = false;
+                            else
+                            {
+                                textArea.textContent = "Error Has Occurred";
+                                upvoteDisplay.textContent = "";
+                                isRetrieving = false;
+                            }
+                        });
 
                         clearInterval(interval);
                     }

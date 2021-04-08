@@ -172,24 +172,37 @@ namespace RedditPosts.Controllers
             }
         }
 
-        public void UpdatePosts()
+        public bool UpdatePosts()
         {
-            List<RedditPost> posts = SeedData.generatePosts();
+            bool toReturn = false;
 
-            var newIds = posts.Select(p => p.Number).Distinct().ToArray();
-            var oldIds = _redditPostContext.RedditPost.Where(p => newIds.Contains(p.Number)).Select(p => p.Number).ToArray();
-            var idsToAdd = posts.Where(p => !oldIds.Contains(p.Number)).ToList();
-
-            if (idsToAdd.Count > 0)
+            try
             {
-                _redditPostContext.RedditPost.AddRange(idsToAdd);
-                _redditPostContext.SaveChanges();
+                List<RedditPost> posts = SeedData.generatePosts();
 
-                System.Diagnostics.Debug.WriteLine("Added Posts");
+                var newIds = posts.Select(p => p.Number).Distinct().ToArray();
+                var oldIds = _redditPostContext.RedditPost.Where(p => newIds.Contains(p.Number)).Select(p => p.Number).ToArray();
+                var idsToAdd = posts.Where(p => !oldIds.Contains(p.Number)).ToList();
+
+                if(idsToAdd.Count > 0)
+                {
+                    _redditPostContext.RedditPost.AddRange(idsToAdd);
+                    _redditPostContext.SaveChanges();
+
+                    System.Diagnostics.Debug.WriteLine("Added Posts");
+                }
+
+                UpvoteCount = 0;
+                EmptyResultsFile();
+                toReturn = true;
             }
 
-            UpvoteCount = 0;
-            EmptyResultsFile();
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("ERROR ADDING POSTS: " + "\n" + e.Message);
+            }
+
+            return toReturn;
         }
 
         public bool UpdateIcons()
