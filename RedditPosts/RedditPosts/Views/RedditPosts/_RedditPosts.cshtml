@@ -196,9 +196,15 @@
                 </div>
             </div>
 
-            <h4 style="text-align:center">
-                @Html.DisplayFor(modelItem => item.Author) - @Html.DisplayFor(modelItem => item.Date)
-            </h4>
+            <p>
+                <h4 style="text-align:center">
+                    @Html.DisplayFor(modelItem => item.Author) - 
+
+                    <span data-toggle="tooltip" title="@item.FullDate">
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </span>
+                </h4>
+            </p>
 
             @* LINKS *@
             @if(item.UrlThumbnail == "image")

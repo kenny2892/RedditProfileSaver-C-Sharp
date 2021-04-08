@@ -60,6 +60,13 @@ namespace RedditPosts.Models
 
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
+        public string FullDate // Formats: https://docs.microsoft.com/en-us/dotnet/standard/base-types/custom-date-and-time-format-strings
+        {
+            get
+            {
+                return Date.ToLocalTime().ToString("MMMM dd, yyyy - h:m:s tt");
+            }
+        }
 
         private string urlContent;
         [Display(Name = "Content")]
