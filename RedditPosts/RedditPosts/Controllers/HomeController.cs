@@ -178,7 +178,7 @@ namespace RedditPosts.Controllers
 
             try
             {
-                List<RedditPost> posts = SeedData.generatePosts();
+                List<RedditPost> posts = SeedData.GeneratePosts();
 
                 var newIds = posts.Select(p => p.Number).Distinct().ToArray();
                 var oldIds = _redditPostContext.RedditPost.Where(p => newIds.Contains(p.Number)).Select(p => p.Number).ToArray();

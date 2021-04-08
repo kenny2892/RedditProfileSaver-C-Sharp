@@ -80,7 +80,7 @@ def storeUpvotedPosts(reddit):
             post_entry[fields[0]] = title
             post_entry[fields[1]] = author
             post_entry[fields[2]] = item.subreddit.display_name
-            post_entry[fields[3]] = str(item.created)
+            post_entry[fields[3]] = item.created_utc
             
             contentUrl = item.url
             

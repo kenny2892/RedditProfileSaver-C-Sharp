@@ -30,7 +30,7 @@ namespace RedditPosts.Models
                .AddJsonFile("appsettings.json", true, true)
                .Build();
 
-                List<RedditPost> posts = generatePosts();
+                List<RedditPost> posts = GeneratePosts();
 
                 var newIds = posts.Select(p => p.Number).Distinct().ToArray();
                 var oldIds = context.RedditPost.Where(p => newIds.Contains(p.Number)).Select(p => p.Number).ToArray();
@@ -44,7 +44,7 @@ namespace RedditPosts.Models
             }
         }
 
-        public static List<RedditPost> generatePosts()
+        public static List<RedditPost> GeneratePosts()
         {
             List<RedditPost> posts = new List<RedditPost>();
 
@@ -92,10 +92,7 @@ namespace RedditPosts.Models
                                     break;
 
                                 case "Created (in Seconds)":
-                                    if (Int32.TryParse(value.Value.ToString().Replace(".0", ""), out int seconds))
-                                    {
-                                        dateCreated = dateCreated.AddSeconds(seconds);
-                                    }
+                                    dateCreated = dateCreated.AddSeconds(value.Value.Value<double>());
                                     break;
 
                                 case "Url to Content":
