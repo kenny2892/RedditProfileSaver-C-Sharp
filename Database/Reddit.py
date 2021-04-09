@@ -113,10 +113,11 @@ def storeUpvotedPosts(reddit):
 def convertRedGifsUrl(contentUrl):
     try:
         html = requests.get(contentUrl).text
-        
+    
         startIndex = html.index("og:video\" content=\"") + 19
-        endIndex = html.index("\"/><meta data", startIndex)
-        newUrl = html[startIndex:endIndex]
+        html = html[startIndex:]
+        endIndex = html.index("\" /><meta data")
+        newUrl = html[:endIndex]
         newUrl = newUrl.replace("-mobile.mp4", ".mp4")
         
         # Sleep for 1 Sec
