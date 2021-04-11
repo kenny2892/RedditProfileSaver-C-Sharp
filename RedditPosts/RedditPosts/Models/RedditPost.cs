@@ -68,54 +68,8 @@ namespace RedditPosts.Models
             }
         }
 
-        private string urlContent;
         [Display(Name = "Content")]
-        public string UrlContent
-        {
-            get
-            {
-                if(urlContent.Contains("/gallery/"))
-                {
-                    string[] links = urlContent.Split(" ");
-
-                    if(links.Count() < 2)
-                    {
-                        return links[0];
-                    }
-
-                    return links[1];
-                }
-
-                else if(urlContent.Contains(".gifv"))
-                {
-                    return urlContent.Replace(".gifv", ".mp4");
-                }
-
-                else if(urlContent.Contains("https://gfycat.com/"))
-                {
-                    return urlContent.Replace("https://gfycat.com/", "https://gfycat.com/ifr/");
-                }
-
-                else if(urlContent.Contains("https://imgur.com/") && !urlContent.Contains("/a/")) // An Imgur pic that wasn't posted with the direct link
-                {
-                    return urlContent.Replace("https://imgur.com/", "https://i.imgur.com/") + ".png";
-                }
-
-                else if(urlContent.Contains("http://imgur.com/") && !urlContent.Contains("/a/")) // An Imgur pic that wasn't posted with the direct link
-                {
-                    return urlContent.Replace("http://imgur.com/", "http://i.imgur.com/") + ".png";
-                }
-
-                else if(urlContent.Contains("v.redd.it") && urlContent.Contains(" "))
-                {
-                    return urlContent.Split(" ")[0];
-                }
-
-                return urlContent;
-            }
-
-            set { urlContent = value; }
-        }
+        public string UrlContent { get; set; }
 
         [Display(Name = "Post")]
         public string UrlPost { get; set; }
@@ -127,11 +81,72 @@ namespace RedditPosts.Models
         public bool IsSaved { get; set; }
         [Display(Name = "NSFW")]
         public bool IsNsfw { get; set; }
+
+        public string[] GetContentUrls()
+        {
+            string[] toReturn = new string[] { UrlContent };
+
+            if(UrlContent.Contains("/gallery/"))
+            {
+                toReturn = UrlContent.Split(" ");
+            }
+
+            else if(UrlContent.Contains(".gifv"))
+            {
+                toReturn[0] = toReturn[0].Replace(".gifv", ".mp4");
+            }
+
+            else if(UrlContent.Contains("https://gfycat.com/"))
+            {
+                toReturn[0] = toReturn[0].Replace("https://gfycat.com/", "https://gfycat.com/ifr/");
+            }
+
+            else if(UrlContent.Contains("https://imgur.com/") && !UrlContent.Contains("/a/")) // An Imgur pic that wasn't posted with the direct link
+            {
+                toReturn[0] = toReturn[0].Replace("https://imgur.com/", "https://i.imgur.com/") + ".png";
+            }
+
+            else if(UrlContent.Contains("http://imgur.com/") && !UrlContent.Contains("/a/")) // An Imgur pic that wasn't posted with the direct link
+            {
+                toReturn[0] = toReturn[0].Replace("http://imgur.com/", "http://i.imgur.com/") + ".png";
+            }
+
+            else if(UrlContent.Contains("v.redd.it") && UrlContent.Contains(" "))
+            {
+                toReturn = UrlContent.Split(" ");
+            }
+
+            else if(UrlContent.Contains("youtu.be"))
+            {
+                toReturn[0] = toReturn[0].Replace("https://youtu.be/", "https://www.youtube.com/embed/");
+            }
+
+            else if(UrlContent.Contains("youtube.com"))
+            {
+                toReturn[0] = toReturn[0].Replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/");
+            }
+
+            return toReturn;
+        }
+
         public ContentType GetContentType()
         {
             ContentType type = ContentType.Blank;
 
-            if(urlContent.Contains(" ")) // Contains spaces, meaning it has multiple Urls and is a gallery
+            if(UrlContent.Contains("v.redd.it"))
+            {
+                if(UrlContent.Contains(" "))
+                {
+                    type = ContentType.Vreddit;
+                }
+
+                else
+                {
+                    type = ContentType.VredditPostOnly;
+                }
+            }
+
+            else if(UrlContent.Contains(" "))
             {
                 type = ContentType.Gallery;
             }
@@ -171,19 +186,6 @@ namespace RedditPosts.Models
                 type = ContentType.Gif;
             }
 
-            else if(UrlContent.Contains("v.redd.it"))
-            {
-                if(urlContent.Contains(" "))
-                {
-                    type = ContentType.Vreddit;
-                }
-
-                else
-                {
-                    type = ContentType.VredditPostOnly;
-                }
-            }
-
             else if(UrlContent.Contains("gfycat.com"))
             {
                 type = ContentType.GfyCat;
@@ -202,46 +204,6 @@ namespace RedditPosts.Models
             return type;
         }
 
-        public string GetYoutubeUrl()
-        {
-            if(GetContentType() != ContentType.Youtube)
-            {
-                return "";
-            }
-
-            else if(UrlContent.Contains("youtu.be"))
-            {
-                return UrlContent.Replace("https://youtu.be/", "https://www.youtube.com/embed/");
-            }
-
-            return UrlContent.Replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/");
-        }
-
-        public string[] GetGalleryUrls()
-        {
-            if(GetContentType() != ContentType.Gallery)
-            {
-                return new string[] { UrlContent };
-            }
-
-            return urlContent.Split(" ").Skip(1).ToArray();
-        }
-
-        public string GetImgurId()
-        {
-            if(GetContentType() != ContentType.ImgurGallery)
-            {
-                return "";
-            }
-
-            else if(UrlContent.Contains("https"))
-            {
-                return UrlContent.Replace("https://imgur.com/", "");
-            }
-
-            return UrlContent.Replace("http://imgur.com/", "");
-        }
-
         public string GetImgurIdNum()
         {
             if(GetContentType() != ContentType.ImgurGallery)
@@ -255,6 +217,80 @@ namespace RedditPosts.Models
             }
 
             return UrlContent.Replace("http://imgur.com/a/", "");
+        }
+
+        public int GetVredditWidth()
+        {
+            int width = 50;
+
+            try
+            {
+                if(GetContentType() == ContentType.Vreddit)
+                {
+                    width = Int32.Parse(GetContentUrls()[2]);
+                }
+            }
+
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+
+            return width;
+        }
+
+        public int GetVredditHeight()
+        {
+            int height = 50;
+
+            try
+            {
+                if(GetContentType() == ContentType.Vreddit)
+                {
+                    height = Int32.Parse(GetContentUrls()[3]);
+                }
+            }
+
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.Message);
+            }
+
+            return height;
+        }
+
+        public string GetVredditId()
+        {
+            if(GetContentType() != ContentType.Vreddit)
+            {
+                return "";
+            }
+
+            string id = UrlPost.Substring(UrlPost.IndexOf("comments/") + 9);
+            id = id.Substring(0, id.IndexOf("/"));
+
+            return id;
+        }
+
+        public string GetVredditAspectRatioString()
+        {
+            if(GetContentType() != ContentType.Vreddit)
+            {
+                return "100%";
+            }
+
+            double width = GetVredditWidth();
+            double height = GetVredditHeight();
+
+            double aspRatio = height / width;
+            aspRatio *= 100;
+
+            if(aspRatio > 100)
+            {
+                aspRatio = 100;
+            }
+
+            return aspRatio + "%";
         }
 
         public string GetMobileTitle()

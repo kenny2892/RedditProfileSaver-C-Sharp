@@ -17,7 +17,7 @@
                     break;
 
                 case ContentType.UrlPreview:
-                    <a href="@Url.Content(item.UrlContent)" target="_blank">
+                    <a href="@Url.Content(item.GetContentUrls()[0])" target="_blank">
                         <div class="urlBox">
                             <div>
                                 <img src="@Url.Content(item.UrlThumbnail)" alt="@Html.DisplayFor(modelItem => item.Title)" style="width:190px; height:190px; object-fit:cover; display:block; margin-left:auto; margin-right: auto;" />
@@ -37,7 +37,7 @@
                     <!-- Button trigger modal -->
                     <a data-toggle="modal" data-target=@modalTarget>
                         <h2 style="text-align:center">
-                            <img src="@Url.Content(item.UrlContent)" alt="@Html.DisplayFor(modelItem => item.Title)" style="height:auto; width:auto; max-height:720px; max-width:100%" />
+                            <img src="@Url.Content(item.GetContentUrls()[0])" alt="@Html.DisplayFor(modelItem => item.Title)" style="height:auto; width:auto; max-height:720px; max-width:100%" />
                         </h2>
                     </a>
 
@@ -53,7 +53,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <h2 style="text-align:center">
-                                        <img src=@Url.Content(item.UrlContent) alt=@Html.DisplayTextFor(modelItem => item.Title) style="height:auto; width:auto; max-height:720px; max-width:100%" />
+                                        <img src=@Url.Content(item.GetContentUrls()[0]) alt=@Html.DisplayTextFor(modelItem => item.Title) style="height:auto; width:auto; max-height:720px; max-width:100%" />
                                     </h2>
                                 </div>
                                 <div class="modal-footer">
@@ -65,23 +65,14 @@
                     break;
 
                 case ContentType.Gif:
-                    <a href="@Url.Content(item.UrlContent)">
+                    <a href="@Url.Content(item.GetContentUrls()[0])">
                         <h2 style="text-align:center">
-                            <img src="@Url.Content(item.UrlContent)" alt="@Html.DisplayFor(modelItem => item.Title)" style="height:auto; width:auto; max-height:720px; max-width:100%" />
+                            <img src="@Url.Content(item.GetContentUrls()[0])" alt="@Html.DisplayFor(modelItem => item.Title)" style="height:auto; width:auto; max-height:720px; max-width:100%" />
                         </h2>
                     </a>
                     break;
 
                 case ContentType.ImgurGallery:
-                    /*
-                    <div style="text-align:center">
-                        <blockquote class="imgur-embed-pub" lang="en" data-id=@Url.Content(item.GetImgurId()) data-context="false">
-                            <a href=@Url.Content(item.UrlContent)>@Url.Content(item.Title)</a>
-                        </blockquote>
-                        <script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
-                    </div>
-                    */
-
                     <div style="text-align:center">
                         <iframe allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" class="imgur-embed-iframe-pub imgur-embed-iframe-pub-a-@Url.Content(item.GetImgurIdNum())-false-540" scrolling="no" src="https://imgur.com/a/@Url.Content(item.GetImgurIdNum())/embed?pub=true&amp;ref=https%3A%2F%2Flocalhost%3A44358%2F&amp;context=false&amp;w=540" id="imgur-embed-iframe-pub-a-@Url.Content(item.GetImgurIdNum())" style="height: auto; width: 100%; "></iframe>
                         <script async="" src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
@@ -90,20 +81,20 @@
 
                 case ContentType.RedGifWatch:
                     <div style="text-align:center">
-                        <a href="@Url.Content(item.UrlContent)" style="font-size:32px">Video Link</a>
+                        <a href="@Url.Content(item.GetContentUrls()[0])" style="font-size:32px">Video Link</a>
                     </div>
                     break;
 
                 case ContentType.GfyCat:
                     <div style='position:relative; padding-bottom:calc(70.80% + 44px)'>
-                        <iframe src='@Url.Content(item.UrlContent)?autoplay=0&hd=1&controls=1' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe>
+                        <iframe src='@Url.Content(item.GetContentUrls()[0])?autoplay=0&hd=1&controls=1' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe>
                     </div>
                     break;
 
                 case ContentType.Gifv:
                 case ContentType.Mp4:
                     <video style="height: auto; width: auto; max-height: 720px; max-width: 100%; margin-left: auto; margin-right: auto; display: block;" controls muted loop poster="@item.UrlThumbnail">
-                        <source src="@Url.Content(item.UrlContent)" type="video/mp4">
+                        <source src="@Url.Content(item.GetContentUrls()[0])" type="video/mp4">
                         Your browser does not support the video tag.
                     </video>
                     break;
@@ -116,7 +107,7 @@
 
                 case ContentType.Youtube:
                     <div class="youtube">
-                        <iframe src="@Url.Content(item.GetYoutubeUrl())">
+                        <iframe src="@Url.Content(item.GetContentUrls()[0])">
                         </iframe>
                     </div>
                     break;
@@ -125,7 +116,7 @@
                     string num = "a" + item.ID;
                     string hashNum = "#" + num;
                     int count = 0;
-                    int total = item.GetGalleryUrls().Count();
+                    int total = item.GetContentUrls().Count() - 1;
 
                     <div id=@num class="carousel slide" data-interval="false">
 
@@ -147,7 +138,7 @@
 
                         <!-- The slideshow -->
                         <div class="carousel-inner">
-                            @foreach(string url in item.GetGalleryUrls())
+                            @foreach(string url in item.GetContentUrls().Skip(1))
                             {
                                 if(count == 0)
                                 {
@@ -178,6 +169,15 @@
                     break;
 
                 case ContentType.Vreddit:
+                    <div class="reddit-preview reddit-container" style="padding-bottom: 10px; padding-top: @item.GetVredditAspectRatioString()">
+                        <div class="resp-media" data-src="https%3A%2F%2Fold.reddit.com%2Fmediaembed">
+                            <iframe class="responsive-iframe" frameborder="0" allowfullscreen="" scrolling="no" src="https://old.reddit.com/mediaembed/@item.GetVredditId()"></iframe>
+                        </div>
+                    </div>
+                    <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>
+                    break;
+
+                case ContentType.VredditPostOnly:
                     <blockquote class="reddit-card">
                         <a href="@Url.Content(item.UrlPost)"></a>
                     </blockquote>
@@ -198,7 +198,7 @@
 
             <p>
                 <h4 style="text-align:center">
-                    @Html.DisplayFor(modelItem => item.Author) - 
+                    @Html.DisplayFor(modelItem => item.Author) -
 
                     <span data-toggle="tooltip" title="@item.FullDate">
                         @Html.DisplayFor(modelItem => item.Date)
@@ -210,14 +210,14 @@
             @if(item.UrlThumbnail == "image")
             {
                 <h3 style="text-align:center">
-                    <a href="@Html.DisplayFor(modelItem => item.UrlContent)">Content Link</a> | <a href="@Html.DisplayFor(modelItem => item.UrlPost)">Post Link</a>
+                    <a href="@Html.DisplayFor(modelItem => item.GetContentUrls()[0])">Content Link</a> | <a href="@Html.DisplayFor(modelItem => item.UrlPost)">Post Link</a>
                 </h3>
             }
 
             else
             {
                 <h3 style="text-align:center">
-                    <a href="@Html.DisplayFor(modelItem => item.UrlContent)">Content Link</a> | <a href="@Html.DisplayFor(modelItem => item.UrlPost)">Post Link</a> | <a href="@Html.DisplayFor(modelItem => item.UrlThumbnail)">Thumbnail Link</a>
+                    <a href="@Html.DisplayFor(modelItem => item.GetContentUrls()[0])">Content Link</a> | <a href="@Html.DisplayFor(modelItem => item.UrlPost)">Post Link</a> | <a href="@Html.DisplayFor(modelItem => item.UrlThumbnail)">Thumbnail Link</a>
                 </h3>
             }
 
@@ -236,7 +236,7 @@
                 {
                     <p style="color: darkred"><b>NSFW</b></p>
                 }
-                
+
                 <p>
                     @if(item.Hidden)
                     {
