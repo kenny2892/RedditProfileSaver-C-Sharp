@@ -54,8 +54,9 @@ def storeUpvotedPosts(reddit):
             
             # Make Post Entry Name
             post_name = title + " - " + author + " - " + str(item.created)
+            post_name_utc = title + " - " + author + " - " + str(item.created_utc)
             
-            if post_name in old_upvoted_posts.keys():
+            if post_name in old_upvoted_posts.keys() or post_name_utc in old_upvoted_posts.keys():
                 matches = matches + 1
                 printToFile("Post Already in Archive. " + str((10 - matches)) + " more posts till termination.\n")
                 time.sleep(0.2)
@@ -89,6 +90,9 @@ def storeUpvotedPosts(reddit):
                 
             elif("redgifs" in contentUrl):
                 contentUrl = convertRedGifsUrl(contentUrl)
+                
+            elif("v.redd.it" in contentUrl):
+                contentUrl = convertVredditUrl(item, contentUrl)
             
             post_entry[fields[4]] = contentUrl            
             post_entry[fields[5]] = "https://www.reddit.com" + item.permalink
@@ -109,6 +113,23 @@ def storeUpvotedPosts(reddit):
     except Exception as e:
         printToFile("Something went wrong!\nError Msg:\n" + str(e) + "\n")
         traceback.print_exc()
+        
+def convertVredditUrl(post, contentUrl):
+    try:
+        newUrl = contentUrl
+        postVideo = post.media['reddit_video']
+
+        newUrl = postVideo['fallback_url']
+        newUrl = newUrl.split("?")[0]
+        newUrl = contentUrl + " " + newUrl + " " + str(postVideo['width']) + " " + str(postVideo['height'])
+
+        # Sleep for 100 Millisec
+        time.sleep(0.1)
+
+        return newUrl
+        
+    except:
+        return contentUrl
         
 def convertRedGifsUrl(contentUrl):
     try:

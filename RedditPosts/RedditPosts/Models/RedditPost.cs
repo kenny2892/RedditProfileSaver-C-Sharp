@@ -106,6 +106,11 @@ namespace RedditPosts.Models
                     return urlContent.Replace("http://imgur.com/", "http://i.imgur.com/") + ".png";
                 }
 
+                else if(urlContent.Contains("v.redd.it") && urlContent.Contains(" "))
+                {
+                    return urlContent.Split(" ")[0];
+                }
+
                 return urlContent;
             }
 
@@ -168,7 +173,15 @@ namespace RedditPosts.Models
 
             else if(UrlContent.Contains("v.redd.it"))
             {
-                type = ContentType.Vreddit;
+                if(urlContent.Contains(" "))
+                {
+                    type = ContentType.Vreddit;
+                }
+
+                else
+                {
+                    type = ContentType.VredditPostOnly;
+                }
             }
 
             else if(UrlContent.Contains("gfycat.com"))
