@@ -169,7 +169,7 @@
                     break;
 
                 case ContentType.Vreddit:
-                    <div class="reddit-preview reddit-container" style="padding-bottom: 10px; padding-top: @item.GetVredditAspectRatioString()">
+                    <div class="reddit-preview reddit-container" style="padding-top: @item.GetVredditAspectRatioString()">
                         <div class="resp-media" data-src="https%3A%2F%2Fold.reddit.com%2Fmediaembed">
                             <iframe class="responsive-iframe" frameborder="0" allowfullscreen="" scrolling="no" src="https://old.reddit.com/mediaembed/@item.GetVredditId()"></iframe>
                         </div>
@@ -189,7 +189,7 @@
 
             <div id="horizontal-box">
                 <div id="left-box">
-                    <img src="@(Utility.GetSubredditIcon(item.Subreddit))" alt="" style="width:100px; height:auto;" />
+                    <img src="@(Utility.GetSubredditIcon(item.Subreddit))" alt="" class="subreddit-logo" />
                 </div>
                 <div id="right-box">
                     <h4>r/@Html.DisplayFor(modelItem => item.DisplaySubreddit)</h4>
