@@ -246,6 +246,6 @@ hr {
 
 .subreddit-logo {
     width: 100px;
-    height: auto;
-    clip-path: circle(50% at 50% 50%);
+    height: 100px;
+    clip-path: circle(50% at center);
 }
