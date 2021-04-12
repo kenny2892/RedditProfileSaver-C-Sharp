@@ -11,5 +11,6 @@ namespace RedditPosts.Models
         [Key]
         public string SubredditName { get; set; }
         public string IconUrl { get; set; }
+        public string PrimaryColor { get; set; }
     }
 }

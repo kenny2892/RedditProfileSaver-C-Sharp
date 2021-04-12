@@ -189,7 +189,7 @@
 
             <div id="horizontal-box">
                 <div id="left-box">
-                    <img src="@(Utility.GetSubredditIcon(item.Subreddit))" alt="" class="subreddit-logo" />
+                    <img src="@item.GetSubredditInfo().IconUrl" alt="" class="subreddit-logo" style="background-color: @item.GetSubredditInfo().PrimaryColor"/>
                 </div>
                 <div id="right-box">
                     <h4>r/@Html.DisplayFor(modelItem => item.DisplaySubreddit)</h4>

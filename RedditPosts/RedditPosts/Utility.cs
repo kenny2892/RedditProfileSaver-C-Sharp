@@ -41,9 +41,9 @@ namespace RedditPosts
             return new HtmlString(JsonConvert.SerializeObject(dict));
         }
 
-        public static string GetSubredditIcon(string subredditName)
+        public static SubredditInfo GetSubredditInfo(string subredditName)
         {
-            string toReturn = "https://b.thumbs.redditmedia.com/iTldIIlQVSoH6SPlH9iiPZZVzFWubJU7cOM__uqSOqU.png"; // Default to Reddit Announcements Icon
+            SubredditInfo toReturn = MakeDefaultSubredditInfo();
 
             if(_subredditInfoContext is null || !CreateConfiguration())
             {
@@ -61,12 +61,14 @@ namespace RedditPosts
                 {
                     _subredditInfoContext.Add(subredditInfo);
                     _subredditInfoContext.SaveChanges();
-                }    
+
+                    toReturn = subredditInfo;
+                }
             }
 
             else
             {
-                toReturn = results.ToList().Cast<SubredditInfo>().ElementAt(0).IconUrl;
+                toReturn = results.ToList().Cast<SubredditInfo>().ElementAt(0);
             }
 
             return toReturn;
@@ -80,15 +82,18 @@ namespace RedditPosts
             }
 
             var subsQuery = from m in _subredditInfoContext.SubredditInfo select m;
-            var subredditList = subsQuery.Select(subreddit => subreddit.SubredditName);
+            var subredditList = subsQuery.OrderBy(subreddit => subreddit.SubredditName.ToLower()).Select(subreddit => subreddit.SubredditName);
 
             foreach(string subredditName in subredditList)
             {
                 SubredditInfo subInfo = RetrieveSubredditInfo(subredditName);
                 _subredditInfoContext.Update(subInfo);
                 _subredditInfoContext.SaveChanges();
+
+                System.Threading.Thread.Sleep(700); // Sleep to avoid overloading the Reddit Api
             }
 
+            System.Diagnostics.Debug.WriteLine("Finished updating Subreddits");
             return true;
         }
 
@@ -99,31 +104,44 @@ namespace RedditPosts
                 System.Diagnostics.Debug.WriteLine("GETTING SUBREDDIT: " + subredditName);
 
                 Subreddit subredditAbout = RedditClient.Subreddit(subredditName).About();
-                string communityIcon = subredditAbout.SubredditData.CommunityIcon;
+
+                string primaryColor = !String.IsNullOrEmpty(subredditAbout.PrimaryColor) ? subredditAbout.PrimaryColor : "#000001";
+                string communityIcon = "";
                 string iconImg = "";
                 string url = "https://b.thumbs.redditmedia.com/iTldIIlQVSoH6SPlH9iiPZZVzFWubJU7cOM__uqSOqU.png";
 
-                if(!(subredditAbout.SubredditData.IconImg is null))
+                if(!(subredditAbout.SubredditData.CommunityIcon is null)) // Reddit's current icon system
+                {
+                    communityIcon = subredditAbout.SubredditData.CommunityIcon;
+
+                    if(communityIcon.Contains("&amp;"))
+                    {
+                        communityIcon = communityIcon.Replace("&amp;", "&");
+                    }
+                }
+
+                if(!(subredditAbout.SubredditData.IconImg is null)) // Reddit's old icon system (used as a backup and in outlier cases such as User posts)
                 {
                     iconImg = subredditAbout.SubredditData.IconImg.ToString();
+
+                    if(iconImg.Contains("&amp;"))
+                    {
+                        iconImg = iconImg.Replace("&amp;", "&");
+                    }
                 }
 
-                if(communityIcon.Contains("&amp;s="))
+                if(!String.IsNullOrEmpty(iconImg) || !String.IsNullOrEmpty(communityIcon)) // Try and use new system, but if not available, use old one.
                 {
-                    communityIcon = communityIcon.Replace("&amp;s=", "&s=");
+                    url = !String.IsNullOrEmpty(communityIcon) ? communityIcon : iconImg;
                 }
 
-                if(!String.IsNullOrEmpty(iconImg) || !String.IsNullOrEmpty(communityIcon))
-                {
-                    url = !String.IsNullOrEmpty(iconImg) ? iconImg : communityIcon;
-                }
-
-                return new SubredditInfo { SubredditName = subredditName, IconUrl = url };
+                return new SubredditInfo { SubredditName = subredditName, IconUrl = url, PrimaryColor = primaryColor};
             }
 
             catch(Exception e)
             {
-                return null;
+                System.Diagnostics.Debug.WriteLine("Could not get SubredditInfo: " + subredditName);
+                return MakeDefaultSubredditInfo();
             }
         }
 
@@ -199,6 +217,16 @@ namespace RedditPosts
             {
                 return reader.ReadToEnd();
             }
+        }
+
+        private static SubredditInfo MakeDefaultSubredditInfo()
+        {
+            return new SubredditInfo
+            {
+                SubredditName = "DEFAULT NAME",
+                IconUrl = "https://b.thumbs.redditmedia.com/iTldIIlQVSoH6SPlH9iiPZZVzFWubJU7cOM__uqSOqU.png", // Default to Reddit Announcements Icon
+                PrimaryColor = "#000001"
+            };
         }
     }
 }
