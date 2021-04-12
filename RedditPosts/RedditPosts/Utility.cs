@@ -17,6 +17,8 @@ namespace RedditPosts
 {
     public class Utility // Source: https://stackoverflow.com/a/54167231
     {
+        public static string DefaultSubredditIcon { get; } = "Default";
+
         private static IConfiguration Configuration { get; set; }
         private static SubredditInfoContext _subredditInfoContext;
         private static RedditClient RedditClient { get; set; }
@@ -108,7 +110,7 @@ namespace RedditPosts
                 string primaryColor = !String.IsNullOrEmpty(subredditAbout.PrimaryColor) ? subredditAbout.PrimaryColor : "#000001";
                 string communityIcon = "";
                 string iconImg = "";
-                string url = "https://b.thumbs.redditmedia.com/iTldIIlQVSoH6SPlH9iiPZZVzFWubJU7cOM__uqSOqU.png";
+                string url = DefaultSubredditIcon;
 
                 if(!(subredditAbout.SubredditData.CommunityIcon is null)) // Reddit's current icon system
                 {
@@ -224,7 +226,7 @@ namespace RedditPosts
             return new SubredditInfo
             {
                 SubredditName = "DEFAULT NAME",
-                IconUrl = "https://b.thumbs.redditmedia.com/iTldIIlQVSoH6SPlH9iiPZZVzFWubJU7cOM__uqSOqU.png", // Default to Reddit Announcements Icon
+                IconUrl = DefaultSubredditIcon,
                 PrimaryColor = "#000001"
             };
         }

@@ -12,5 +12,10 @@ namespace RedditPosts.Models
         public string SubredditName { get; set; }
         public string IconUrl { get; set; }
         public string PrimaryColor { get; set; }
+
+        public bool IsDefaultIcon()
+        {
+            return IconUrl == Utility.DefaultSubredditIcon;
+        }
     }
 }

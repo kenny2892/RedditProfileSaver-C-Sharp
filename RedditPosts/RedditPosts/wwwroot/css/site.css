@@ -179,8 +179,11 @@ hr {
     margin-right: auto;
 }
 
-/* Source for HBox: https://stackoverflow.com/a/11931374 */
+.carousel-inner {
+    background-color: #141414;
+}
 
+/* Source for HBox: https://stackoverflow.com/a/11931374 */
 #horizontal-box {
     height: 100%;
     width: 100%;
@@ -248,4 +251,18 @@ hr {
     width: 100px;
     height: 100px;
     clip-path: circle(50% at center);
+}
+
+.subreddit-circle {
+    border-radius: 50%;
+    -moz-border-radius: 50%;
+    -webkit-border-radius: 50%;
+    color: #FFFFFF;
+    display: inline-block;
+    font-weight: bold;
+    line-height: 100px;
+    margin-right: 5px;
+    text-align: center;
+    font-size: 50px;
+    width: 100px;
 }

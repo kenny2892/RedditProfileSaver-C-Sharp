@@ -186,11 +186,19 @@
             }
 
             @* POST DATA *@
-
             <div id="horizontal-box">
                 <div id="left-box">
-                    <img src="@item.GetSubredditInfo().IconUrl" alt="" class="subreddit-logo" style="background-color: @item.GetSubredditInfo().PrimaryColor"/>
+                    @if(item.GetSubredditInfo().IsDefaultIcon()) // Source: https://www.w3docs.com/snippets/css/how-to-add-a-circle-around-a-number-in-css.html
+                    {
+                        <span class="subreddit-circle" style="background: @item.GetSubredditInfo().PrimaryColor">@item.Subreddit.Substring(0, 1).ToUpper()</span>
+                    }
+
+                    else
+                    {
+                        <img src="@item.GetSubredditInfo().IconUrl" alt="" class="subreddit-logo" style="background-color: @item.GetSubredditInfo().PrimaryColor" />
+                    }
                 </div>
+
                 <div id="right-box">
                     <h4>r/@Html.DisplayFor(modelItem => item.DisplaySubreddit)</h4>
                 </div>
