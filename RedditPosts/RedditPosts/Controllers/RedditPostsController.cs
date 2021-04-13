@@ -80,7 +80,7 @@ namespace RedditPosts.Controllers
         {
             if (!HasPasswordAlready())
             {
-                return RedirectToAction("Index", "ShowPassword");
+                return RedirectToAction("Index", "Password");
             }
 
             var postsQuery = from m in _redditPostContext.RedditPost select m;

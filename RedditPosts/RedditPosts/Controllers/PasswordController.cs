@@ -17,7 +17,7 @@ namespace RedditPosts.Controllers
             _configuration = configuration;
         }
 
-        public IActionResult Index(string password = "")
+        public IActionResult Index(string password = "", string redirectTo = "Posts")
         {
             if(HasPasswordAlready() || password == _configuration.GetConnectionString("Password"))
             {
@@ -27,10 +27,15 @@ namespace RedditPosts.Controllers
                     HttpContext.Session.SetString(_configuration.GetConnectionString("PasswordKey"), serialisedPass);
                 }
 
+                if(redirectTo == "Icons")
+                {
+                    return RedirectToAction("Index", "SubredditIcons");
+                }
+
                 return RedirectToAction("Index", "RedditPosts");
             }
 
-            return View();
+            return View("Index" , redirectTo);
         }
 
         private bool HasPasswordAlready()

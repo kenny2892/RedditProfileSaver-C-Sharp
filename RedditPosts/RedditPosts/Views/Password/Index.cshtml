@@ -1,4 +1,6 @@
-﻿@{
+﻿@model string
+
+@{
     ViewData["Title"] = "Password";
 }
 
@@ -15,6 +17,7 @@
         <label for="showPassword"> Show Password</label>
     </div>
 
+    <input type="hidden" name="redirectTo" value="@Model" />
     <input type="submit" value="Submit">
 </form>
 

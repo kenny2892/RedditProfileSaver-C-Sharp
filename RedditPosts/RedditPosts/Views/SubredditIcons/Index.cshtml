@@ -1,0 +1,30 @@
+﻿@model IEnumerable<RedditPosts.Models.SubredditInfo>
+
+@{
+    ViewData["Title"] = "Subreddit Icons";
+}
+
+<h1>Subreddit Icons</h1>
+
+<div class="grid-container">
+    @foreach(var item in Model)
+    {
+        <div class="grid-item">
+            <h5>@item.SubredditName</h5>
+            @if(item.IsDefaultIcon()) // Source: https://www.w3docs.com/snippets/css/how-to-add-a-circle-around-a-number-in-css.html
+            {
+                <span class="subreddit-circle" style="background: @item.PrimaryColor">@item.SubredditName.Substring(0, 1).ToUpper()</span>
+            }
+
+            else
+            {
+                <img src="@item.IconUrl" alt="" class="subreddit-logo" style="background-color: @item.PrimaryColor" />
+            }
+        </div>
+    }
+</div>
+
+@section Scripts
+{
+    
+}
