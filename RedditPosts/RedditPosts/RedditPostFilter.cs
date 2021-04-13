@@ -165,7 +165,6 @@ namespace RedditPosts
                     string noDashKeyword = keyword.Substring(1);
 
                     keywords.RemoveAt(i);
-                    keywords.Add(noDashKeyword);
                     bannedKeywords.Add(noDashKeyword);
                 }
             }
