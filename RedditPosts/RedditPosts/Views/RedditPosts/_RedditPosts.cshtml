@@ -200,7 +200,11 @@
                 </div>
 
                 <div id="right-box">
-                    <h4>r/@Html.DisplayFor(modelItem => item.DisplaySubreddit)</h4>
+                    <h4>
+                        <span data-toggle="tooltip" title="r/@item.Subreddit">
+                            r/@Html.DisplayFor(modelItem => item.DisplaySubreddit)
+                        </span>
+                    </h4>
                 </div>
             </div>
 

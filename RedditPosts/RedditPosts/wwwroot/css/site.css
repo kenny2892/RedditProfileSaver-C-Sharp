@@ -101,7 +101,7 @@ h1, h2, h3, h4, h5, h6, p, div {
 }
 
 hr {
-    background-color: #212121;
+    background-color: #dee2e6;
 }
 
 #topScrollBtn, #autoScrollBtn {
@@ -269,12 +269,18 @@ hr {
 
 .grid-container {
     display: grid;
-    grid-template-columns: auto auto auto;
-    padding: 10px;
+    grid-template-columns: auto auto;
+    width: 75%;
+    margin: auto;
 }
 
 .grid-item {
-    padding: 20px;
     font-size: 30px;
     text-align: center;
+    width: 75%;
+}
+
+.grid-line {
+    background-color: #dee2e6;
+    width: 75%;
 }
