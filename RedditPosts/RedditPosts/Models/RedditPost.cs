@@ -42,20 +42,6 @@ namespace RedditPosts.Models
         }
         public string Author { get; set; }
         public string Subreddit { get; set; }
-        public string DisplaySubreddit // If word is to long, split it to avoid the table being to wide for mobile display
-        {
-            get
-            {
-                string toReturn = Subreddit;
-
-                if(toReturn.Length > 15)
-                {
-                    toReturn = toReturn.Substring(0, 12) + "...";
-                }
-
-                return toReturn;
-            }
-        }
         public bool Hidden { get; set; }
 
         [DataType(DataType.Date)]

@@ -318,3 +318,10 @@ btn:hover {
     padding-right: 10px;
     margin-right: 20px;
 }
+
+.subreddit-name-display {
+    text-overflow: ellipsis;
+    width: calc(100%);
+    overflow: hidden;
+    padding-bottom: 5px;
+}

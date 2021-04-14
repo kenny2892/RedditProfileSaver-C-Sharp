@@ -37,7 +37,7 @@
                     <!-- Button trigger modal -->
                     <a data-toggle="modal" data-target=@modalTarget>
                         <h2 style="text-align:center">
-                            <img src="@Url.Content(item.GetContentUrls()[0])" alt="@Html.DisplayFor(modelItem => item.Title)" style="height:auto; width:auto; max-height:720px; max-width:100%" />
+                            <img src="@Url.Content(item.GetContentUrls()[0])" alt="@Html.DisplayFor(modelItem => item.Title)" style="height:auto; width:auto; max-height:720px; max-width:100%; cursor: pointer;" />
                         </h2>
                     </a>
 
@@ -200,10 +200,8 @@
                 </div>
 
                 <div id="right-box">
-                    <h4>
-                        <span data-toggle="tooltip" title="r/@item.Subreddit">
-                            r/@Html.DisplayFor(modelItem => item.DisplaySubreddit)
-                        </span>
+                    <h4 class="subreddit-name-display">
+                        r/@Html.DisplayFor(modelItem => item.Subreddit)
                     </h4>
                 </div>
             </div>
