@@ -10,7 +10,7 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-dark navbar-toggleable-sm border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Reddit Profiler</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
@@ -31,11 +31,8 @@
                     </ul>
                 </div>
 
-                <div>
-                    <input class="pin-nav-btn" type="checkbox" id="checkbox" />
-                </div>
-
                 <div class="theme-switch-wrapper">
+                    <button id="pin-nav-btn">Pin</button>
                     <h6>Light Mode</h6>
                     <label class="theme-switch" for="checkbox">
                         <input type="checkbox" id="checkbox" />
@@ -54,7 +51,8 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2021 - Reddit Profiler - Not affiliated with Reddit Inc. - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2021 - Reddit Profiler - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <p>Not affiliated with Reddit Inc.</p>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
@@ -63,6 +61,7 @@
     <script>
         var setupTheme = SetupThemeToggle();
         var setupPin = SetupPinToggle();
+        var setupMobile = SetupMobileChanges();
     </script>
     @RenderSection("Scripts", required: false)
 </body>

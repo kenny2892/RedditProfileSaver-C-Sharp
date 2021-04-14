@@ -12,6 +12,7 @@ for details on configuring this project to bundle and minify static web assets. 
     --btn-hover-bg-color: #545454;
     --carousel-bg-color: #141414;
     --modal-bg-color: black;
+    --nav-mobile-img: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(255, 255, 255, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
 [data-theme="light"] {
@@ -25,6 +26,17 @@ for details on configuring this project to bundle and minify static web assets. 
     --btn-hover-bg-color: #545454;
     --carousel-bg-color: #141414;
     --modal-bg-color: white;
+    --nav-mobile-img: url("data:image/svg+xml,%3csvg viewBox='0 0 30 30' xmlns='http://www.w3.org/2000/svg'%3e%3cpath stroke='rgba(0, 0, 0, 0.5)' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+:root {
+    --subreddit-logo-diameter: 100px;
+    --subreddit-name-top-margin: 30px;
+}
+
+[data-device="mobile"] {
+    --subreddit-logo-diameter: 50px;
+    --subreddit-name-top-margin: 15px;
 }
 
 a.navbar-brand {
@@ -73,7 +85,7 @@ button.accept-policy {
     bottom: 0;
     width: 100%;
     white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
+    line-height: 30px;
 }
 
 /* Styles */
@@ -84,6 +96,14 @@ button.accept-policy {
 
 .nav-link, .navbar-brand {
     color: var(--txt-color) !important;
+}
+
+.navbar-toggler {
+    background-color: var(--btn-bg-color) !important;
+}
+
+.navbar-toggler-icon {
+    background-image: var(--nav-mobile-img);
 }
 
 body {
@@ -231,7 +251,7 @@ btn:hover {
 }
 
 #right-box h4 {
-    margin-top: 30px;
+    margin-top: var(--subreddit-name-top-margin);
 }
 
 .hide_post_modal .modal-dialog .modal-content {
@@ -255,8 +275,8 @@ btn:hover {
 }
 
 .subreddit-logo {
-    width: 100px;
-    height: 100px;
+    width: var(--subreddit-logo-diameter);
+    height: var(--subreddit-logo-diameter);
     clip-path: circle(50% at center);
 }
 
@@ -267,11 +287,11 @@ btn:hover {
     color: #FFFFFF;
     display: inline-block;
     font-weight: bold;
-    line-height: 100px;
+    line-height: var(--subreddit-logo-diameter);
     margin-right: 5px;
     text-align: center;
     font-size: 50px;
-    width: 100px;
+    width: var(--subreddit-logo-diameter);
 }
 
 .grid-container {
@@ -289,4 +309,10 @@ btn:hover {
 
 .grid-line {
     width: 75%;
+}
+
+#pin-nav-btn {
+    padding-left: 10px;
+    padding-right: 10px;
+    margin-right: 20px;
 }
