@@ -31,6 +31,10 @@
                     </ul>
                 </div>
 
+                <div>
+                    <input class="pin-nav-btn" type="checkbox" id="checkbox" />
+                </div>
+
                 <div class="theme-switch-wrapper">
                     <h6>Light Mode</h6>
                     <label class="theme-switch" for="checkbox">
@@ -42,7 +46,7 @@
             </div>
         </nav>
     </header>
-    <div class="container">
+    <div class="container content-body">
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
@@ -58,6 +62,7 @@
     <script src="~/js/Layout.js" asp-append-version="true"></script>
     <script>
         var setupTheme = SetupThemeToggle();
+        var setupPin = SetupPinToggle();
     </script>
     @RenderSection("Scripts", required: false)
 </body>
