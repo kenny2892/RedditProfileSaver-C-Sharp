@@ -32,11 +32,13 @@ for details on configuring this project to bundle and minify static web assets. 
 :root {
     --subreddit-logo-diameter: 100px;
     --subreddit-name-top-margin: 30px;
+    --icons-grid-colms: auto auto auto;
 }
 
 [data-device="mobile"] {
     --subreddit-logo-diameter: 50px;
     --subreddit-name-top-margin: 15px;
+    --icons-grid-colms: auto auto;
 }
 
 a.navbar-brand {
@@ -296,7 +298,7 @@ btn:hover {
 
 .grid-container {
     display: grid;
-    grid-template-columns: auto auto;
+    grid-template-columns: var(--icons-grid-colms);
     width: 75%;
     margin: auto;
 }
