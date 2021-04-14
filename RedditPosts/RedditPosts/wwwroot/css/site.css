@@ -1,33 +1,46 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+:root {
+    --link-color: #0366d6;
+    --body-bg-color: #424242;
+    --txt-color: white;
+    --hor-line-color: #dee2e6;
+    --btn-bg-color: black;
+    --btn-txt-color: black;
+    --btn-hover-bg-color: #545454;
+    --carousel-bg-color: #141414;
+    --modal-bg-color: black;
+}
+
+[data-theme="light"] {
+    --link-color: #0366d6;
+    --body-bg-color: #424242;
+    --txt-color: white;
+    --hor-line-color: #dee2e6;
+    --btn-bg-color: black;
+    --btn-txt-color: black;
+    --btn-hover-bg-color: #545454;
+    --carousel-bg-color: #141414;
+    --modal-bg-color: black;
+}
+
 a.navbar-brand {
     white-space: normal;
     text-align: center;
     word-break: break-all;
 }
 
-/* Provide sufficient contrast against white background */
 a {
-    color: #0366d6;
-}
-
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+    color: var(--link-color);
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
     font-size: 14px;
+    position: relative;
+    min-height: 100%;
 }
 
 @media (min-width: 768px) {
@@ -53,18 +66,6 @@ button.accept-policy {
     line-height: inherit;
 }
 
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-    position: relative;
-    min-height: 100%;
-}
-
-body {
-    /* Margin bottom by footer height */
-    margin-bottom: 60px;
-}
-
 .footer {
     position: absolute;
     bottom: 0;
@@ -76,7 +77,9 @@ body {
 /* Styles */
 
 body {
-    background-color: #424242;
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+    background-color: var(--body-bg-color);
 }
 
 /* Source: https://coolestguidesontheplanet.com/videodrome/youtube/ */
@@ -97,28 +100,32 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6, p, div {
-    color: white;
+    color: var(--txt-color);
 }
 
 hr {
-    background-color: #dee2e6;
+    background-color: var(--hor-line-color);
+}
+
+btn {
+    background-color: var(--btn-bg-color);
+    color: var(--btn-txt-color);
+    border: none;
+    outline: none;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+btn:hover {
+    background-color: var(--btn-hover-bg-color);
 }
 
 #topScrollBtn, #autoScrollBtn {
     position: fixed;
     bottom: 20px;
     font-size: 18px;
-    border: none;
-    outline: none;
-    background-color: black;
-    color: white;
-    cursor: pointer;
     padding: 15px;
-    border-radius: 4px;
-}
-
-#topScrollBtn:hover, #autoScrollBtn:hover {
-    background-color: #555;
 }
 
 #topScrollBtn {
@@ -137,8 +144,8 @@ hr {
     font-size: 18px;
     border: none;
     outline: none;
-    background-color: black;
-    color: white;
+    background-color: var(--btn-bg-color);
+    color: var(--btn-txt-color);
     cursor: pointer;
     border-radius: 4px;
 }
@@ -180,7 +187,7 @@ hr {
 }
 
 .carousel-inner {
-    background-color: #141414;
+    background-color: var(--carousel-bg-color);
 }
 
 /* Source for HBox: https://stackoverflow.com/a/11931374 */
@@ -218,17 +225,7 @@ hr {
 }
 
 .hide_post_modal .modal-dialog .modal-content {
-    background-color: black !important;
-}
-
-.night-mode-btn {
-    border: none;
-    outline: none;
-    background-color: black;
-    color: white;
-    cursor: pointer;
-    padding: 5px;
-    border-radius: 4px;
+    background-color: var(--modal-bg-color) !important;
 }
 
 .reddit-container {
@@ -281,6 +278,5 @@ hr {
 }
 
 .grid-line {
-    background-color: #dee2e6;
     width: 75%;
 }
