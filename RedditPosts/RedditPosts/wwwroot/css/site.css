@@ -2,27 +2,29 @@
 for details on configuring this project to bundle and minify static web assets. */
 
 :root {
+    --navbar-bg-color: #1c1c1c;
     --link-color: #0366d6;
     --body-bg-color: #424242;
     --txt-color: white;
     --hor-line-color: #dee2e6;
     --btn-bg-color: black;
-    --btn-txt-color: black;
+    --btn-txt-color: white;
     --btn-hover-bg-color: #545454;
     --carousel-bg-color: #141414;
     --modal-bg-color: black;
 }
 
 [data-theme="light"] {
+    --navbar-bg-color: white;
     --link-color: #0366d6;
-    --body-bg-color: #424242;
-    --txt-color: white;
-    --hor-line-color: #dee2e6;
-    --btn-bg-color: black;
+    --body-bg-color: white;
+    --txt-color: black;
+    --hor-line-color: black;
+    --btn-bg-color: #dedede;
     --btn-txt-color: black;
     --btn-hover-bg-color: #545454;
     --carousel-bg-color: #141414;
-    --modal-bg-color: black;
+    --modal-bg-color: white;
 }
 
 a.navbar-brand {
@@ -76,6 +78,14 @@ button.accept-policy {
 
 /* Styles */
 
+.navbar {
+    background-color: var(--navbar-bg-color) !important;
+}
+
+.nav-link, .navbar-brand {
+    color: var(--txt-color) !important;
+}
+
 body {
     /* Margin bottom by footer height */
     margin-bottom: 60px;
@@ -107,7 +117,7 @@ hr {
     background-color: var(--hor-line-color);
 }
 
-btn {
+btn, button {
     background-color: var(--btn-bg-color);
     color: var(--btn-txt-color);
     border: none;
