@@ -1,6 +1,10 @@
-﻿@model IEnumerable<RedditPosts.Models.RedditPost>
+﻿@model RedditPosts.ViewModels.RedditPostsViewModel
 
-@foreach(var item in Model)
+@{ 
+    var subredditDict = Model.Subreddits;
+}
+
+@foreach(var item in Model.Posts)
 {
     <tr style="width:100%">
         <td style="width:100%">
@@ -188,14 +192,14 @@
             @* POST DATA *@
             <div id="horizontal-box">
                 <div id="left-box">
-                    @if(item.GetSubredditInfo().IsDefaultIcon()) // Source: https://www.w3docs.com/snippets/css/how-to-add-a-circle-around-a-number-in-css.html
+                    @if(subredditDict[item.Subreddit].IsDefaultIcon()) // Source: https://www.w3docs.com/snippets/css/how-to-add-a-circle-around-a-number-in-css.html
                     {
-                        <span class="subreddit-circle" style="background: @item.GetSubredditInfo().PrimaryColor">@item.Subreddit.Substring(0, 1).ToUpper()</span>
+                        <span class="subreddit-circle" style="background: @subredditDict[item.Subreddit].PrimaryColor">@item.Subreddit.Substring(0, 1).ToUpper()</span>
                     }
 
                     else
                     {
-                        <img src="@item.GetSubredditInfo().IconUrl" alt="" class="subreddit-logo" style="background-color: @item.GetSubredditInfo().PrimaryColor" />
+                        <img src="@subredditDict[item.Subreddit].IconUrl" alt="" class="subreddit-logo" style="background-color: @subredditDict[item.Subreddit].PrimaryColor" />
                     }
                 </div>
 

@@ -197,11 +197,6 @@ namespace RedditPosts.Controllers
             return toReturn;
         }
 
-        public bool UpdateIcons()
-        {
-            return Utility.UpdateSubredditIcons();
-        }
-
         public string GetPythonExePath()
         {
             return _configuration.GetConnectionString("PythonExe");

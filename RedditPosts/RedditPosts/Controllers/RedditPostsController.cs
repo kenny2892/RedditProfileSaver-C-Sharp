@@ -50,8 +50,14 @@ namespace RedditPosts.Controllers
             RedditPostFilter filter = new RedditPostFilter(vm, postsEnumerable);
             postsEnumerable = filter.FilterPosts();
 
-            var model = postsEnumerable.Skip(firstItem).Take(BATCH_SIZE).ToList();
-            if (model.Count() == 0) return StatusCode(204);  // 204 := "No Content"
+            var postsModel = postsEnumerable.Skip(firstItem).Take(BATCH_SIZE).ToList();
+            if (postsModel.Count() == 0) return StatusCode(204);  // 204 := "No Content"
+
+            RedditPostsViewModel model = new RedditPostsViewModel()
+            {
+                Posts = postsModel,
+                Subreddits = GetSubredditDictionary()
+            };
 
             return PartialView(model);
         }

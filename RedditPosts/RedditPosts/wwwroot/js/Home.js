@@ -110,7 +110,7 @@
 
         $.ajax // Launch the retrieval Python Script
         ({
-            url: "/Home/UpdateIcons",
+            url: "/Home/UpdateSubredditIcons",
             data: {}
         })
         .done(function(result) 

@@ -310,10 +310,5 @@ namespace RedditPosts.Models
 
             return toReturn;
         }
-
-        public SubredditInfo GetSubredditInfo()
-        {
-            return Utility.GetSubredditInfo(Subreddit);
-        }
     }
 }
