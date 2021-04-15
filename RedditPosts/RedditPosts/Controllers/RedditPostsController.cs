@@ -15,52 +15,13 @@ using RedditPosts.ViewModels;
 
 namespace RedditPosts.Controllers
 {
-    public class RedditPostsController : Controller
+    public class RedditPostsController : BaseController
     {
-        private readonly RedditPostContext _redditPostContext;
-        private readonly SubredditInfoContext _subredditContext;
-        private readonly IConfiguration _configuration;
         private const int BATCH_SIZE = 25;
 
-        public RedditPostsController(RedditPostContext redditPostContext, SubredditInfoContext subredditContext, IConfiguration configuration)
+        public RedditPostsController(RedditPostContext redditPostContext, SubredditInfoContext subredditInfoContext, IConfiguration configuration) : base(redditPostContext, subredditInfoContext, configuration)
         {
-            _redditPostContext = redditPostContext;
-            _subredditContext = subredditContext;
-            _configuration = configuration;
 
-            Utility.Initialize(_subredditContext);
-        }
-
-        private bool HasPasswordAlready()
-        {
-            string passValue = HttpContext.Session.GetString(_configuration.GetConnectionString("PasswordKey"));
-
-            if (!string.IsNullOrEmpty(passValue))
-            {
-                return passValue == "\"" + _configuration.GetConnectionString("Password") + "\"";
-            }
-
-            return false;
-        }
-
-        private bool IsMobile()
-        {
-            try
-            {
-                var dd = new DeviceDetector(Request.Headers["User-Agent"].ToString());
-                dd.Parse();
-
-                var device = dd.GetDeviceName();
-
-                return device != "desktop";
-            }
-
-            catch(Exception e)
-            {
-                Console.WriteLine(e.Message);
-            }
-
-            return false;
         }
 
         public IActionResult Index(RedditViewModel vm)

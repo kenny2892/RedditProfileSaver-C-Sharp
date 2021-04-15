@@ -15,29 +15,11 @@ using RedditPosts.ViewModels;
 
 namespace RedditPosts.Controllers
 {
-    public class SubredditIconsController : Controller
+    public class SubredditIconsController : BaseController
     {
-        private readonly SubredditInfoContext _subredditContext;
-        private readonly IConfiguration _configuration;
-
-        public SubredditIconsController(SubredditInfoContext subredditContext, IConfiguration configuration)
+        public SubredditIconsController(RedditPostContext redditPostContext, SubredditInfoContext subredditInfoContext, IConfiguration configuration) : base(redditPostContext, subredditInfoContext, configuration)
         {
-            _subredditContext = subredditContext;
-            _configuration = configuration;
 
-            Utility.Initialize(_subredditContext);
-        }
-
-        private bool HasPasswordAlready()
-        {
-            string passValue = HttpContext.Session.GetString(_configuration.GetConnectionString("PasswordKey"));
-
-            if (!string.IsNullOrEmpty(passValue))
-            {
-                return passValue == "\"" + _configuration.GetConnectionString("Password") + "\"";
-            }
-
-            return false;
         }
 
         public IActionResult Index()
@@ -47,7 +29,7 @@ namespace RedditPosts.Controllers
                 return RedirectToAction("Index", "Password", new { redirectTo = "Icons" });
             }
 
-            var iconQuery = from m in _subredditContext.SubredditInfo select m;
+            var iconQuery = from m in _subredditInfoContext.SubredditInfo select m;
             iconQuery = iconQuery.OrderBy(subreddit => subreddit.SubredditName.ToLower());
 
             return View(iconQuery.ToList());

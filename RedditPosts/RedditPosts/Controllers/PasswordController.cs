@@ -6,25 +6,25 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using RedditPosts.Data;
 
 namespace RedditPosts.Controllers
 {
-    public class PasswordController : Controller
+    public class PasswordController : BaseController
     {
-        private readonly IConfiguration _configuration;
-        public PasswordController(IConfiguration configuration)
+        public PasswordController(RedditPostContext redditPostContext, SubredditInfoContext subredditInfoContext, IConfiguration configuration) : base(redditPostContext, subredditInfoContext, configuration)
         {
-            _configuration = configuration;
+
         }
 
         public IActionResult Index(string password = "", string redirectTo = "Posts")
         {
-            if(HasPasswordAlready() || password == _configuration.GetConnectionString("Password"))
+            if(HasPasswordAlready() || password == GetConnectionString("Password"))
             {
-                if(password == _configuration.GetConnectionString("Password"))
+                if(password == GetConnectionString("Password"))
                 {
-                    var serialisedPass = JsonConvert.SerializeObject(_configuration.GetConnectionString("Password"));
-                    HttpContext.Session.SetString(_configuration.GetConnectionString("PasswordKey"), serialisedPass);
+                    var serialisedPass = JsonConvert.SerializeObject(GetConnectionString("Password"));
+                    SetSessionString(GetConnectionString("PasswordKey"), serialisedPass);
                 }
 
                 if(redirectTo == "Icons")
@@ -36,18 +36,6 @@ namespace RedditPosts.Controllers
             }
 
             return View("Index" , redirectTo);
-        }
-
-        private bool HasPasswordAlready()
-        {
-            string passValue = HttpContext.Session.GetString(_configuration.GetConnectionString("PasswordKey"));
-
-            if(!string.IsNullOrEmpty(passValue))
-            {
-                return passValue == "\"" + _configuration.GetConnectionString("Password") + "\"";
-            }
-
-            return false;
         }
     }
 }

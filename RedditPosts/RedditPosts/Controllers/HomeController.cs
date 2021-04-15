@@ -15,24 +15,16 @@ using System.Threading.Tasks;
 
 namespace RedditPosts.Controllers
 {
-    public class HomeController : Controller
+    public class HomeController : BaseController
     {
-        private readonly RedditPostContext _redditPostContext;
-        private readonly SubredditInfoContext _subredditInfoContext;
-        private readonly IConfiguration _configuration;
-
         private static bool RetrievingUpvotes { get; set; } = false;
         private static bool RunningScript { get; set; } = false;
         private static bool FinishedScript { get; set; } = false;
         private static int UpvoteCount { get; set; }
 
-        public HomeController(RedditPostContext redditPostContext, SubredditInfoContext subredditInfoContext, IConfiguration configuration)
+        public HomeController(RedditPostContext redditPostContext, SubredditInfoContext subredditInfoContext, IConfiguration configuration) : base(redditPostContext, subredditInfoContext, configuration)
         {
-            _redditPostContext = redditPostContext;
-            _subredditInfoContext = subredditInfoContext;
-            _configuration = configuration;
 
-            Utility.Initialize(_subredditInfoContext);
         }
 
         public IActionResult Index()

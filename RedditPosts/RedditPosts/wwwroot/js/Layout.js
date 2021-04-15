@@ -1,32 +1,53 @@
 ﻿function SetupThemeToggle() // Source: https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
 {
-    const currentTheme = sessionStorage.getItem('theme') ? sessionStorage.getItem('theme') : null;
+    var currentTheme = "dark";
     const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
     toggleSwitch.checked = true;
 
-    if(currentTheme)
-    {
-        document.documentElement.setAttribute('data-theme', currentTheme);
-
-        if(currentTheme === 'light')
+    $.ajax
+    ({
+        url: "/Base/GetSessionString",
+        data: { key: "Theme" },
+        success: function(value)
         {
-            toggleSwitch.checked = false;
-        }
-    }
+            if(value != null && currentTheme === "light")
+            {
+                currentTheme = value;
+                toggleSwitch.checked = false;
+            }
+        },
+    });
+
+    document.documentElement.setAttribute('data-theme', currentTheme);
 
     function switchTheme(e)
     {
+        var theme = "light";
+
         if(e.target.checked)
         {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            sessionStorage.setItem('theme', 'dark');
+            theme = "dark";
         }
 
-        else
-        {
-            document.documentElement.setAttribute('data-theme', 'light');
-            sessionStorage.setItem('theme', 'light');
-        }
+        document.documentElement.setAttribute('data-theme', theme);
+
+        $.ajax
+        ({
+            url: "/Base/SetSessionString",
+            data: { key: "Theme", value: theme },
+            success: function(data)
+            {
+                //if(data)
+                //{
+                //    console.log("YES");
+                //}
+
+                //else
+                //{
+                //    console.log("NO");
+                //}
+            },
+        });
     }
 
     toggleSwitch.addEventListener('change', switchTheme, false);
@@ -35,12 +56,18 @@
 function SetupPinToggle()
 {
     var isPinned = false;
-
-    const pinnedValue = sessionStorage.getItem('pinned') ? sessionStorage.getItem('pinned') : null;
-    if(pinnedValue === "true")
-    {
-        isPinned = true;
-    }
+    $.ajax
+    ({
+        url: "/Base/GetSessionString",
+        data: { key: "Pinned" },
+        success: function(value)
+        {
+            if(value != null && value === "true")
+            {
+                isPinned = true;
+            }
+        },
+    });
 
     const navbarPinBtn = document.getElementById("pin-nav-btn");
     const navbar = document.querySelector('.navbar');
@@ -52,7 +79,6 @@ function SetupPinToggle()
         {
             navbar.classList.add("fixed-top");
             navbarPinBtn.textContent = "Unpin";
-            sessionStorage.setItem("pinned", "true");
 
             if(IsMobile())
             {
@@ -70,8 +96,25 @@ function SetupPinToggle()
             navbar.classList.remove("fixed-top");
             body.setAttribute("style", "padding-top: none;");
             navbarPinBtn.textContent = "Pin";
-            sessionStorage.setItem("pinned", "false");
         }
+
+        $.ajax
+        ({
+            url: "/Base/SetSessionString",
+            data: { key: "Pinned", value: isPinned.toString() },
+            success: function(data)
+            {
+                //if(data)
+                //{
+                //    console.log("YES");
+                //}
+
+                //else
+                //{
+                //    console.log("NO");
+                //}
+            },
+        });
     }
 
     navbarPinBtn.onclick = function()
