@@ -279,31 +279,6 @@ namespace RedditPosts.Models
             return aspRatio + "%";
         }
 
-        public string GetMobileTitle()
-        {
-            StringBuilder sb = new StringBuilder();
-            string[] words = Title.Split(" ");
-
-            for(int i = 0; i < words.Count(); i++)
-            {
-                string word = words[i];
-
-                if(word.Length > 15) // If word is to long, split it in half as to avoid the table being to wide for mobile display
-                {
-                    word = word.Substring(0, word.Length / 2) + "\n" + word.Substring(word.Length / 2);
-                }
-
-                if(i != 0)
-                {
-                    word = " " + word;
-                }
-
-                sb.Append(word);
-            }
-
-            return sb.ToString();
-        }
-
         public string GetTwitterHtml()
         {
             string toReturn = "<b>TWITTER DEFAULT HTML</b>";
