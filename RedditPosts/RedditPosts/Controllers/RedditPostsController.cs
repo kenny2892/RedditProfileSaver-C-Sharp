@@ -24,15 +24,6 @@ namespace RedditPosts.Controllers
 
         }
 
-        private IEnumerable<RedditPost> RetrieveFilteredPosts(RedditViewModel vm)
-        {
-            IQueryable<RedditPost> postsQuery = from m in _redditPostContext.RedditPost select m;
-            IEnumerable<RedditPost> postsEnumerable = postsQuery.ToList().AsEnumerable();
-
-            RedditPostFilter filter = new RedditPostFilter(vm);
-            return filter.FilterPosts(postsEnumerable);
-        }
-
         public IActionResult Index(RedditViewModel vm)
         {
             if(!HasPasswordAlready())
@@ -59,6 +50,8 @@ namespace RedditPosts.Controllers
             List<RedditPost> postsModel = filteredPosts.Skip(firstItem).Take(BATCH_SIZE).ToList();
             if (postsModel.Count() == 0) return StatusCode(204);  // 204 := "No Content"
 
+            CheckSubredditInfos(postsModel);
+
             RedditPostsViewModel model = new RedditPostsViewModel()
             {
                 Posts = postsModel,
@@ -66,6 +59,24 @@ namespace RedditPosts.Controllers
             };
 
             return PartialView(model);
+        }
+
+        private IEnumerable<RedditPost> RetrieveFilteredPosts(RedditViewModel vm)
+        {
+            IQueryable<RedditPost> postsQuery = from m in _redditPostContext.RedditPost select m;
+            IEnumerable<RedditPost> postsEnumerable = postsQuery.ToList().AsEnumerable();
+
+            RedditPostFilter filter = new RedditPostFilter(vm);
+            return filter.FilterPosts(postsEnumerable);
+        }
+
+        private void CheckSubredditInfos(List<RedditPost> posts)
+        {
+            var subredditNames = posts.Select(post => post.Subreddit).Distinct().ToList();
+            foreach(string subredditName in subredditNames)
+            {
+                GetSubredditInfo(subredditName);
+            }
         }
 
         // GET: RedditPosts/Details/5

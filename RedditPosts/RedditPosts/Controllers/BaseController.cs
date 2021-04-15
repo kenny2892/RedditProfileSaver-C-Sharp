@@ -236,11 +236,18 @@ namespace RedditPosts.Controllers
                 return new SubredditInfo { SubredditName = subredditName, IconUrl = url, PrimaryColor = primaryColor };
             }
 
-            catch(Exception e)
+            catch(Exception)
             {
                 System.Diagnostics.Debug.WriteLine("Could not get SubredditInfo: " + subredditName);
-                return Utility.MakeDefaultSubredditInfo();
             }
+
+            // Only to be used if the subreddit was unable to be reached
+            SubredditInfo backup = Utility.MakeDefaultSubredditInfo();
+            backup.SubredditName = subredditName;
+            backup.PrimaryColor = GenerateSubredditColor(subredditName);
+            backup.IconUrl = Utility.DefaultSubredditIcon;
+
+            return backup;
         }
 
         private string GenerateSubredditColor(string subredditName) // Source: https://stackoverflow.com/a/57726983
