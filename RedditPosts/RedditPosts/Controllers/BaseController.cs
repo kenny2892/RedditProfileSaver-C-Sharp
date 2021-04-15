@@ -174,13 +174,26 @@ namespace RedditPosts.Controllers
                 return false;
             }
 
-            var subsQuery = from m in _subredditInfoContext.SubredditInfo select m;
-            var subredditList = subsQuery.OrderBy(subreddit => subreddit.SubredditName.ToLower()).Select(subreddit => subreddit.SubredditName);
+            var postsQuery = from m in _redditPostContext.RedditPost select m;
+            var subredditQuery = from m in _subredditInfoContext.SubredditInfo select m;
 
-            foreach(string subredditName in subredditList)
+            var subredditsToCheck = postsQuery.Select(post => post.Subreddit).Distinct().OrderBy(name => name.ToLower()).ToList();
+            var subredditsAlreadyExist = subredditQuery.Select(sub => sub.SubredditName).Distinct().OrderBy(name => name.ToLower()).ToList();
+
+            foreach(string subredditName in subredditsToCheck)
             {
                 SubredditInfo subInfo = RetrieveSubredditInfo(subredditName);
-                _subredditInfoContext.Update(subInfo);
+
+                if(subredditsAlreadyExist.Contains(subredditName))
+                {
+                    _subredditInfoContext.Update(subInfo);
+                }
+
+                else
+                {
+                    _subredditInfoContext.Add(subInfo);
+                }
+
                 _subredditInfoContext.SaveChanges();
 
                 System.Threading.Thread.Sleep(700); // Sleep to avoid overloading the Reddit Api
@@ -238,7 +251,7 @@ namespace RedditPosts.Controllers
 
             catch(Exception)
             {
-                System.Diagnostics.Debug.WriteLine("Could not get SubredditInfo: " + subredditName);
+                System.Diagnostics.Debug.WriteLine("Could not get Subreddit: " + subredditName + ". Will be using backup");
             }
 
             // Only to be used if the subreddit was unable to be reached
