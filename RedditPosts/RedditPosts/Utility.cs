@@ -107,7 +107,7 @@ namespace RedditPosts
 
                 Subreddit subredditAbout = RedditClient.Subreddit(subredditName).About();
 
-                string primaryColor = !String.IsNullOrEmpty(subredditAbout.PrimaryColor) ? subredditAbout.PrimaryColor : "#000001";
+                string primaryColor = !String.IsNullOrEmpty(subredditAbout.PrimaryColor) ? subredditAbout.PrimaryColor : GenerateSubredditColor(subredditName);
                 string communityIcon = "";
                 string iconImg = "";
                 string url = DefaultSubredditIcon;
@@ -145,6 +145,19 @@ namespace RedditPosts
                 System.Diagnostics.Debug.WriteLine("Could not get SubredditInfo: " + subredditName);
                 return MakeDefaultSubredditInfo();
             }
+        }
+
+        private static string GenerateSubredditColor(string subredditName) // Source: https://stackoverflow.com/a/57726983
+        {
+            string toReturn = "#000001";
+
+            if(subredditName != null)
+            {
+                int hash = subredditName.GetHashCode();
+                toReturn = $"#{hash:X8}";
+            }
+
+            return toReturn;
         }
 
         private static bool CreateConfiguration()
