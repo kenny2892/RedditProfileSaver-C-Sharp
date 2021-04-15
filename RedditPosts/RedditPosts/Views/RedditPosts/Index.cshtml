@@ -5,6 +5,7 @@
 }
 
 <h1>Upvoted Posts</h1>
+<h4>Total Posts: @Model.DisplayPostCount</h4>
 
 <p>
     <a asp-action="Create">Create New</a> | <button class="night-mode-btn" data-toggle="collapse" data-target="#inputFields">Show Filters</button>
@@ -65,6 +66,7 @@
 
 <button type="button" id="autoScrollBtn">Auto Scroll</button>
 <button onclick="topFunction()" id="topScrollBtn" title="Go to top">Top</button>
+
 
 <table id="postTable" class="table" style="width:100%">
     <tbody>

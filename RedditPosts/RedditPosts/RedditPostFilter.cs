@@ -13,14 +13,15 @@ namespace RedditPosts
         private RedditViewModel Vm { get; set; }
         private IEnumerable<RedditPost> PostsToFilter { get; set; }
 
-        public RedditPostFilter(RedditViewModel vm, IEnumerable<RedditPost> postsToFilter)
+        public RedditPostFilter(RedditViewModel vm)
         {
             Vm = vm;
-            PostsToFilter = postsToFilter;
         }
 
-        public IEnumerable<RedditPost> FilterPosts()
+        public IEnumerable<RedditPost> FilterPosts(IEnumerable<RedditPost> postsToFilter)
         {
+            PostsToFilter = postsToFilter;
+
             TitleFilter();
             AuthorFilter();
             SubredditFilter();

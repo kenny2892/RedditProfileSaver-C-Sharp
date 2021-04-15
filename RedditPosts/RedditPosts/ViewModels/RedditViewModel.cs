@@ -8,6 +8,8 @@ namespace RedditPosts.ViewModels
 {
     public class RedditViewModel
     {
+        public int PostCount { get; set; } = 0;
+        public string DisplayPostCount => String.Format("{0:n0}", PostCount);
         public string TitleFilter { get; set; } = "";
         public string AuthorFilter { get; set; } = "";
         public string SubredditFilter { get; set; } = "";

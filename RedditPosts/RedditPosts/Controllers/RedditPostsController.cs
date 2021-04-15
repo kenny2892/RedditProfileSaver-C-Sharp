@@ -24,6 +24,15 @@ namespace RedditPosts.Controllers
 
         }
 
+        private IEnumerable<RedditPost> RetrieveFilteredPosts(RedditViewModel vm)
+        {
+            IQueryable<RedditPost> postsQuery = from m in _redditPostContext.RedditPost select m;
+            IEnumerable<RedditPost> postsEnumerable = postsQuery.ToList().AsEnumerable();
+
+            RedditPostFilter filter = new RedditPostFilter(vm);
+            return filter.FilterPosts(postsEnumerable);
+        }
+
         public IActionResult Index(RedditViewModel vm)
         {
             if(!HasPasswordAlready())
@@ -32,6 +41,7 @@ namespace RedditPosts.Controllers
             }
 
             vm.IsMobile = IsMobile();
+            vm.PostCount = RetrieveFilteredPosts(vm).Count();
             return View(vm);
         }
 
@@ -44,13 +54,9 @@ namespace RedditPosts.Controllers
                 return RedirectToAction("Index", "Password");
             }
 
-            var postsQuery = from m in _redditPostContext.RedditPost select m;
-            var postsEnumerable = postsQuery.ToList().AsEnumerable();
+            IEnumerable<RedditPost> filteredPosts = RetrieveFilteredPosts(vm);
 
-            RedditPostFilter filter = new RedditPostFilter(vm, postsEnumerable);
-            postsEnumerable = filter.FilterPosts();
-
-            var postsModel = postsEnumerable.Skip(firstItem).Take(BATCH_SIZE).ToList();
+            List<RedditPost> postsModel = filteredPosts.Skip(firstItem).Take(BATCH_SIZE).ToList();
             if (postsModel.Count() == 0) return StatusCode(204);  // 204 := "No Content"
 
             RedditPostsViewModel model = new RedditPostsViewModel()
