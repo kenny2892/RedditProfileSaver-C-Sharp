@@ -32,7 +32,7 @@ namespace RedditPosts
                 // cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 // requires using Microsoft.AspNetCore.Http;
-                options.MinimumSameSitePolicy = SameSiteMode.None;
+                options.MinimumSameSitePolicy = SameSiteMode.Lax;
             });
 
             services.AddDistributedMemoryCache(); // Source: https://andrewlock.net/an-introduction-to-session-storage-in-asp-net-core/
