@@ -29,7 +29,7 @@ namespace RedditPosts
             SavedFilter();
             HiddenFilter();
             ContentTypeFilter();
-            Randomize();
+            Sort();
 
             return PostsToFilter;
         }
@@ -106,30 +106,44 @@ namespace RedditPosts
             PostsToFilter = posts.AsEnumerable();
         }
 
+        private void Sort()
+        {
+            switch(Vm.SortingSetting)
+            {
+                case SortingSettings.Newest:
+                    PostsToFilter = PostsToFilter.OrderByDescending(post => post.Number);
+                    break;
+
+                case SortingSettings.Oldest:
+                    PostsToFilter = PostsToFilter.OrderBy(post => post.Number);
+                    break;
+
+                case SortingSettings.Subreddit:
+                    PostsToFilter = PostsToFilter.OrderBy(post => post.Subreddit.ToLower());
+                    break;
+
+                case SortingSettings.Random:
+                    Randomize();
+                    break;
+            }
+        }
+
         private void Randomize()
         {
-            if(Vm.Randomize)
+            List<RedditPost> posts = PostsToFilter.ToList();
+            Random r = new Random(Vm.RandomizeSeed);
+
+            int curr = posts.Count;
+            while(curr > 1)
             {
-                List<RedditPost> posts = PostsToFilter.ToList();
-                Random r = new Random(Vm.RandomizeSeed);
-
-                int curr = posts.Count;
-                while(curr > 1)
-                {
-                    curr--;
-                    int toSwap = r.Next(curr + 1);
-                    RedditPost value = posts[toSwap];
-                    posts[toSwap] = posts[curr];
-                    posts[curr] = value;
-                }
-
-                PostsToFilter = posts.AsEnumerable();
+                curr--;
+                int toSwap = r.Next(curr + 1);
+                RedditPost value = posts[toSwap];
+                posts[toSwap] = posts[curr];
+                posts[curr] = value;
             }
 
-            else
-            {
-                PostsToFilter = PostsToFilter.OrderByDescending(post => post.Number);
-            }
+            PostsToFilter = posts.AsEnumerable();
         }
 
         private (List<string>, List<string>, List<string>) RetreiveKeywords(string words)

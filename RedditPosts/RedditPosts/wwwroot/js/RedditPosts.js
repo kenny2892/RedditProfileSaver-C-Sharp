@@ -169,3 +169,21 @@ function HidePostToggle(id)
         },
     });
 }
+
+function SetupRandomSeedDisplay()
+{
+    var sortingDropdown = document.getElementById("SortingSetting");
+    var randomSeedDisplay = document.getElementById("randomSeedDisplay");
+
+    sortingDropdown.onchange = function()
+    {
+        updateSortDisplay();
+    }
+
+    function updateSortDisplay()
+    {
+        randomSeedDisplay.style.display = sortingDropdown.value == "Random" ? "inline-block" : "none";
+    }
+
+    updateSortDisplay();
+}

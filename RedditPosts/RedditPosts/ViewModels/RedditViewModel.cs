@@ -15,9 +15,9 @@ namespace RedditPosts.ViewModels
         public string SubredditFilter { get; set; } = "";
         public bool SavedOnly { get; set; } = false;
         public bool ShowHidden { get; set; } = false;
-        public bool Randomize { get; set; } = false;
         public int RandomizeSeed { get; set; } = 0;
         public NsfwSettings NsfwSetting { get; set; } = NsfwSettings.No_Filter;
+        public SortingSettings SortingSetting { get; set; } = SortingSettings.Newest;
         public bool IsMobile { get; set; } = false;
         public List<bool> ContentTypes { get; set; }
 
