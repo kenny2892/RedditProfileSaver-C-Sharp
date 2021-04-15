@@ -10,15 +10,18 @@
         data: { key: "Theme" },
         success: function(value)
         {
-            if(value != null && currentTheme === "light")
+            if(value != null && value == "light")
             {
                 currentTheme = value;
                 toggleSwitch.checked = false;
             }
         },
+    })
+    .done(function()
+    {
+        document.documentElement.setAttribute('data-theme', currentTheme);
+        toggleSwitch.addEventListener('change', switchTheme, false);
     });
-
-    document.documentElement.setAttribute('data-theme', currentTheme);
 
     function switchTheme(e)
     {
@@ -49,29 +52,37 @@
             },
         });
     }
-
-    toggleSwitch.addEventListener('change', switchTheme, false);
 }
 
 function SetupPinToggle()
 {
+    const navbarPinBtn = document.getElementById("pin-nav-btn");
+    const navbar = document.querySelector('.navbar');
+    const body = document.querySelector('.content-body');
     var isPinned = false;
+
     $.ajax
     ({
         url: "/Base/GetSessionString",
         data: { key: "Pinned" },
         success: function(value)
         {
-            if(value != null && value === "true")
+            if(value != null && value == "true")
             {
                 isPinned = true;
             }
         },
-    });
+    })
+    .done(function()
+    {
+        navbarPinBtn.onclick = function()
+        {
+            isPinned = !isPinned;
+            updatePin();
+        }
 
-    const navbarPinBtn = document.getElementById("pin-nav-btn");
-    const navbar = document.querySelector('.navbar');
-    const body = document.querySelector('.content-body');
+        updatePin();
+    });
 
     function updatePin()
     {
@@ -101,7 +112,7 @@ function SetupPinToggle()
         $.ajax
         ({
             url: "/Base/SetSessionString",
-            data: { key: "Pinned", value: isPinned.toString() },
+            data: {key: "Pinned", value: isPinned.toString()},
             success: function(data)
             {
                 //if(data)
@@ -116,14 +127,6 @@ function SetupPinToggle()
             },
         });
     }
-
-    navbarPinBtn.onclick = function()
-    {
-        isPinned = !isPinned;
-        updatePin();
-    }
-
-    updatePin();
 }
 
 function SetupMobileChanges()
