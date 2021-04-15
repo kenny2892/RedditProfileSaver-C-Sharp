@@ -94,7 +94,13 @@ namespace RedditPosts.Controllers
                 return NotFound();
             }
 
-            return View(redditPost);
+            RedditPostsViewModel model = new RedditPostsViewModel()
+            {
+                Posts = new List<RedditPost>(){ redditPost },
+                Subreddits = GetSubredditDictionary()
+            };
+
+            return View(model);
         }
 
         // GET: RedditPosts/Create
