@@ -250,51 +250,40 @@
                 {
                     <p style="color: darkred"><b>NSFW</b></p>
                 }
-
-                <p>
-                    @if(item.Hidden)
-                    {
-                        <button class="hidePostBtn" id="hidePostBtn_@item.ID" data-toggle="modal" data-target="#HideModal_@item.ID">Show Post</button>
-                    }
-
-                    else
-                    {
-                        <button class="hidePostBtn" id="hidePostBtn_@item.ID" data-toggle="modal" data-target="#HideModal_@item.ID">Hide Post</button>
-                    }
-                </p>
-
-                <!-- The Modal -->
-                <div class="modal hide_post_modal" id="HideModal_@item.ID">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-
-                            <!-- Modal Header -->
-                            <div class="modal-header">
-                                <h4 class="modal-title">Hide Post</h4>
-                                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            </div>
-
-                            <!-- Modal body -->
-                            <div class="modal-body">
-                                Are you sure you want to hide / unhide this post?
-                            </div>
-
-                            <!-- Modal footer -->
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-primary" onclick="HidePostToggle(@item.ID)">Confirm</button>
-                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
             </div>
 
             <h6 style="text-align:center">
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a href="#" id="hidePostBtn_@item.ID" data-toggle="modal" data-target="#HideModal_@item.ID">Hide</a> |
                 <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
             </h6>
+
+            <!-- The Modal -->
+            <div class="modal hide_post_modal" id="HideModal_@item.ID">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+
+                        <!-- Modal Header -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">Hide Post</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+
+                        <!-- Modal body -->
+                        <div class="modal-body">
+                            Are you sure you want to hide / unhide this post?
+                        </div>
+
+                        <!-- Modal footer -->
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" onclick="HidePostToggle(@item.ID)">Confirm</button>
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
         </td>
     </tr>
 }

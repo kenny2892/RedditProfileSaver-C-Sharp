@@ -157,12 +157,12 @@ function HidePostToggle(id)
         {
             if(data)
             {
-                hideBtn.textContent = "Show Post";
+                hideBtn.innerHTML = "Show";
             }
 
             else
             {
-                hideBtn.textContent = "Hide Post";
+                hideBtn.innerHTML = "Hide";
             }
 
             $('#' + 'HideModal_' + id).modal('hide');
