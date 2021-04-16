@@ -85,8 +85,9 @@ def storeUpvotedPosts(reddit):
             post_entry[fields[3]] = item.created_utc
             
             contentUrl = item.url
+            ogUrl = contentUrl
             
-            if("/gallery/" in contentUrl):
+            if("reddit.com/gallery/" in contentUrl):
                 contentUrl = getGalleryUrls(contentUrl, reddit)
                 
             elif("redgifs" in contentUrl):
@@ -96,7 +97,22 @@ def storeUpvotedPosts(reddit):
                 contentUrl = convertVredditUrl(item, contentUrl)
                 
             elif("imgur.com/a/" in contentUrl):
-                contentUrl = convertImgurGallery(contentUrl)
+                try:
+                    contentUrl = convertImgurGallery(contentUrl)
+                except:
+                    contentUrl = ogUrl
+                
+            elif("//imgur.com/" in contentUrl and "/gallery/" not in contentUrl and "/r/" not in contentUrl):
+                numOfPeriods = 0
+                for i in contentUrl:
+                    if(i == '.'):
+                        numOfPeriods = numOfPeriods + 1
+
+                if(numOfPeriods == 1): ## Meaning there are no extensions like .png or .jpg
+                    try:
+                        contentUrl = convertImgurImage(contentUrl)
+                    except:
+                        contentUrl = ogUrl
             
             post_entry[fields[4]] = contentUrl            
             post_entry[fields[5]] = "https://www.reddit.com" + item.permalink
@@ -117,6 +133,38 @@ def storeUpvotedPosts(reddit):
     except Exception as e:
         printToFile("Something went wrong!\nError Msg:\n" + str(e) + "\n")
         traceback.print_exc()
+
+def convertImgurImage(contentUrl):
+    # Sleep for 1 Sec
+    time.sleep(1)
+
+    id = ""
+    newContentUrl = contentUrl
+    if("//imgur.com/" in newContentUrl):
+        index = newContentUrl.index("com/") + 4
+        id = newContentUrl[index:]
+
+    else:
+        return newContentUrl
+
+    global imgurId
+    clientId = "Client-ID " + imgurId
+    response = requests.get(
+        "https://api.imgur.com/3/image/" + id,
+        headers={"Authorization": clientId},
+    )
+
+    json_response = response.json()
+    success = json_response["success"]
+    status = json_response["status"]
+
+    if(success and status == 200):
+        data = json_response["data"]
+
+        for item in data:
+            newContentUrl = newContentUrl + " " + item["link"]
+
+    return newContentUrl
 
 def convertImgurGallery(contentUrl):
     # Sleep for 1 Sec

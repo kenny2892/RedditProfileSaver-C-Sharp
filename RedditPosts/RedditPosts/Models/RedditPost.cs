@@ -72,7 +72,7 @@ namespace RedditPosts.Models
         {
             string[] toReturn = new string[] { UrlContent };
 
-            if(UrlContent.Contains("/gallery/"))
+            if(UrlContent.Contains("reddit.com/gallery/"))
             {
                 toReturn = UrlContent.Split(" ");
             }
@@ -85,6 +85,11 @@ namespace RedditPosts.Models
             else if(UrlContent.Contains("https://gfycat.com/"))
             {
                 toReturn[0] = toReturn[0].Replace("https://gfycat.com/", "https://gfycat.com/ifr/");
+            }
+
+            else if(UrlContent.Contains(" ") && UrlContent.Contains("i.imgur.com") && (GetContentType() == ContentType.Gif || GetContentType() == ContentType.Image))
+            {
+                toReturn[0] = UrlContent.Split(" ")[1];
             }
 
             else if(UrlContent.Contains("//imgur.com/") && !UrlContent.Contains("/a/")) // An Imgur pic that wasn't posted with the direct link
@@ -168,6 +173,16 @@ namespace RedditPosts.Models
                 }
             }
 
+            else if(UrlContent.Contains(" ") && UrlContent.Contains("i.imgur.com"))
+            {
+                type = ContentType.Image;
+
+                if(UrlContent.Contains(".gif"))
+                {
+                    type = ContentType.Gif;
+                }
+            }
+
             else if(UrlContent.Contains(" "))
             {
                 type = ContentType.Gallery;
@@ -198,12 +213,12 @@ namespace RedditPosts.Models
                 type = ContentType.Youtube;
             }
 
-            else if(UrlContent.Contains("gifv"))
+            else if(UrlContent.Contains(".gifv"))
             {
                 type = ContentType.Gifv;
             }
 
-            else if(UrlContent.Contains("gif"))
+            else if(UrlContent.Contains(".gif"))
             {
                 type = ContentType.Gif;
             }
