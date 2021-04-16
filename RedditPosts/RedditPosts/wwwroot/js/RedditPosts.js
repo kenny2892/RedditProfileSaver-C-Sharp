@@ -125,9 +125,18 @@ function AutoScrollSetup() // Source: https://stackoverflow.com/a/9837823
     {
         isAutoScrolling = !isAutoScrolling;
         AutoScroll();
+
+        if(isAutoScrolling)
+        {
+            window.setTimeout(function()
+            {
+                isBodyClickEnabled = true;
+            }, 100);
+        }
     }
 
     var isAutoScrolling = false;
+    var isBodyClickEnabled = false;
 
     function AutoScroll()
     {
@@ -141,6 +150,16 @@ function AutoScrollSetup() // Source: https://stackoverflow.com/a/9837823
         else
         {
             autoScrollBtn.textContent = "Auto Scroll"
+        }
+    }
+
+    var body = document.getElementById("main-body");
+    body.onclick = function()
+    {
+        if(isAutoScrolling && isBodyClickEnabled)
+        {
+            autoScrollBtn.click();
+            isBodyClickEnabled = false;
         }
     }
 }
