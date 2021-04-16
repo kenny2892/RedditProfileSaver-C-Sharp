@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace RedditPosts
@@ -156,8 +157,28 @@ namespace RedditPosts
             {
                 keywords.Add(words);
 
+                if(words.Contains("\""))
+                {
+                    // Source: https://stackoverflow.com/a/13024181
+                    var reg = new Regex("\".*?\"");
+                    var matches = reg.Matches(words);
+
+                    foreach(var item in matches)
+                    {
+                        requiredKeywords.Add(item.ToString().Replace("\"", ""));
+                    }
+                }
+
                 if(words.Contains(" "))
                 {
+                    if(requiredKeywords.Count > 0)
+                    {
+                        foreach(string requiredKeyword in requiredKeywords)
+                        {
+                            words = words.Replace("\"" + requiredKeyword + "\"", requiredKeyword);
+                        }
+                    }
+
                     keywords = words.Split(" ").ToList();
                 }
             }
@@ -166,16 +187,7 @@ namespace RedditPosts
             {
                 string keyword = keywords[i];
 
-                if(keyword.ElementAt(0) == '\"' && keyword.ElementAt(keyword.Length - 1) == '\"')
-                {
-                    string noQuotesKeyword = keyword.Substring(1, keyword.Length - 2);
-
-                    keywords.RemoveAt(i);
-                    keywords.Add(noQuotesKeyword);
-                    requiredKeywords.Add(noQuotesKeyword);
-                }
-
-                else if(keyword.ElementAt(0) == '-')
+                if(keyword.ElementAt(0) == '-')
                 {
                     string noDashKeyword = keyword.Substring(1);
 
