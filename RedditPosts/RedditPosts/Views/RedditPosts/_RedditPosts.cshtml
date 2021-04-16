@@ -21,171 +21,52 @@
                     break;
 
                 case ContentType.UrlPreview:
-                    <a href="@Url.Content(item.GetContentUrls()[0])" target="_blank">
-                        <div class="urlBox">
-                            <div>
-                                <img src="@Url.Content(item.UrlThumbnail)" alt="@Html.DisplayFor(modelItem => item.Title)" style="width:190px; height:190px; object-fit:cover; display:block; margin-left:auto; margin-right: auto;" />
-                            </div>
-                        </div>
-                    </a>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_UrlPreview.cshtml", item)
                     break;
 
                 case ContentType.Image:
-                    @* Source: https://getbootstrap.com/docs/4.5/components/modal/ *@
-
-                    string id = "a" + item.ID;
-                    string modal = id + "Modal";
-                    string modalTarget = "#" + modal;
-                    string modalLabel = id + "Label";
-
-                    <!-- Button trigger modal -->
-                    <a data-toggle="modal" data-target=@modalTarget>
-                        <h2 style="text-align:center">
-                            <img src="@Url.Content(item.GetContentUrls()[0])" alt="@Html.DisplayFor(modelItem => item.Title)" style="height:auto; width:auto; max-height:720px; max-width:100%; cursor: pointer;" />
-                        </h2>
-                    </a>
-
-                    <!-- Modal -->
-                    <div class="modal fade" id=@modal tabindex="-1" aria-labelledby=@modalLabel aria-hidden="true">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content" style="background-color: black">
-                                <div class="modal-header">
-                                    <h5 class="modal-title" id=@modalLabel>@Html.DisplayTextFor(modelItem => item.Title)</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                        <span aria-hidden="true">&times;</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <h2 style="text-align:center">
-                                        <img src=@Url.Content(item.GetContentUrls()[0]) alt=@Html.DisplayTextFor(modelItem => item.Title) style="height:auto; width:auto; max-height:720px; max-width:100%" />
-                                    </h2>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_Image.cshtml", item)
                     break;
 
                 case ContentType.Gif:
-                    <a href="@Url.Content(item.GetContentUrls()[0])">
-                        <h2 style="text-align:center">
-                            <img src="@Url.Content(item.GetContentUrls()[0])" alt="@Html.DisplayFor(modelItem => item.Title)" style="height:auto; width:auto; max-height:720px; max-width:100%" />
-                        </h2>
-                    </a>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_Gif.cshtml", item)
                     break;
 
                 case ContentType.ImgurGallery:
-                    <div style="text-align: center">
-                        <blockquote class="imgur-embed-pub" lang="en" data-id="a/@Url.Content(item.GetImgurIdNum())" data-context="false">
-                            <a href="//imgur.com/a/@Url.Content(item.GetImgurIdNum())">Test</a>
-                        </blockquote>
-                    </div>
-                    <script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_ImgurGallery.cshtml", item)
                     break;
 
                 case ContentType.RedGifWatch:
-                    <div style="text-align:center">
-                        <a href="@Url.Content(item.GetContentUrls()[0])" style="font-size:32px">Video Link</a>
-                    </div>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_RedGifWatch.cshtml", item)
                     break;
 
                 case ContentType.GfyCat:
-                    <div style='position:relative; padding-bottom:calc(70.80% + 44px)'>
-                        <iframe src='@Url.Content(item.GetContentUrls()[0])?autoplay=0&hd=1&controls=1' frameborder='0' scrolling='no' width='100%' height='100%' style='position:absolute;top:0;left:0;' allowfullscreen></iframe>
-                    </div>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_GfyCat.cshtml", item)
                     break;
 
                 case ContentType.Gifv:
                 case ContentType.Mp4:
-                    <video style="height: auto; width: auto; max-height: 720px; max-width: 100%; margin-left: auto; margin-right: auto; display: block;" controls muted loop poster="@item.UrlThumbnail">
-                        <source src="@Url.Content(item.GetContentUrls()[0])" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_Mp4.cshtml", item)
                     break;
 
                 case ContentType.Twitter:
-                    <div style="width:80%; height:auto; margin-left: auto; margin-right: auto; display: block;">
-                        @Html.Raw(item.GetTwitterHtml())
-                    </div>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_Twitter.cshtml", item)
                     break;
 
                 case ContentType.Youtube:
-                    <div class="youtube">
-                        <iframe src="@Url.Content(item.GetContentUrls()[0])">
-                        </iframe>
-                    </div>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_Youtube.cshtml", item)
                     break;
 
                 case ContentType.Gallery:
-                    string num = "a" + item.ID;
-                    string hashNum = "#" + num;
-                    int count = 0;
-                    int total = item.GetContentUrls().Count() - 1;
-
-                    <div id=@num class="carousel slide" data-interval="false">
-
-                        <!-- Indicators -->
-                        <ul class="carousel-indicators">
-                            @for(int i = 0; i < total; i++)
-                            {
-                                if(i == 0)
-                                {
-                                    <li data-target=@hashNum data-slide-to=@i class="active"></li>
-                                }
-
-                                else
-                                {
-                                    <li data-target=@hashNum data-slide-to=@i></li>
-                                }
-                            }
-                        </ul>
-
-                        <!-- The slideshow -->
-                        <div class="carousel-inner">
-                            @foreach(string url in item.GetContentUrls().Skip(1))
-                            {
-                                if(count == 0)
-                                {
-                                    <div class="carousel-item active">
-                                        <img class="d-block w-100 galleryImg" src=@url alt="Slide">
-                                    </div>
-                                }
-
-                                else
-                                {
-                                    <div class="carousel-item">
-                                        <img class="d-block w-100 galleryImg" src=@url alt="Slide">
-                                    </div>
-                                }
-                                count++;
-                            }
-                        </div>
-
-                        <!-- Left and right controls -->
-                        <a class="carousel-control-prev" href=@hashNum data-slide="prev">
-                            <span class="carousel-control-prev-icon"></span>
-                        </a>
-                        <a class="carousel-control-next" href=@hashNum data-slide="next">
-                            <span class="carousel-control-next-icon"></span>
-                        </a>
-
-                    </div>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_Gallery.cshtml", item)
                     break;
 
                 case ContentType.Vreddit:
-                    <div class="reddit-preview reddit-container" style="padding-top: @item.GetVredditAspectRatioString()">
-                        <div class="resp-media" data-src="https%3A%2F%2Fold.reddit.com%2Fmediaembed">
-                            <iframe class="responsive-iframe" frameborder="0" allowfullscreen="" scrolling="no" src="https://old.reddit.com/mediaembed/@item.GetVredditId()"></iframe>
-                        </div>
-                    </div>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_Vreddit.cshtml", item)
                     break;
 
                 case ContentType.VredditPostOnly:
-                    <blockquote class="reddit-card">
-                        <a href="@Url.Content(item.UrlPost)"></a>
-                    </blockquote>
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_VredditPostOnly.cshtml", item)
                     break;
             }
 

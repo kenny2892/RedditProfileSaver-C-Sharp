@@ -1,0 +1,7 @@
+﻿@model RedditPosts.Models.RedditPost
+
+<div class="reddit-preview reddit-container" style="padding-top: @Model.GetVredditAspectRatioString()">
+    <div class="resp-media" data-src="https%3A%2F%2Fold.reddit.com%2Fmediaembed">
+        <iframe class="responsive-iframe" frameborder="0" allowfullscreen="" scrolling="no" src="https://old.reddit.com/mediaembed/@Model.GetVredditId()"></iframe>
+    </div>
+</div>
