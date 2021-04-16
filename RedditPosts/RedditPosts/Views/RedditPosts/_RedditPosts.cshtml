@@ -77,10 +77,12 @@
                     break;
 
                 case ContentType.ImgurGallery:
-                    <div style="text-align:center">
-                        <iframe allowfullscreen="true" mozallowfullscreen="true" webkitallowfullscreen="true" class="imgur-embed-iframe-pub imgur-embed-iframe-pub-a-@Url.Content(item.GetImgurIdNum())-false-540" scrolling="no" src="https://imgur.com/a/@Url.Content(item.GetImgurIdNum())/embed?pub=true&amp;ref=https%3A%2F%2Flocalhost%3A44358%2F&amp;context=false&amp;w=540" id="imgur-embed-iframe-pub-a-@Url.Content(item.GetImgurIdNum())" style="height: auto; width: 100%; "></iframe>
-                        <script async="" src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
+                    <div style="text-align: center">
+                        <blockquote class="imgur-embed-pub" lang="en" data-id="a/@Url.Content(item.GetImgurIdNum())" data-context="false">
+                            <a href="//imgur.com/a/@Url.Content(item.GetImgurIdNum())">Test</a>
+                        </blockquote>
                     </div>
+                    <script async src="//s.imgur.com/min/embed.js" charset="utf-8"></script>
                     break;
 
                 case ContentType.RedGifWatch:
@@ -178,14 +180,12 @@
                             <iframe class="responsive-iframe" frameborder="0" allowfullscreen="" scrolling="no" src="https://old.reddit.com/mediaembed/@item.GetVredditId()"></iframe>
                         </div>
                     </div>
-                    <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>
                     break;
 
                 case ContentType.VredditPostOnly:
                     <blockquote class="reddit-card">
                         <a href="@Url.Content(item.UrlPost)"></a>
                     </blockquote>
-                    <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>
                     break;
             }
 

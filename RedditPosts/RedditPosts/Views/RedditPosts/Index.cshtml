@@ -69,6 +69,7 @@
 @section Scripts
 {
     <script src="~/js/RedditPosts.js" asp-append-version="true"></script>
+    <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>
 
     <script>
         var scrolling = new Scrolling("postTable", "/RedditPosts/_RedditPosts", {vm:@Html.Raw(Json.Serialize(Model)) });
