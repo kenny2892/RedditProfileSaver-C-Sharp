@@ -2,5 +2,6 @@
   "Id": "",
   "Secret": "",
   "User Agent": "",
-  "Refresh Token": ""
+  "Refresh Token": "",
+  "ImgurClientId": ""
 }

@@ -7,6 +7,7 @@ import pathlib
 import requests
 
 overwrite_old_file = False
+imgurId = ""
 
 upvoted_posts = {}
 old_upvoted_posts = {}
@@ -93,6 +94,9 @@ def storeUpvotedPosts(reddit):
                 
             elif("v.redd.it" in contentUrl):
                 contentUrl = convertVredditUrl(item, contentUrl)
+                
+            elif("imgur.com/a/" in contentUrl):
+                contentUrl = convertImgurGallery(contentUrl)
             
             post_entry[fields[4]] = contentUrl            
             post_entry[fields[5]] = "https://www.reddit.com" + item.permalink
@@ -113,6 +117,38 @@ def storeUpvotedPosts(reddit):
     except Exception as e:
         printToFile("Something went wrong!\nError Msg:\n" + str(e) + "\n")
         traceback.print_exc()
+
+def convertImgurGallery(contentUrl):
+    # Sleep for 1 Sec
+    time.sleep(1)
+
+    id = ""
+    newContentUrl = contentUrl
+    if("imgur.com/a/" in newContentUrl):
+        index = newContentUrl.index("/a/") + 3
+        id = newContentUrl[index:]
+
+    else:
+        return newContentUrl
+
+    global imgurId
+    clientId = "Client-ID " + imgurId
+    response = requests.get(
+        "https://api.imgur.com/3/album/" + id + "/images",
+        headers={"Authorization": clientId},
+    )
+
+    json_response = response.json()
+    success = json_response["success"]
+    status = json_response["status"]
+
+    if(success and status == 200):
+        data = json_response["data"]
+
+        for item in data:
+            newContentUrl = newContentUrl + " " + item["link"]
+
+    return newContentUrl
         
 def convertVredditUrl(post, contentUrl):
     try:
@@ -240,6 +276,9 @@ def main():
     bot_secret = config.get("Secret", "")
     token = config.get("Refresh Token", "")
     user = config.get("User Agent", "")
+
+    global imgurId
+    imgurId = config.get("ImgurClientId", "")
     
     collectUpvotedPosts(bot_id, bot_secret, token, user)
     

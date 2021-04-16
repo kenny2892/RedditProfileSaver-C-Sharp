@@ -87,14 +87,9 @@ namespace RedditPosts.Models
                 toReturn[0] = toReturn[0].Replace("https://gfycat.com/", "https://gfycat.com/ifr/");
             }
 
-            else if(UrlContent.Contains("https://imgur.com/") && !UrlContent.Contains("/a/")) // An Imgur pic that wasn't posted with the direct link
+            else if(UrlContent.Contains("//imgur.com/") && !UrlContent.Contains("/a/")) // An Imgur pic that wasn't posted with the direct link
             {
-                toReturn[0] = toReturn[0].Replace("https://imgur.com/", "https://i.imgur.com/") + ".png";
-            }
-
-            else if(UrlContent.Contains("http://imgur.com/") && !UrlContent.Contains("/a/")) // An Imgur pic that wasn't posted with the direct link
-            {
-                toReturn[0] = toReturn[0].Replace("http://imgur.com/", "http://i.imgur.com/") + ".png";
+                toReturn[0] = toReturn[0].Replace("//imgur.com/", "//i.imgur.com/") + ".png";
             }
 
             else if(UrlContent.Contains("v.redd.it") && UrlContent.Contains(" "))
@@ -110,6 +105,16 @@ namespace RedditPosts.Models
             else if(UrlContent.Contains("youtube.com"))
             {
                 toReturn[0] = toReturn[0].Replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/");
+            }
+
+            else if(UrlContent.Contains("imgur.com/a/") && GetContentType() == ContentType.Gallery)
+            {
+                toReturn = UrlContent.Split(" ");
+            }
+
+            else if(UrlContent.Contains("imgur.com/a/") && (GetContentType() == ContentType.Image || GetContentType() == ContentType.Gif))
+            {
+                toReturn[0] = UrlContent.Split(" ")[1];
             }
 
             return toReturn;
@@ -129,6 +134,37 @@ namespace RedditPosts.Models
                 else
                 {
                     type = ContentType.VredditPostOnly;
+                }
+            }
+
+            else if(UrlContent.Contains("imgur.com/a/"))
+            {
+                if(UrlContent.Contains(" ")) // Was split
+                {
+                    int numOfUrls = UrlContent.Count(letter => letter == ' ') + 1;
+                    
+                    if(numOfUrls > 2)
+                    {
+                        type = ContentType.Gallery;
+                    }
+
+                    else // Only one image in gallery
+                    {
+                        if(UrlContent.Contains(".gif"))
+                        {
+                            type = ContentType.Gif;
+                        }
+
+                        else
+                        {
+                            type = ContentType.Image;
+                        }
+                    }
+                }
+
+                else // Hasn't been split
+                {
+                    type = ContentType.ImgurGallery;
                 }
             }
 
@@ -175,11 +211,6 @@ namespace RedditPosts.Models
             else if(UrlContent.Contains("gfycat.com"))
             {
                 type = ContentType.GfyCat;
-            }
-
-            else if(UrlContent.Contains("imgur.com/a/"))
-            {
-                type = ContentType.ImgurGallery;
             }
 
             else if(!UrlThumbnail.Contains("self") && !UrlThumbnail.Contains("default"))
