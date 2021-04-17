@@ -1,0 +1,11 @@
+﻿@model RedditPosts.Models.SubredditInfo
+
+@if(Model.IsDefaultIcon()) // Source: https://www.w3docs.com/snippets/css/how-to-add-a-circle-around-a-number-in-css.html
+{
+    <span class="subreddit-circle" style="background: @Model.PrimaryColor">@Model.SubredditName.Substring(0, 1).ToUpper()</span>
+}
+
+else
+{
+    <img src="@Model.IconUrl" alt="" class="subreddit-logo" style="background-color: @Model.PrimaryColor" />
+}

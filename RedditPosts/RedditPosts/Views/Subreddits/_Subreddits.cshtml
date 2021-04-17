@@ -1,31 +1,83 @@
-﻿@model Dictionary<SubredditInfo, int>
+﻿@model RedditPosts.ViewModels.SubredditsViewModel
 
-@foreach(var pair in Model) // Source: https://www.w3schools.com/css/css_grid.asp
-{
-    SubredditInfo item = pair.Key;
-    int count = pair.Value;
+@{ 
+    Dictionary<SubredditInfo, int> subreddits = Model.Subreddits;
 
-    <div class="grid-item">
-        <h5>
-            <span data-toggle="tooltip" title="@item.SubredditName">
-                @item.DisplaySubreddit
-            </span>
-        </h5>
-        <h6>
-            <span data-toggle="tooltip" title="Total number of posts saved for this subreddit.">
-                Count: @count
-            </span>
-        </h6>
-        @if(item.IsDefaultIcon()) // Source: https://www.w3docs.com/snippets/css/how-to-add-a-circle-around-a-number-in-css.html
-        {
-            <span class="subreddit-circle" style="background: @item.PrimaryColor">@item.SubredditName.Substring(0, 1).ToUpper()</span>
-        }
+    List<SubredditInfo> mostUpvotedSubs = Model.MostUpvoted;
+    int mostUpvotedCount = Model.MostUpvotedCount;
 
-        else
-        {
-            <img src="@item.IconUrl" alt="" class="subreddit-logo" style="background-color: @item.PrimaryColor" />
-        }
-
-        <hr class="grid-line" />
-    </div>
+    List<SubredditInfo> leastUpvotedSubs = Model.LeastUpvoted;
+    int leastUpvotedCount = Model.LeastUpvotedCount;
 }
+
+<button data-toggle="collapse" data-target="#stats">Show Stats</button>
+<div id="stats" class="collapse">
+    <div>
+        <div>
+            <h3>Most Upvoted Subreddits:</h3>
+            <h6>Count: @mostUpvotedCount</h6>
+        </div>
+
+        @{ 
+            string mostSubsList = mostUpvotedSubs[0].SubredditName;
+        }
+
+        @foreach(var subreddit in mostUpvotedSubs.Skip(1))
+        {
+            mostSubsList += ", " + subreddit.SubredditName;
+        }
+        
+        <div>
+            @mostSubsList
+        </div>
+    </div>
+
+    <hr />
+
+    <div>
+        <div>
+            <h3>Least Upvoted Subreddits:</h3>
+            <h6>Count: @leastUpvotedCount</h6>
+        </div>
+
+        @{ 
+            string leastSubsList = leastUpvotedSubs[0].SubredditName;
+        }
+
+        @foreach(var subreddit in leastUpvotedSubs.Skip(1))
+        {
+            leastSubsList += ", " + subreddit.SubredditName;
+        }
+        
+        <div>
+            @leastSubsList
+        </div>
+    </div>
+</div>
+
+<hr />
+
+<div class="grid-container">
+    @foreach(var pair in subreddits) // Source: https://www.w3schools.com/css/css_grid.asp
+    {
+        SubredditInfo item = pair.Key;
+        int count = pair.Value;
+
+        <div class="grid-item">
+            <h5>
+                <span data-toggle="tooltip" title="@item.SubredditName">
+                    @item.DisplaySubreddit
+                </span>
+            </h5>
+            <h6>
+                <span data-toggle="tooltip" title="Total number of posts saved for this subreddit.">
+                    Count: @count
+                </span>
+            </h6>
+
+            @await Html.PartialAsync("~/Views/Subreddits/_SubredditIcon.cshtml", item)
+
+            <hr class="grid-line" />
+        </div>
+    }
+</div>

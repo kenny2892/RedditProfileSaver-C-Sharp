@@ -52,17 +52,63 @@ namespace RedditPosts.Controllers
                 GetSubredditInfo(subredditName);
             }
 
-            iconQuery = from m in _subredditInfoContext.SubredditInfo select m;
+            SubredditsViewModel vm = CreateViewModel(postsQuery);
+
+            return PartialView(vm);
+        }
+
+        private SubredditsViewModel CreateViewModel(IQueryable<RedditPost> postsQuery)
+        {
+            var iconQuery = from m in _subredditInfoContext.SubredditInfo select m;
             iconQuery = iconQuery.OrderBy(subreddit => subreddit.SubredditName.ToLower());
 
             Dictionary<SubredditInfo, int> model = new Dictionary<SubredditInfo, int>();
+
+            List<SubredditInfo> mostUpvotedInfo = new List<SubredditInfo>() { Utility.MakeDefaultSubredditInfo() };
+            List<SubredditInfo> leastUpvotedInfo = new List<SubredditInfo>() { Utility.MakeDefaultSubredditInfo() };
+
+            int mostUpvotedCount = -1;
+            int leastUpvotedCount = 999999;
+
             foreach(var subreddit in iconQuery)
             {
                 int count = postsQuery.Count(post => post.Subreddit == subreddit.SubredditName);
+
+                if(count >= mostUpvotedCount)
+                {
+                    if(count > mostUpvotedCount)
+                    {
+                        mostUpvotedInfo.Clear();
+                    }
+
+                    mostUpvotedCount = count;
+                    mostUpvotedInfo.Add(subreddit);
+                }
+
+                else if(count <= leastUpvotedCount)
+                {
+                    if(count < leastUpvotedCount)
+                    {
+                        leastUpvotedInfo.Clear();
+                    }
+
+                    leastUpvotedCount = count;
+                    leastUpvotedInfo.Add(subreddit);
+                }
+
                 model.Add(subreddit, count);
             }
 
-            return PartialView(model);
+            SubredditsViewModel vm = new SubredditsViewModel
+            {
+                Subreddits = model,
+                MostUpvoted = mostUpvotedInfo,
+                MostUpvotedCount = mostUpvotedCount,
+                LeastUpvoted = leastUpvotedInfo,
+                LeastUpvotedCount = leastUpvotedCount
+            };
+
+            return vm;
         }
     }
 }
