@@ -1,0 +1,31 @@
+﻿@model Dictionary<SubredditInfo, int>
+
+@foreach(var pair in Model) // Source: https://www.w3schools.com/css/css_grid.asp
+{
+    SubredditInfo item = pair.Key;
+    int count = pair.Value;
+
+    <div class="grid-item">
+        <h5>
+            <span data-toggle="tooltip" title="@item.SubredditName">
+                @item.DisplaySubreddit
+            </span>
+        </h5>
+        <h6>
+            <span data-toggle="tooltip" title="Total number of posts saved for this subreddit.">
+                Count: @count
+            </span>
+        </h6>
+        @if(item.IsDefaultIcon()) // Source: https://www.w3docs.com/snippets/css/how-to-add-a-circle-around-a-number-in-css.html
+        {
+            <span class="subreddit-circle" style="background: @item.PrimaryColor">@item.SubredditName.Substring(0, 1).ToUpper()</span>
+        }
+
+        else
+        {
+            <img src="@item.IconUrl" alt="" class="subreddit-logo" style="background-color: @item.PrimaryColor" />
+        }
+
+        <hr class="grid-line" />
+    </div>
+}

@@ -271,6 +271,11 @@ namespace RedditPosts.Controllers
             {
                 int hash = subredditName.GetHashCode();
                 toReturn = $"#{hash:X8}";
+
+                if(toReturn.Length > 7)
+                {
+                    toReturn = toReturn.Substring(0, 7);
+                }
             }
 
             return toReturn;

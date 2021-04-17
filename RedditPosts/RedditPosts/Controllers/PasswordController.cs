@@ -27,9 +27,9 @@ namespace RedditPosts.Controllers
                     SetSessionString(GetConnectionString("PasswordKey"), serialisedPass);
                 }
 
-                if(redirectTo == "Icons")
+                if(redirectTo == "Subreddits")
                 {
-                    return RedirectToAction("Index", "SubredditIcons");
+                    return RedirectToAction("Index", "Subreddits");
                 }
 
                 return RedirectToAction("Index", "RedditPosts");

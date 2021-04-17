@@ -1,0 +1,22 @@
+﻿@model Dictionary<SubredditInfo, int>
+
+@{
+    ViewData["Title"] = "Subreddit Icons";
+}
+
+<h1>Subreddits</h1>
+<hr />
+
+<div class="grid-container" id="subredditGrid">
+</div>
+
+<h2 id="loadingSubreddits" style="text-align: center">LOADING SUBREDDITS</h2>
+
+@section Scripts
+{
+    <script src="~/js/Subreddits.js" asp-append-version="true"></script>
+
+    <script>
+        var loading = new LoadSubreddits();
+    </script>
+}
