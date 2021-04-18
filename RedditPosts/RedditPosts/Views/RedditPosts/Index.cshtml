@@ -41,14 +41,18 @@
             {
                 List<ContentType> types = Enum.GetValues(typeof(ContentType)).Cast<ContentType>().ToList();
 
-                <span>@types[i].ToString()</span>
-                <span>:</span>
-                <span>@Html.CheckBoxFor(vm => vm.ContentTypes[i], true)</span>
+                <div style="display:inline-block">
+                    <label>
+                        <span>@types[i].GetDescription()</span>
+                        <span>:</span>
+                        <span>@Html.CheckBoxFor(vm => vm.ContentTypes[i], true)</span>
+                    </label>
 
-                if(i + 1 < Model.ContentTypes.Count - 1)
-                {
-                    <span>|</span>
-                }
+                    @if(i < Model.ContentTypes.Count - 1)
+                    {
+                        <span>|</span>
+                    }
+                </div>
             }
         </p>
         <p><input type="submit" value="Submit" /></p>

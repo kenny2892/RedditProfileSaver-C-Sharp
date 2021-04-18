@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace RedditPosts
+namespace RedditPosts.Models
 {
     public class RedditPostFilter
     {

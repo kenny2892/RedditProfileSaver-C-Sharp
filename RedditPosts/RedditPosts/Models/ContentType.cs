@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -13,12 +14,16 @@ namespace RedditPosts.Models
         Image,
         Gif,
         Gifv,
+        [Description("Imgur Gallery")]
         ImgurGallery,
         GfyCat,
+        [Description("RedGif Watch Link")]
         RedGifWatch,
         Gallery,
         Vreddit,
+        [Description("Vreddit Post")]
         VredditPostOnly,
+        [Description("Url")]
         UrlPreview,
         Blank
     }
