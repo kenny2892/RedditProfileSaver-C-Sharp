@@ -6,7 +6,7 @@
 
 @foreach(var item in Model.Posts)
 {
-    <tr style="width:100%">
+    <tr id="@item.Number" style="width:100%">
         <td style="width:100%">
             <h1 style="text-align:center">
                 @Html.DisplayFor(modelItem => item.DisplayTitle)

@@ -10,10 +10,10 @@ function Scrolling(iTable, iAction, iParams)
     var topScrollBtn = document.getElementById("topScrollBtn");
     var loadingPostsDisplay = document.getElementById("loadingPosts");
 
-    this.AddTableLines = function(firstItem) 
+    this.AddTableLines = function(lastRowNumber) 
     {
         this.loading = true;
-        this.params.firstItem = firstItem;
+        this.params.lastRowNumber = lastRowNumber;
         loadingPostsDisplay.textContent = "LOADING POSTS"; // show loading info
 
         $.ajax({
@@ -54,8 +54,10 @@ function Scrolling(iTable, iAction, iParams)
             //User is currently at the bottom of the page
             if(!self.loading) 
             {
-                var itemCount = $('#' + self.table + ' tr').length;
-                self.AddTableLines(itemCount);
+                var tableElement = document.getElementById(self.table);
+                var lastRowNumber = tableElement.rows[tableElement.rows.length - 1].id;
+
+                self.AddTableLines(lastRowNumber);
             }
         }
     }

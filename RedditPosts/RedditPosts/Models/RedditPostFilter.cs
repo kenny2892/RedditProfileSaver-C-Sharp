@@ -23,14 +23,13 @@ namespace RedditPosts.Models
         {
             PostsToFilter = postsToFilter;
 
+            Sort();
             TitleFilter();
             AuthorFilter();
             SubredditFilter();
             NsfwFilter();
             SavedFilter();
-            HiddenFilter();
             ContentTypeFilter();
-            Sort();
 
             return PostsToFilter;
         }
@@ -72,14 +71,6 @@ namespace RedditPosts.Models
             if(Vm.SavedOnly)
             {
                 PostsToFilter = PostsToFilter.Where(s => s.IsSaved == true);
-            }
-        }
-
-        private void HiddenFilter()
-        {
-            if(!Vm.ShowHidden)
-            {
-                PostsToFilter = PostsToFilter.Where(s => s.Hidden == false);
             }
         }
 

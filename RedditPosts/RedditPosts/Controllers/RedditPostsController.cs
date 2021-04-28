@@ -38,7 +38,7 @@ namespace RedditPosts.Controllers
 
         [HttpPost]
         // Source for Keyword Search: https://stackoverflow.com/a/31383256 & https://stackoverflow.com/a/57971185
-        public IActionResult _RedditPosts(RedditViewModel vm, int firstItem = 0)
+        public IActionResult _RedditPosts(RedditViewModel vm, int lastRowNumber = -1)
         {
             if (!HasPasswordAlready())
             {
@@ -47,7 +47,20 @@ namespace RedditPosts.Controllers
 
             IEnumerable<RedditPost> filteredPosts = RetrieveFilteredPosts(vm);
 
-            List<RedditPost> postsModel = filteredPosts.Skip(firstItem).Take(BATCH_SIZE).ToList();
+            int toSkip = 0;
+            if(lastRowNumber > -1)
+            {
+                int indexToSkip = filteredPosts.ToList().FindIndex(post => post.Number == lastRowNumber);
+                toSkip = indexToSkip > -1 ? indexToSkip + 1 : 0;
+                filteredPosts = filteredPosts.Skip(toSkip);
+            }
+
+            if(!vm.ShowHidden)
+            {
+                filteredPosts = filteredPosts.Where(s => s.Hidden == false);
+            }
+
+            List<RedditPost> postsModel = filteredPosts.Take(BATCH_SIZE).ToList();
             if (postsModel.Count() == 0) return StatusCode(204);  // 204 := "No Content"
 
             CheckSubredditInfos(postsModel);
