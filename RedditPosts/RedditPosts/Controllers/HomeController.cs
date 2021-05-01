@@ -64,9 +64,7 @@ namespace RedditPosts.Controllers
             RunningScript = true;
 
             Thread startPythonThread = new Thread(RetrieveUpvotes);
-            Thread watchFileThread = new Thread(WatchUpvoteFile);
             startPythonThread.Start();
-            watchFileThread.Start();
 
             Thread.Sleep(100); // Pause to let the thread start before changing condition
             RetrievingUpvotes = true;
@@ -89,77 +87,47 @@ namespace RedditPosts.Controllers
             string pythonPath = GetPythonExePath();
             string scriptPath = GetRedditScriptPath();
 
-            ProcessStartInfo start = new ProcessStartInfo();
-            start.FileName = pythonPath;
-            start.Arguments = string.Format("\"{0}\"", scriptPath);
-            start.UseShellExecute = false;
-            start.CreateNoWindow = true;
-            start.RedirectStandardOutput = true;
-            start.RedirectStandardError = true;
-
-            using(Process process = Process.Start(start))
+            var process = new Process // Source: https://stackoverflow.com/a/53380763
             {
-                using(StreamReader reader = process.StandardOutput)
+                StartInfo = new ProcessStartInfo
                 {
-                    //string stderr = process.StandardError.ReadToEnd();
-                    //string result = reader.ReadToEnd();
+                    FileName = "\"" + pythonPath + "\"",
+                    Arguments = "\"" + scriptPath + "\"",
+                    UseShellExecute = false,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    CreateNoWindow = true
+                },
+                EnableRaisingEvents = true
+            };
+            process.ErrorDataReceived += Process_OutputDataReceived;
+            process.OutputDataReceived += Process_OutputDataReceived;
 
-                    while (!FinishedScript)
-                    {
-
-                    }
-
-                    RunningScript = false;
-                    RetrievingUpvotes = false;
-
-                    System.Diagnostics.Debug.WriteLine("Closing Python Thread");
-                }
-            }
+            process.Start();
+            process.BeginErrorReadLine();
+            process.BeginOutputReadLine();
+            process.WaitForExit();
+            Console.Read();
         }
 
-        private void WatchUpvoteFile()
+        private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if(RetrievingUpvotes)
+            if(e is null || e.Data is null || FinishedScript)
             {
-                System.Diagnostics.Debug.WriteLine("Already active 2!");
                 return;
             }
 
-            string dirPath = GetRedditScriptDirPath();
-            string txtPath = GetResultsPath();
-            using var watcher = new FileSystemWatcher(dirPath);
+            Console.WriteLine(e.Data);
+            System.Diagnostics.Debug.WriteLine(e.Data);
 
-            watcher.NotifyFilter = NotifyFilters.Attributes
-                                 | NotifyFilters.LastWrite
-                                 | NotifyFilters.Size;
-
-            watcher.Path = Path.GetDirectoryName(txtPath);
-            watcher.Filter = Path.GetFileName(txtPath);
-
-            watcher.Changed += OnChanged;
-            watcher.EnableRaisingEvents = true;
-
-            while(RunningScript)
-            {
-
-            }
-
-            System.Diagnostics.Debug.WriteLine("Closing Watch Thread");
-        }
-
-        private void OnChanged(object sender, FileSystemEventArgs e)
-        {
-            string txtPath = GetResultsPath();
-            var lastLine = System.IO.File.ReadLines(txtPath).Last();
-            System.Diagnostics.Debug.WriteLine(lastLine);
-
-            if (lastLine.Contains("as been stored."))
+            if(e.Data.Contains("as been stored."))
             {
                 UpvoteCount++;
             }
 
-            if (lastLine == "Completed")
+            else if(e.Data.Contains("Completed"))
             {
+                RetrievingUpvotes = false;
                 FinishedScript = true;
             }
         }
@@ -184,8 +152,10 @@ namespace RedditPosts.Controllers
                     System.Diagnostics.Debug.WriteLine("Added Posts");
                 }
 
-                UpvoteCount = 0;
                 EmptyResultsFile();
+                RunningScript = false;
+                FinishedScript = false;
+                UpvoteCount = 0;
                 toReturn = true;
             }
 
@@ -209,8 +179,8 @@ namespace RedditPosts.Controllers
 
         public string GetRedditScriptPath()
         {
-            return GetRedditScriptDirPath() + @"\Reddit.py";
-            //return GetRedditScriptDirPath() + @"\PrintLoop.py";
+            //return GetRedditScriptDirPath() + @"\Reddit.py";
+            return GetRedditScriptDirPath() + @"\PrintLoop.py";
         }
 
         public string GetResultsPath()

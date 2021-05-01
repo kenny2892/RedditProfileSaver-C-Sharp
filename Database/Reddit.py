@@ -5,6 +5,7 @@ import traceback
 import os.path
 import pathlib
 import requests
+import sys
 from content_url_filter import * # pylint: disable=unused-wildcard-import
 
 overwrite_old_file = False
@@ -22,7 +23,7 @@ def collect_upvoted_posts(bot_id, bot_secret, token, user, imgur_id):
         user_agent = user
     )
     
-    print_to_file("User being checked: " + reddit.user.me().name + "\n")
+    print_to_system("User being checked: " + reddit.user.me().name + "\n")
     
     load_file(reddit)
     store_upvoted_posts(reddit, imgur_id)
@@ -59,7 +60,7 @@ def store_upvoted_posts(reddit, imgur_id):
             
             if post_name in old_upvoted_posts.keys() or post_name_utc in old_upvoted_posts.keys():
                 matches = matches + 1
-                print_to_file("Post Already in Archive. " + str((10 - matches)) + " more posts till termination.\n")
+                print_to_system("Post Already in Archive. " + str((10 - matches)) + " more posts till termination.\n")
                 time.sleep(1)
                 
                 if(matches >= 10):
@@ -73,7 +74,7 @@ def store_upvoted_posts(reddit, imgur_id):
             matches = 0
             
             # Print the storing message
-            print_to_file("Post " + str(post_count) + " has been stored.\n")
+            print_to_system("Post " + str(post_count) + " has been stored.\n")
             
             # if post_count == 281:
             #     print("aweaweaeaw")
@@ -104,7 +105,7 @@ def store_upvoted_posts(reddit, imgur_id):
                 break
 
     except Exception as e:
-        print_to_file("Something went wrong!\nError Msg:\n" + str(e) + "\n")
+        print_to_system("Something went wrong!\nError Msg:\n" + str(e) + "\n")
         traceback.print_exc()
         
 def save_file(reddit):
@@ -129,15 +130,11 @@ def save_file(reddit):
     json.dump(upvoted_posts, out_file, indent = 4) 
     out_file.close()
 
-    print_to_file("Completed")
+    print_to_system("Completed")
     
-def print_to_file(text):
-    file_path = str(pathlib.Path(__file__).parent.absolute()) + "/Results.txt"
-
-    with open(file_path, "a") as resultsFile:
-        resultsFile.write(text)
-    
+def print_to_system(text):
     print(text)
+    sys.stdout.flush()
     
 def main():
     # Get Config File
