@@ -23,14 +23,14 @@ def collect_upvoted_posts(bot_id, bot_secret, token, user, imgur_id):
         user_agent = user
     )
     
-    print_to_system("User being checked: " + reddit.user.me().name + "\n")
+    print_to_system("User being checked: " + reddit.user.me().name)
     
     load_file(reddit)
     store_upvoted_posts(reddit, imgur_id)
     save_file(reddit)
     
-    print("Upvotes have been saved!")
-    print("Total of " + str(len(upvoted_posts)) + " upvoted posts archived.")
+    print_to_system("Upvotes have been saved!")
+    print_to_system("Total of " + str(len(upvoted_posts)) + " upvoted posts archived.")
 
 # Check if Upvoted File Exists
 def load_file(reddit):
@@ -60,7 +60,7 @@ def store_upvoted_posts(reddit, imgur_id):
             
             if post_name in old_upvoted_posts.keys() or post_name_utc in old_upvoted_posts.keys():
                 matches = matches + 1
-                print_to_system("Post Already in Archive. " + str((10 - matches)) + " more posts till termination.\n")
+                print_to_system("Post Already in Archive. " + str((10 - matches)) + " more posts till termination.")
                 time.sleep(1)
                 
                 if(matches >= 10):
@@ -74,10 +74,7 @@ def store_upvoted_posts(reddit, imgur_id):
             matches = 0
             
             # Print the storing message
-            print_to_system("Post " + str(post_count) + " has been stored.\n")
-            
-            # if post_count == 281:
-            #     print("aweaweaeaw")
+            print_to_system("Post " + str(post_count) + " has been stored.")
 
             # Get All Variables
             # print(vars(item))
@@ -105,7 +102,7 @@ def store_upvoted_posts(reddit, imgur_id):
                 break
 
     except Exception as e:
-        print_to_system("Something went wrong!\nError Msg:\n" + str(e) + "\n")
+        print_to_system("Something went wrong!\nError Msg:\n" + str(e))
         traceback.print_exc()
         
 def save_file(reddit):
