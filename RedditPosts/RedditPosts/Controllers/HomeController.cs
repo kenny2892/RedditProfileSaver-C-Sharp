@@ -179,8 +179,8 @@ namespace RedditPosts.Controllers
 
         public string GetRedditScriptPath()
         {
-            //return GetRedditScriptDirPath() + @"\Reddit.py";
-            return GetRedditScriptDirPath() + @"\PrintLoop.py";
+            return GetRedditScriptDirPath() + @"\Reddit.py";
+            //return GetRedditScriptDirPath() + @"\PrintLoop.py";
         }
 
         public string GetResultsPath()

@@ -1,30 +1,42 @@
 import pathlib
+import sys
 from time import sleep
-from RepeatedTimer import *
+from RepeatedTimer import * # pylint: disable=unused-wildcard-import
+
+count = 0
 
 def printToFile():
-    text = "\nPost 1 has been stored."
+    global count
+    count = count + 1
+    text = "Post " + str(count) + " has been stored."
 
-    file_path = str(pathlib.Path(__file__).parent.absolute()) + "/Results.txt"
-    resultsFile = open(file_path, "a")
-    
-    resultsFile.write(text)
-    resultsFile.close()
-    
     print(text)
+    sys.stdout.flush()
+
+    # file_path = str(pathlib.Path(__file__).parent.absolute()) + "/Results.txt"
+    # resultsFile = open(file_path, "a")
+    
+    # resultsFile.write(text)
+    # resultsFile.close()
+    
+    # print(text)
     
 def main():
-    rt = RepeatedTimer(1, printToFile) # it auto-starts, no need of rt.start()
+    rt = RepeatedTimer(0.5, printToFile) # it auto-starts, no need of rt.start()
 
     try:
-        sleep(10) # your long-running job goes here...
+        while(count < 20):
+            continue
     finally:
         rt.stop() # better in a try/finally block to make sure the program ends!
 
-    file_path = str(pathlib.Path(__file__).parent.absolute()) + "/Results.txt"
-    resultsFile = open(file_path, "a")
+    # file_path = str(pathlib.Path(__file__).parent.absolute()) + "/Results.txt"
+    # resultsFile = open(file_path, "a")
     
-    resultsFile.write("\nCompleted")
-    resultsFile.close()
+    # resultsFile.write("\nCompleted")
+    # resultsFile.close()
+
+    print("Completed")
+    sys.stdout.flush()
 
 main()
