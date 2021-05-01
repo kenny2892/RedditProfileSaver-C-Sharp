@@ -41,6 +41,26 @@ namespace RedditPosts.Models
                     context.RedditPost.AddRange(idsToAdd);
                     context.SaveChanges();
                 }
+
+                //UpdateContentUrlWithinDatabase(context, posts);
+            }
+        }
+
+        private static void UpdateContentUrlWithinDatabase(RedditPostContext context, List<RedditPost> posts)
+        {
+            IQueryable<RedditPost> postsQuery = from m in context.RedditPost select m;
+            IEnumerable<RedditPost> postsEnumerable = postsQuery.ToList().AsEnumerable();
+
+            foreach(RedditPost fromJson in posts)
+            {
+                RedditPost fromDatabase = postsEnumerable.Where(post => post.Number == fromJson.Number).FirstOrDefault();
+
+                if(fromJson.UrlContent != fromDatabase.UrlContent)
+                {
+                    fromDatabase.UrlContent = fromJson.UrlContent;
+                    context.Update(fromDatabase);
+                    context.SaveChanges();
+                }
             }
         }
 

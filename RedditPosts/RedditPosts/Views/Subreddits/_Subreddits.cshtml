@@ -1,7 +1,8 @@
 ﻿@model RedditPosts.ViewModels.SubredditsViewModel
 
 @{ 
-    Dictionary<SubredditInfo, int> subreddits = Model.Subreddits;
+    List<SubredditInfo> subreddits = Model.Subreddits;
+    Dictionary<SubredditInfo, int> subredditCountDict = Model.SubredditCountDict;
 
     List<SubredditInfo> mostUpvotedSubs = Model.MostUpvoted;
     int mostUpvotedCount = Model.MostUpvotedCount;
@@ -58,10 +59,9 @@
 <hr />
 
 <div class="grid-container">
-    @foreach(var pair in subreddits) // Source: https://www.w3schools.com/css/css_grid.asp
+    @foreach(var item in subreddits) // Source: https://www.w3schools.com/css/css_grid.asp
     {
-        SubredditInfo item = pair.Key;
-        int count = pair.Value;
+        int count = subredditCountDict.GetValueOrDefault(item);
 
         <div class="grid-item">
             <h5>

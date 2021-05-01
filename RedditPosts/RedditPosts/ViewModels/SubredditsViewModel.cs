@@ -8,7 +8,8 @@ namespace RedditPosts.ViewModels
 {
     public class SubredditsViewModel
     {
-        public Dictionary<SubredditInfo, int> Subreddits { get; set; }
+        public List<SubredditInfo> Subreddits { get; set; }
+        public Dictionary<SubredditInfo, int> SubredditCountDict { get; set; }
         public List<SubredditInfo> MostUpvoted { get; set; }
         public List<SubredditInfo> LeastUpvoted { get; set; }
         public int MostUpvotedCount { get; set; }

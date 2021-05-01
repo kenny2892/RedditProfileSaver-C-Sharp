@@ -1,8 +1,15 @@
-﻿@{
+﻿@model RedditPosts.ViewModels.SubredditPageViewModel
+
+@{
     ViewData["Title"] = "Subreddits";
 }
 
 <h1>Subreddits</h1>
+
+<form asp-controller="Subreddits" asp-action="Index" method="get">
+    Sorting: @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(SubredditSortingSettings))))
+    <input type="submit" value="Submit">
+</form>
 
 <div id="subredditGrid">
 </div>
@@ -14,6 +21,6 @@
     <script src="~/js/Subreddits.js" asp-append-version="true"></script>
 
     <script>
-        var loading = new LoadSubreddits();
+        var loading = new LoadSubreddits({ vm:@Html.Raw(Json.Serialize(Model)) });
     </script>
 }

@@ -22,17 +22,17 @@ namespace RedditPosts.Controllers
 
         }
 
-        public IActionResult Index()
+        public IActionResult Index(SubredditPageViewModel vm)
         {
             if(!HasPasswordAlready())
             {
                 return RedirectToAction("Index", "Password", new { redirectTo = "Subreddits" });
             }  
 
-            return View();
+            return View(vm);
         }
 
-        public IActionResult _Subreddits()
+        public IActionResult _Subreddits(SubredditPageViewModel vm)
         {
             if(!HasPasswordAlready())
             {
@@ -43,8 +43,6 @@ namespace RedditPosts.Controllers
             var subredditNames = postsQuery.Select(post => post.Subreddit).Distinct().OrderBy(subredditName => subredditName.ToLower()).ToList();
 
             var iconQuery = from m in _subredditInfoContext.SubredditInfo select m;
-            iconQuery = iconQuery.OrderBy(subreddit => subreddit.SubredditName.ToLower());
-
             var subredditsAlreadyStored = iconQuery.Select(subreddit => subreddit.SubredditName).ToList();
             var subredditsToRetrieve = subredditNames.Where(subName => !subredditsAlreadyStored.Contains(subName)).ToList();
             foreach(string subredditName in subredditsToRetrieve)
@@ -52,17 +50,16 @@ namespace RedditPosts.Controllers
                 GetSubredditInfo(subredditName);
             }
 
-            SubredditsViewModel vm = CreateViewModel(postsQuery);
+            SubredditsViewModel itemsVm = CreateViewModel(postsQuery, vm.SortingSetting);
 
-            return PartialView(vm);
+            return PartialView(itemsVm);
         }
 
-        private SubredditsViewModel CreateViewModel(IQueryable<RedditPost> postsQuery)
+        private SubredditsViewModel CreateViewModel(IQueryable<RedditPost> postsQuery, SubredditSortingSettings sortingSetting)
         {
             var iconQuery = from m in _subredditInfoContext.SubredditInfo select m;
-            iconQuery = iconQuery.OrderBy(subreddit => subreddit.SubredditName.ToLower());
 
-            Dictionary<SubredditInfo, int> model = new Dictionary<SubredditInfo, int>();
+            Dictionary<SubredditInfo, int> subredditCountDict = new Dictionary<SubredditInfo, int>();
 
             List<SubredditInfo> mostUpvotedInfo = new List<SubredditInfo>() { Utility.MakeDefaultSubredditInfo() };
             List<SubredditInfo> leastUpvotedInfo = new List<SubredditInfo>() { Utility.MakeDefaultSubredditInfo() };
@@ -96,12 +93,34 @@ namespace RedditPosts.Controllers
                     leastUpvotedInfo.Add(subreddit);
                 }
 
-                model.Add(subreddit, count);
+                subredditCountDict.Add(subreddit, count);
+            }
+
+            var iconEnumerable = iconQuery.AsEnumerable();
+
+            switch(sortingSetting)
+            {
+                case SubredditSortingSettings.Alphabetical:
+                    iconEnumerable = iconEnumerable.OrderBy(subreddit => subreddit.SubredditName.ToLower());
+                    break;
+
+                case SubredditSortingSettings.Reverse_Alphabetical:
+                    iconEnumerable = iconEnumerable.OrderByDescending(subreddit => subreddit.SubredditName.ToLower());
+                    break;
+
+                case SubredditSortingSettings.Count:
+                    iconEnumerable = iconEnumerable.OrderByDescending(subreddit => subredditCountDict.GetValueOrDefault(subreddit));
+                    break;
+
+                case SubredditSortingSettings.Reverse_Count:
+                    iconEnumerable = iconEnumerable.OrderBy(subreddit => subredditCountDict.GetValueOrDefault(subreddit));
+                    break;
             }
 
             SubredditsViewModel vm = new SubredditsViewModel
             {
-                Subreddits = model,
+                Subreddits = iconEnumerable.ToList(),
+                SubredditCountDict = subredditCountDict,
                 MostUpvoted = mostUpvotedInfo,
                 MostUpvotedCount = mostUpvotedCount,
                 LeastUpvoted = leastUpvotedInfo,

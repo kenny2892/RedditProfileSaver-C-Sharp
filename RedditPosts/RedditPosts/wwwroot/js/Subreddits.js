@@ -1,11 +1,13 @@
-﻿function LoadSubreddits()
+﻿function LoadSubreddits(params)
 {
     var subredditGrid = document.getElementById("subredditGrid");
     var loadingSubredditsDisplay = document.getElementById("loadingSubreddits");
 
     $.ajax
     ({
+        type: 'POST',
         url: "/Subreddits/_Subreddits",
+        data: params,
         dataType: "html"
     })
     .done(function(result) 

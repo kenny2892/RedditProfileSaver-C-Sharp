@@ -60,12 +60,13 @@ def store_upvoted_posts(reddit, imgur_id):
             if post_name in old_upvoted_posts.keys() or post_name_utc in old_upvoted_posts.keys():
                 matches = matches + 1
                 print_to_file("Post Already in Archive. " + str((10 - matches)) + " more posts till termination.\n")
-                time.sleep(0.2)
+                time.sleep(1)
                 
                 if(matches >= 10):
                     break
                 
                 else:
+                    time.sleep(1)
                     continue
             
             # Reset Matches Counter
@@ -74,6 +75,9 @@ def store_upvoted_posts(reddit, imgur_id):
             # Print the storing message
             print_to_file("Post " + str(post_count) + " has been stored.\n")
             
+            # if post_count == 281:
+            #     print("aweaweaeaw")
+
             # Get All Variables
             # print(vars(item))
             
@@ -129,10 +133,9 @@ def save_file(reddit):
     
 def print_to_file(text):
     file_path = str(pathlib.Path(__file__).parent.absolute()) + "/Results.txt"
-    resultsFile = open(file_path, "a")
-    
-    resultsFile.write(text)
-    resultsFile.close()
+
+    with open(file_path, "a") as resultsFile:
+        resultsFile.write(text)
     
     print(text)
     
