@@ -72,37 +72,16 @@
 
                     else
                     {
-                        textArea.textContent = "Adding Posts to Database";
-                        upvoteDisplay.textContent = "";
-
-                        $.ajax // Add new posts to the database
-                        ({
-                            url: "/Home/UpdatePosts",
-                            data: {}
-                        })
-                        .done(function(result) 
-                        {
-                            if(result) 
-                            {
-                                textArea.textContent = "";
-                                upvoteDisplay.textContent = "";
-                                isRetrieving = false;
-                            }
-
-                            else
-                            {
-                                textArea.textContent = "Error Has Occurred";
-                                upvoteDisplay.textContent = "";
-                                isRetrieving = false;
-                            }
-                        });
-
+                        setTimeout(() => { textArea.textContent = ""; upvoteDisplay.textContent = ""; }, 10); // Need to have it delayed to properly display
+                        isRetrieving = false;
                         clearInterval(interval);
                     }
                 },
             });
         }, 1000);
     }
+
+
 
     function updateIcons()
     {

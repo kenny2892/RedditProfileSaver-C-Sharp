@@ -132,41 +132,6 @@ namespace RedditPosts.Controllers
             }
         }
 
-        public bool UpdatePosts()
-        {
-            bool toReturn = false;
-
-            try
-            {
-                List<RedditPost> posts = SeedData.GeneratePosts();
-
-                var newIds = posts.Select(p => p.Number).Distinct().ToArray();
-                var oldIds = _redditPostContext.RedditPost.Where(p => newIds.Contains(p.Number)).Select(p => p.Number).ToArray();
-                var idsToAdd = posts.Where(p => !oldIds.Contains(p.Number)).ToList();
-
-                if(idsToAdd.Count > 0)
-                {
-                    _redditPostContext.RedditPost.AddRange(idsToAdd);
-                    _redditPostContext.SaveChanges();
-
-                    System.Diagnostics.Debug.WriteLine("Added Posts");
-                }
-
-                EmptyResultsFile();
-                RunningScript = false;
-                FinishedScript = false;
-                UpvoteCount = 0;
-                toReturn = true;
-            }
-
-            catch(Exception e)
-            {
-                System.Diagnostics.Debug.WriteLine("ERROR ADDING POSTS: " + "\n" + e.Message);
-            }
-
-            return toReturn;
-        }
-
         public string GetPythonExePath()
         {
             return _configuration.GetConnectionString("PythonExe");

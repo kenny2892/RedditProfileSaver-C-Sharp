@@ -6,16 +6,15 @@ import os.path
 import pathlib
 import requests
 import sys
+from datetime import datetime
 from content_url_filter import * # pylint: disable=unused-wildcard-import
-
-overwrite_old_file = False
+from sqlite_helper import * # pylint: disable=unused-wildcard-import
 
 upvoted_posts = {}
-old_upvoted_posts = {}
 fields = ["Post Name", "Author", "Subreddit", "Created (in Seconds)", "Url to Content", "Url to Post", "Url to Thumbnail", "Is Saved", "Is NSFW", "Number"]
 
 # Create Reddit Instance and Start Processing
-def collect_upvoted_posts(bot_id, bot_secret, token, user, imgur_id):
+def collect_upvoted_posts(bot_id, bot_secret, token, user, imgur_id, connection):
     reddit = praw.Reddit(
         client_id = bot_id,
         client_secret = bot_secret,
@@ -25,26 +24,18 @@ def collect_upvoted_posts(bot_id, bot_secret, token, user, imgur_id):
     
     print_to_system("User being checked: " + reddit.user.me().name)
     
-    load_file(reddit)
-    store_upvoted_posts(reddit, imgur_id)
-    save_file(reddit)
+    store_upvoted_posts(reddit, imgur_id, connection)
+    save_file(reddit, connection)
     
     print_to_system("Upvotes have been saved!")
     print_to_system("Total of " + str(len(upvoted_posts)) + " upvoted posts archived.")
 
-# Check if Upvoted File Exists
-def load_file(reddit):
-    file_path = str(pathlib.Path(__file__).parent.absolute()) + "/" + reddit.user.me().name + " - Upvoted.json"
-    if(not overwrite_old_file & os.path.isfile(file_path)):
-        with open(file_path) as file:
-            global old_upvoted_posts 
-            old_upvoted_posts = json.load(file)
-
 # Begin Storing Upvoted Posts
-def store_upvoted_posts(reddit, imgur_id):
+def store_upvoted_posts(reddit, imgur_id, connection):
     try:
         post_count = 0
         matches = 0 # Match Counter (counts up to 10, if it reaches 10 it breaks the loop)
+        old_post_keys = select_all_post_keys(connection)
 
         # Add Posts to List
         for item in reddit.user.me().upvoted(limit=None):
@@ -52,22 +43,25 @@ def store_upvoted_posts(reddit, imgur_id):
             post_count = post_count + 1
     
             title = item.title
+
+            if post_count >= 82:
+                print()
+
             author = item.author.name if item.author is not None else "Deleted"
             
             # Make Post Entry Name
-            post_name = title + " - " + author + " - " + str(item.created)
-            post_name_utc = title + " - " + author + " - " + str(item.created_utc)
+            post_name = title + " - " + author + " - " + format_time(item.created)
+            post_name_utc = title + " - " + author + " - " + format_time(item.created_utc)
             
-            if post_name in old_upvoted_posts.keys() or post_name_utc in old_upvoted_posts.keys():
+            if post_name in old_post_keys or post_name_utc in old_post_keys:
                 matches = matches + 1
                 print_to_system("Post Already in Archive. " + str((10 - matches)) + " more posts till termination.")
-                time.sleep(1)
+                time.sleep(0.1)
                 
                 if(matches >= 10):
                     break
                 
                 else:
-                    time.sleep(1)
                     continue
             
             # Reset Matches Counter
@@ -84,7 +78,7 @@ def store_upvoted_posts(reddit, imgur_id):
             post_entry[fields[0]] = title
             post_entry[fields[1]] = author
             post_entry[fields[2]] = item.subreddit.display_name
-            post_entry[fields[3]] = item.created_utc
+            post_entry[fields[3]] = format_time(item.created_utc)
             post_entry[fields[4]] = filter_content_url(item.url, item, reddit, imgur_id)            
             post_entry[fields[5]] = "https://www.reddit.com" + item.permalink
             post_entry[fields[6]] = item.thumbnail # If there is no thumbnail (the post is text) it will say "self" instead
@@ -104,28 +98,20 @@ def store_upvoted_posts(reddit, imgur_id):
     except Exception as e:
         print_to_system("Something went wrong!\nError Msg:\n" + str(e))
         traceback.print_exc()
+
+def format_time(seconds):
+    return datetime.utcfromtimestamp(seconds).strftime("%Y-%m-%d %H:%M:%S")
         
-def save_file(reddit):
+def save_file(reddit, connection):
+    og_post_count = find_post_count(connection)
+    
     # Correct The Post Numbers
     to_subtract = len(upvoted_posts)
     for entry in upvoted_posts:
         upvoted_posts[entry][fields[9]] = -1 * (upvoted_posts[entry][fields[9]] - to_subtract)
-        
-    # If merging, correct the numbers again
-    if(not overwrite_old_file):
-        to_add = len(old_upvoted_posts)
-        for entry in upvoted_posts:
-            upvoted_posts[entry][fields[9]] = upvoted_posts[entry][fields[9]] + to_add + 1
-    
-    # Check if file is to be overwritten or not
-    if(not overwrite_old_file):
-        upvoted_posts.update(old_upvoted_posts)
-    
-    # Save to File
-    file_path = str(pathlib.Path(__file__).parent.absolute()) + "/" + reddit.user.me().name + " - Upvoted.json"
-    out_file = open(file_path, "w") 
-    json.dump(upvoted_posts, out_file, indent = 4) 
-    out_file.close()
+        upvoted_posts[entry][fields[9]] = upvoted_posts[entry][fields[9]] + og_post_count + 1
+        post = (upvoted_posts[entry][fields[9]], upvoted_posts[entry][fields[0]], upvoted_posts[entry][fields[1]], upvoted_posts[entry][fields[2]], '0', upvoted_posts[entry][fields[3]], upvoted_posts[entry][fields[4]], upvoted_posts[entry][fields[5]], upvoted_posts[entry][fields[6]], upvoted_posts[entry][fields[7]], upvoted_posts[entry][fields[8]])
+        create_post(connection, post)
 
     print_to_system("Completed")
     
@@ -148,7 +134,10 @@ def main():
     user = config.get("User Agent", "")
     imgur_id = config.get("ImgurClientId", "")
     
-    collect_upvoted_posts(bot_id, bot_secret, token, user, imgur_id)
+    database_path = str(pathlib.Path(__file__).parent.absolute()) + "/RedditPosts.db"
+    connection = create_connection(database_path)
+    
+    collect_upvoted_posts(bot_id, bot_secret, token, user, imgur_id, connection)
     
 main()
     
