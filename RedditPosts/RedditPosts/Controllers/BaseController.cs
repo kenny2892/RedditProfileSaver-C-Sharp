@@ -220,6 +220,7 @@ namespace RedditPosts.Controllers
                 string communityIcon = "";
                 string iconImg = "";
                 string url = Utility.DefaultSubredditIcon;
+                bool isNsfw = false;
 
                 if(!(subredditAbout.SubredditData.CommunityIcon is null)) // Reddit's current icon system
                 {
@@ -246,7 +247,14 @@ namespace RedditPosts.Controllers
                     url = !String.IsNullOrEmpty(communityIcon) ? communityIcon : iconImg;
                 }
 
-                return new SubredditInfo { SubredditName = subredditName, IconUrl = url, PrimaryColor = primaryColor };
+                bool? isOver18 = subredditAbout.SubredditData.Over18;
+
+                if(!(isOver18 is null) && (bool) isOver18)
+                {
+                    isNsfw = true;
+                }
+
+                return new SubredditInfo { SubredditName = subredditName, IconUrl = url, PrimaryColor = primaryColor, IsNsfw = isNsfw };
             }
 
             catch(Exception)
