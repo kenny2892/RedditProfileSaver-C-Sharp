@@ -50,14 +50,25 @@ namespace RedditPosts.Controllers
                 GetSubredditInfo(subredditName);
             }
 
-            SubredditsViewModel itemsVm = CreateViewModel(postsQuery, vm.SortingSetting);
+            SubredditsViewModel itemsVm = CreateViewModel(postsQuery, vm.SortingSetting, vm.NsfwSetting);
 
             return PartialView(itemsVm);
         }
 
-        private SubredditsViewModel CreateViewModel(IQueryable<RedditPost> postsQuery, SubredditSortingSettings sortingSetting)
+        private SubredditsViewModel CreateViewModel(IQueryable<RedditPost> postsQuery, SubredditSortingSettings sortingSetting, NsfwSettings nsfwSetting)
         {
             var iconQuery = from m in _subredditInfoContext.SubredditInfo select m;
+
+            switch(nsfwSetting)
+            {
+                case NsfwSettings.No_Nsfw:
+                    iconQuery = iconQuery.Where(sub => !sub.IsNsfw);
+                    break;
+
+                case NsfwSettings.Nsfw_Only:
+                    iconQuery = iconQuery.Where(sub => sub.IsNsfw);
+                    break;
+            }
 
             Dictionary<SubredditInfo, int> subredditCountDict = new Dictionary<SubredditInfo, int>();
 
@@ -66,9 +77,11 @@ namespace RedditPosts.Controllers
 
             int mostUpvotedCount = -1;
             int leastUpvotedCount = 999999;
+            int totalSubCount = 0;
 
             foreach(var subreddit in iconQuery)
             {
+                totalSubCount++;
                 int count = postsQuery.Count(post => post.Subreddit == subreddit.SubredditName);
 
                 if(count >= mostUpvotedCount)
@@ -124,7 +137,8 @@ namespace RedditPosts.Controllers
                 MostUpvoted = mostUpvotedInfo,
                 MostUpvotedCount = mostUpvotedCount,
                 LeastUpvoted = leastUpvotedInfo,
-                LeastUpvotedCount = leastUpvotedCount
+                LeastUpvotedCount = leastUpvotedCount,
+                TotalSubredditCount = totalSubCount
             };
 
             return vm;

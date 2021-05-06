@@ -7,7 +7,8 @@
 <h1>Subreddits</h1>
 
 <form asp-controller="Subreddits" asp-action="Index" method="get">
-    Sorting: @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(SubredditSortingSettings))))
+    Sorting: @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(SubredditSortingSettings)))) | 
+    Nsfw Filter: @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings))))
     <input type="submit" value="Submit">
 </form>
 

@@ -9,5 +9,6 @@ namespace RedditPosts.ViewModels
     public class SubredditPageViewModel
     {
         public SubredditSortingSettings SortingSetting { get; set; }
+        public NsfwSettings NsfwSetting { get; set; } = NsfwSettings.No_Filter;
     }
 }

@@ -14,5 +14,6 @@ namespace RedditPosts.ViewModels
         public List<SubredditInfo> LeastUpvoted { get; set; }
         public int MostUpvotedCount { get; set; }
         public int LeastUpvotedCount { get; set; }
+        public int TotalSubredditCount { get; set; }
     }
 }
