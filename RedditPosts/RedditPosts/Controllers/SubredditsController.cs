@@ -59,6 +59,11 @@ namespace RedditPosts.Controllers
         {
             var iconQuery = from m in _subredditInfoContext.SubredditInfo select m;
 
+            if(GetCookieString("AllowNsfw") == "false")
+            {
+                iconQuery = iconQuery.Where(sub => !sub.IsNsfw);
+            }
+
             switch(nsfwSetting)
             {
                 case NsfwSettings.No_Nsfw:

@@ -13,10 +13,12 @@ namespace RedditPosts.Models
     {
         private RedditViewModel Vm { get; set; }
         private IEnumerable<RedditPost> PostsToFilter { get; set; }
+        private bool DenyNsfw { get; set; }
 
-        public RedditPostFilter(RedditViewModel vm)
+        public RedditPostFilter(RedditViewModel vm, bool denyNsfw)
         {
             Vm = vm;
+            DenyNsfw = denyNsfw;
         }
 
         public IEnumerable<RedditPost> FilterPosts(IEnumerable<RedditPost> postsToFilter)
@@ -51,6 +53,11 @@ namespace RedditPosts.Models
 
         private void NsfwFilter()
         {
+            if(DenyNsfw)
+            {
+                PostsToFilter = PostsToFilter.Where(s => !s.IsNsfw);
+            }
+
             switch(Vm.NsfwSetting)
             {
                 case NsfwSettings.No_Filter:
