@@ -38,3 +38,42 @@
         });
     }
 }
+
+function SetupAllowNsfw()
+{
+    var allowNsfwCheckbox = document.getElementById("allowNsfw");
+    allowNsfwCheckbox.checked = true;
+
+    $.ajax
+    ({
+        url: "/Base/GetCookieString",
+        data: { key: "AllowNsfw" },
+        success: function(value)
+        {
+            if(value != null && value == "false")
+            {
+                allowNsfwCheckbox.checked = false;
+            }
+        },
+    })
+    .done(function()
+    {
+        allowNsfwCheckbox.addEventListener('change', toggleNsfw, false);
+    });
+
+    function toggleNsfw(e)
+    {
+        var toSet = "false";
+
+        if(e.target.checked)
+        {
+            toSet = "true";
+        }
+
+        $.ajax
+            ({
+                url: "/Base/SetCookieString",
+                data: {key: "AllowNsfw", value: toSet}
+            });
+    }
+}

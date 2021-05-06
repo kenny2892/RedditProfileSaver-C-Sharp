@@ -320,5 +320,39 @@ namespace RedditPosts.Controllers
             HttpContext.Session.SetString(key, value);
             return true;
         }
+
+        public string GetCookieString(string key) // Source for Cookies: https://www.c-sharpcorner.com/article/asp-net-core-working-with-cookie/
+        {
+            if(key is null)
+            {
+                return "";
+            }
+
+            string value = HttpContext.Request.Cookies[key];
+            return !String.IsNullOrEmpty(value) ? value : "";
+        }
+
+        public bool SetCookieString(string key, string value, int? expireTimeInMinutes)
+        {
+            if(key is null || value is null)
+            {
+                return false;
+            }
+
+            CookieOptions option = new CookieOptions();
+
+            if(expireTimeInMinutes.HasValue)
+            {
+                option.Expires = DateTime.Now.AddMinutes(expireTimeInMinutes.Value);
+            }
+
+            else
+            {
+                option.Expires = DateTime.Now.AddMonths(12);
+            }
+
+            Response.Cookies.Append(key, value, option);
+            return true;
+        }
     }
 }

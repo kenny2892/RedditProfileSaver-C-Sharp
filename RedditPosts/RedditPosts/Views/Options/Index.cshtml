@@ -11,11 +11,17 @@
     <h6>Dark Mode</h6>
 </div>
 
+<div>
+    <label for="allowNsfw">Allow Nsfw: </label>
+    <input type="checkbox" id="allowNsfw">
+</div>
+
 @section Scripts
 {
     <script src="~/js/Options.js" asp-append-version="true"></script>
 
     <script>
         var setupTheme = SetupThemeToggle();
+        var setupAllowNsfw = SetupAllowNsfw();
     </script>
 }
