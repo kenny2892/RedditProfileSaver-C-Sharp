@@ -40,9 +40,15 @@ namespace RedditPosts.Controllers
         // Source for Keyword Search: https://stackoverflow.com/a/31383256 & https://stackoverflow.com/a/57971185
         public IActionResult _RedditPosts(RedditViewModel vm, int lastRowNumber = -1)
         {
-            if (!HasPasswordAlready())
+            if(!HasPasswordAlready()) // If so, then they had the password at one point but the server lost their session
             {
-                return RedirectToAction("Index", "Password");
+                RedditPostsViewModel emptyModel = new RedditPostsViewModel()
+                {
+                    Posts = new List<RedditPost>(),
+                    Subreddits = new Dictionary<string, SubredditInfo>()
+                };
+
+                return PartialView(emptyModel);
             }
 
             IEnumerable<RedditPost> filteredPosts = RetrieveFilteredPosts(vm);
