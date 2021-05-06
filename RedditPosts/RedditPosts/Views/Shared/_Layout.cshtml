@@ -26,20 +26,14 @@
                             <a class="nav-link" asp-area="" asp-controller="Subreddits" asp-action="Index">Subreddits</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Options" asp-action="Index">Options</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
                 </div>
-
-                <div class="theme-switch-wrapper">
-                    <button id="pin-nav-btn">Pin</button>
-                    <h6>Light Mode</h6>
-                    <label class="theme-switch" for="checkbox">
-                        <input type="checkbox" id="checkbox" />
-                        <div class="slider round"></div>
-                    </label>
-                    <h6>Dark Mode</h6>
-                </div>
+                <button id="pin-nav-btn">Pin</button>
             </div>
         </nav>
     </header>
@@ -60,7 +54,7 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/Layout.js" asp-append-version="true"></script>
     <script>
-        var setupTheme = SetupThemeToggle();
+        var setupTheme = SetupTheme();
         var setupPin = SetupPinToggle();
         var setupMobile = SetupMobileChanges();
     </script>

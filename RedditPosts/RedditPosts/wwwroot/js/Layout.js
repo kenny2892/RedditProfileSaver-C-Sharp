@@ -1,57 +1,23 @@
-﻿function SetupThemeToggle() // Source: https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
+﻿function SetupTheme() // Source: https://dev.to/ananyaneogi/create-a-dark-light-mode-switch-with-css-variables-34l8
 {
     var currentTheme = "dark";
-    const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
-    toggleSwitch.checked = true;
 
     $.ajax
     ({
         url: "/Base/GetSessionString",
-        data: { key: "Theme" },
+        data: {key: "Theme"},
         success: function(value)
         {
             if(value != null && value == "light")
             {
                 currentTheme = value;
-                toggleSwitch.checked = false;
             }
         },
     })
     .done(function()
     {
         document.documentElement.setAttribute('data-theme', currentTheme);
-        toggleSwitch.addEventListener('change', switchTheme, false);
     });
-
-    function switchTheme(e)
-    {
-        var theme = "light";
-
-        if(e.target.checked)
-        {
-            theme = "dark";
-        }
-
-        document.documentElement.setAttribute('data-theme', theme);
-
-        $.ajax
-        ({
-            url: "/Base/SetSessionString",
-            data: { key: "Theme", value: theme },
-            success: function(data)
-            {
-                //if(data)
-                //{
-                //    console.log("YES");
-                //}
-
-                //else
-                //{
-                //    console.log("NO");
-                //}
-            },
-        });
-    }
 }
 
 function SetupPinToggle()
@@ -98,7 +64,7 @@ function SetupPinToggle()
 
             else
             {
-                body.setAttribute("style", "padding-top: 80px;");
+                body.setAttribute("style", "padding-top: 73px;");
             }
         }
 
