@@ -107,7 +107,6 @@ namespace RedditPosts.Controllers
             process.BeginErrorReadLine();
             process.BeginOutputReadLine();
             process.WaitForExit();
-            Console.Read();
         }
 
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
