@@ -5,7 +5,7 @@
 
     $.ajax
     ({
-        url: "/Base/GetSessionString",
+        url: "/Base/GetCookieString",
         data: { key: "Theme" },
         success: function(value)
         {
@@ -33,7 +33,7 @@
 
         $.ajax
         ({
-            url: "/Base/SetSessionString",
+            url: "/Base/SetCookieString",
             data: { key: "Theme", value: theme }
         });
     }
@@ -71,9 +71,9 @@ function SetupAllowNsfw()
         }
 
         $.ajax
-            ({
-                url: "/Base/SetCookieString",
-                data: {key: "AllowNsfw", value: toSet}
-            });
+        ({
+            url: "/Base/SetCookieString",
+            data: {key: "AllowNsfw", value: toSet}
+        });
     }
 }

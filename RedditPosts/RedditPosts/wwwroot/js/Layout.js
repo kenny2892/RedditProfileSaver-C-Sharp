@@ -4,7 +4,7 @@
 
     $.ajax
     ({
-        url: "/Base/GetSessionString",
+        url: "/Base/GetCookieString",
         data: {key: "Theme"},
         success: function(value)
         {
@@ -29,7 +29,7 @@ function SetupPinToggle()
 
     $.ajax
     ({
-        url: "/Base/GetSessionString",
+        url: "/Base/GetCookieString",
         data: { key: "Pinned" },
         success: function(value)
         {
@@ -77,20 +77,8 @@ function SetupPinToggle()
 
         $.ajax
         ({
-            url: "/Base/SetSessionString",
-            data: {key: "Pinned", value: isPinned.toString()},
-            success: function(data)
-            {
-                //if(data)
-                //{
-                //    console.log("YES");
-                //}
-
-                //else
-                //{
-                //    console.log("NO");
-                //}
-            },
+            url: "/Base/SetCookieString",
+            data: {key: "Pinned", value: isPinned.toString()}
         });
     }
 }
