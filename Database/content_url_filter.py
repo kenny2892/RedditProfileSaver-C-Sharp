@@ -27,6 +27,10 @@ def filter_content_url(url, reddit_post, reddit, imgur_id):
             if(numOfPeriods == 1): ## Meaning there are no extensions like .png or .jpg
                 new_url = convert_imgur_image(url, imgur_id)
 
+        elif("https://www.reddit.com" + reddit_post.permalink == url and reddit_post.thumbnail != 'self' and reddit_post.thumbnail != 'default'):
+            new_url = check_direct_post(reddit_post, url)
+            time.sleep(0.2)
+
         return new_url
 
     except:

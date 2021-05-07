@@ -3,3 +3,4 @@ from .redgif import *
 from .vreddit import *
 from .imgur_gallery import *
 from .imgur_image import *
+from .reddit_direct_image import *
