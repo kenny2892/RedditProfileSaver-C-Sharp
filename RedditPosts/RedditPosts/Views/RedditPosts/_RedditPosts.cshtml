@@ -116,29 +116,41 @@
                 </h3>
             }
 
-            <div style="text-align:center; font-size:32px;">
+            <div style="text-align: center; font-size: 32px;">
                 @if(item.IsSaved && item.IsNsfw)
                 {
-                    <p><b><span style="color: forestgreen">Saved</span> | <span style="color: darkred">NSFW</span></b></p>
+                    <b><span style="color: forestgreen">Saved</span> | <span style="color: darkred">NSFW</span></b>
                 }
 
                 else if(item.IsSaved)
                 {
-                    <p style="color: forestgreen"><b>Saved</b></p>
+                    <b style="color: forestgreen">Saved</b>
                 }
 
                 else if(item.IsNsfw)
                 {
-                    <p style="color: darkred"><b>NSFW</b></p>
+                    <b style="color: darkred">NSFW</b>
                 }
             </div>
 
-            <h6 style="text-align:center">
+            <h5 style="text-align:center">
+                @if(item.IsFavorited)
+                {
+                    <input type="checkbox" class="favorite-btn-check" id="favoritePostBtn_@item.ID" onclick="FavoritePostToggle(@item.ID)" checked/>
+                }
+
+                else
+                {
+                    <input type="checkbox" class="favorite-btn-check" id="favoritePostBtn_@item.ID" onclick="FavoritePostToggle(@item.ID)"/>
+                }
+
+                <i class="fas fa-star favorite-btn-symbol" for="favoritePostBtn_@item.ID"></i>
+                 | 
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                <a asp-action="Details" asp-route-id="@item.ID">Details</a> | 
                 <a href="#" id="hidePostBtn_@item.ID" data-toggle="modal" data-target="#HideModal_@item.ID">Hide</a> |
                 <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
-            </h6>
+            </h5>
 
             <!-- The Modal -->
             <div class="modal hide_post_modal" id="HideModal_@item.ID">

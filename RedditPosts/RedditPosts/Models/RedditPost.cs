@@ -42,7 +42,7 @@ namespace RedditPosts.Models
         }
         public string Author { get; set; }
         public string Subreddit { get; set; }
-        public bool Hidden { get; set; }
+        public bool Hidden { get; set; } = false;
 
         [DataType(DataType.Date)]
         public DateTime Date { get; set; }
@@ -67,6 +67,8 @@ namespace RedditPosts.Models
         public bool IsSaved { get; set; }
         [Display(Name = "NSFW")]
         public bool IsNsfw { get; set; }
+        [Display(Name = "Favorited")]
+        public bool IsFavorited { get; set; } = false;
 
         public string[] GetContentUrls()
         {

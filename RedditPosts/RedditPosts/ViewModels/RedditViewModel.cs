@@ -14,6 +14,7 @@ namespace RedditPosts.ViewModels
         public string AuthorFilter { get; set; } = "";
         public string SubredditFilter { get; set; } = "";
         public bool SavedOnly { get; set; } = false;
+        public bool FavoritedOnly { get; set; } = false;
         public bool ShowHidden { get; set; } = false;
         public int RandomizeSeed { get; set; } = 0;
         public NsfwSettings NsfwSetting { get; set; } = NsfwSettings.No_Filter;

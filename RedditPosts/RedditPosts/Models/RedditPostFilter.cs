@@ -31,6 +31,7 @@ namespace RedditPosts.Models
             SubredditFilter();
             NsfwFilter();
             SavedFilter();
+            FavoriteFilter();
             ContentTypeFilter();
 
             return PostsToFilter;
@@ -77,7 +78,15 @@ namespace RedditPosts.Models
         {
             if(Vm.SavedOnly)
             {
-                PostsToFilter = PostsToFilter.Where(s => s.IsSaved == true);
+                PostsToFilter = PostsToFilter.Where(s => s.IsSaved);
+            }
+        }
+
+        private void FavoriteFilter()
+        {
+            if(Vm.FavoritedOnly)
+            {
+                PostsToFilter = PostsToFilter.Where(s => s.IsFavorited);
             }
         }
 

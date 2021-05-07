@@ -1,5 +1,12 @@
 ﻿@model RedditPosts.ViewModels.RedditViewModel
 
+@section Header
+{
+    @* Source: https://www.w3schools.com/bootstrap4/bootstrap_icons.asp *@
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/favorite-btn.css" asp-append-version="true"/>
+}
+
 @{
     ViewData["Title"] = "Upvoted Posts";
 }
@@ -28,7 +35,7 @@
 
         <hr />
         <h3>Toggles</h3>
-        <p>Saved Only: @Html.CheckBoxFor(vm => vm.SavedOnly) | Show Hidden: @Html.CheckBoxFor(vm => vm.ShowHidden)</p>
+        <p>Saved Only: @Html.CheckBoxFor(vm => vm.SavedOnly) | Favorited Only: @Html.CheckBoxFor(vm => vm.FavoritedOnly) | Show Hidden: @Html.CheckBoxFor(vm => vm.ShowHidden)</p>
 
         <hr />
         <h3>Dropdowns</h3>

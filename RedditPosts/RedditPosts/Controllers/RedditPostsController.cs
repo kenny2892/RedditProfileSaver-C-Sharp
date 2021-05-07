@@ -165,6 +165,27 @@ namespace RedditPosts.Controllers
             return redditPost.Hidden;
         }
 
+        public bool Favorite(int? id)
+        {
+            if(id == null)
+            {
+                return false;
+            }
+
+            var redditPost = _redditPostContext.RedditPost.Find(id);
+            if(redditPost == null)
+            {
+                return false;
+            }
+
+            redditPost.IsFavorited = !redditPost.IsFavorited;
+            _redditPostContext.Update(redditPost);
+            _redditPostContext.SaveChangesAsync();
+
+            System.Diagnostics.Debug.WriteLine("Favorite Toggled for Post Id:" + id + " Post Favorite Value: " + redditPost.IsFavorited);
+            return redditPost.IsFavorited;
+        }
+
         // GET: RedditPosts/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {

@@ -208,3 +208,12 @@ function SetupRandomSeedDisplay()
 
     updateSortDisplay();
 }
+
+function FavoritePostToggle(id)
+{
+    $.ajax
+    ({
+        url: "/RedditPosts/Favorite",
+        data: {id}
+    });
+}

@@ -59,7 +59,7 @@ function SetupPinToggle()
 
             if(IsMobile())
             {
-                body.setAttribute("style", "padding-top: 110px;");
+                body.setAttribute("style", "padding-top: 64px;");
             }
 
             else

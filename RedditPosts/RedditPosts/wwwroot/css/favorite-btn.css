@@ -1,0 +1,23 @@
+﻿/* Source: https://codepen.io/Guades/pen/bewZgO */
+
+.favorite-btn-check {
+  display: none;
+}
+
+.favorite-btn-symbol, .favorite-btn-check {
+  position: relative;
+  cursor: pointer;
+}
+
+.favorite-btn-symbol {
+	color: gray;
+	font-size: 23px;
+}
+
+.favorite-btn-symbol:hover{
+  color: gold;
+}
+
+.favorite-btn-check:checked ~ .fa-star {
+  color: gold;
+}
