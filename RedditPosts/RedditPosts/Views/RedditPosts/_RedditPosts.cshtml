@@ -134,17 +134,19 @@
             </div>
 
             <h5 style="text-align:center">
-                @if(item.IsFavorited)
-                {
-                    <input type="checkbox" class="favorite-btn-check" id="favoritePostBtn_@item.ID" onclick="FavoritePostToggle(@item.ID)" checked/>
-                }
+                <label for="favoritePostBtn_@item.ID">
+                    @if(item.IsFavorited)
+                    {
+                        <input type="checkbox" class="favorite-btn-check" id="favoritePostBtn_@item.ID" onclick="FavoritePostToggle(@item.ID)" checked/>
+                    }
 
-                else
-                {
-                    <input type="checkbox" class="favorite-btn-check" id="favoritePostBtn_@item.ID" onclick="FavoritePostToggle(@item.ID)"/>
-                }
+                    else
+                    {
+                        <input type="checkbox" class="favorite-btn-check" id="favoritePostBtn_@item.ID" onclick="FavoritePostToggle(@item.ID)"/>
+                    }
 
-                <i class="fas fa-star favorite-btn-symbol" for="favoritePostBtn_@item.ID"></i>
+                    <i class="fas fa-star favorite-btn-symbol"></i>
+                </label>
                  | 
                 <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.ID">Details</a> | 
