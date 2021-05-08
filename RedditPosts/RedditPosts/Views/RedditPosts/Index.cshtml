@@ -39,7 +39,19 @@
 
         <hr />
         <h3>Dropdowns</h3>
-        <p>Nsfw Filter: @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings)))) | Sorting: @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(SortingSettings)))) <span id="randomSeedDisplay"> | Current Seed: @Html.EditorFor(vm => vm.RandomizeSeed)</span></p>
+        <p>Nsfw Filter: @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings)))) | Sorting: @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(RedditPostSortingSettings)))) <span id="randomSeedDisplay"> | Current Seed: @Html.EditorFor(vm => vm.RandomizeSeed)</span></p>
+        
+        <hr />
+        <h3>Date Range</h3>
+        <p>Use Date Range: @Html.CheckBoxFor(vm => vm.UseDateRange) 
+            <span id="dateRanges">
+                 | 
+                Start Date: <input type="date" id="StartDate" name="StartDate" value=@Model.StartDate.ToString("yyyy-MM-dd") min="1970-01-01" max="2999-12-31">
+                 | 
+                End Date: <input type="date" id="EndDate" name="EndDate" value=@Model.EndDate.ToString("yyyy-MM-dd") min="1970-01-01" max="2999-12-31">
+            </span>
+        </p>
+
         <hr />
         <h3>Content Types</h3>
         <p><button type="button" id="selectTypesBtn">Select All</button> | <button type="button" id="deselectTypesBtn">Deselect All</button></p>
@@ -88,5 +100,6 @@
         var selectTypes = new SetSelect(contentTypeEnum);
         var autoScroll = new AutoScrollSetup();
         var randomSeedDisplay = new SetupRandomSeedDisplay();
+        var dateRangeDisplay = new SetupDateRangeDisplay();
     </script>
 }

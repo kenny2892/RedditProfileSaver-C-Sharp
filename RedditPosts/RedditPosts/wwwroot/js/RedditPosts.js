@@ -217,3 +217,21 @@ function FavoritePostToggle(id)
         data: {id}
     });
 }
+
+function SetupDateRangeDisplay()
+{
+    var useDateRangeCheckbox = document.getElementById("UseDateRange");
+    var dateRangesDisplay = document.getElementById("dateRanges");
+
+    useDateRangeCheckbox.onchange = function()
+    {
+        updatedateRangesDisplay();
+    }
+
+    function updatedateRangesDisplay()
+    {
+        dateRangesDisplay.style.display = useDateRangeCheckbox.checked ? "inline-block" : "none";
+    }
+
+    updatedateRangesDisplay();
+}

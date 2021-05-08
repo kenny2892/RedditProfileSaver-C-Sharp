@@ -32,6 +32,7 @@ namespace RedditPosts.Models
             NsfwFilter();
             SavedFilter();
             FavoriteFilter();
+            DateRangeFilter();
             ContentTypeFilter();
 
             return PostsToFilter;
@@ -118,19 +119,26 @@ namespace RedditPosts.Models
         {
             switch(Vm.SortingSetting)
             {
-                case SortingSettings.Newest:
+                case RedditPostSortingSettings.Newest_Added:
                     PostsToFilter = PostsToFilter.OrderByDescending(post => post.Number);
                     break;
 
-                case SortingSettings.Oldest:
+                case RedditPostSortingSettings.Oldest_Added:
                     PostsToFilter = PostsToFilter.OrderBy(post => post.Number);
                     break;
+                case RedditPostSortingSettings.Newest_By_Date:
+                    PostsToFilter = PostsToFilter.OrderByDescending(post => post.Date);
+                    break;
 
-                case SortingSettings.Subreddit:
+                case RedditPostSortingSettings.Oldest_By_Date:
+                    PostsToFilter = PostsToFilter.OrderBy(post => post.Date);
+                    break;
+
+                case RedditPostSortingSettings.Subreddit:
                     PostsToFilter = PostsToFilter.OrderBy(post => post.Subreddit.ToLower());
                     break;
 
-                case SortingSettings.Random:
+                case RedditPostSortingSettings.Random:
                     Randomize();
                     break;
             }
@@ -152,6 +160,14 @@ namespace RedditPosts.Models
             }
 
             PostsToFilter = posts.AsEnumerable();
+        }
+
+        private void DateRangeFilter()
+        {
+            if(Vm.UseDateRange && Vm.StartDate.Date <= Vm.EndDate.Date)
+            {
+                PostsToFilter = PostsToFilter.Where(post => Vm.StartDate.Date <= post.Date.Date && post.Date.Date <= Vm.EndDate.Date);
+            }
         }
 
         private (List<string>, List<string>, List<string>) RetreiveKeywords(string words)

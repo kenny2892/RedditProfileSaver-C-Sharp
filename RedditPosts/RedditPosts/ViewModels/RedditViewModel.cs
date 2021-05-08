@@ -18,9 +18,12 @@ namespace RedditPosts.ViewModels
         public bool ShowHidden { get; set; } = false;
         public int RandomizeSeed { get; set; } = 0;
         public NsfwSettings NsfwSetting { get; set; } = NsfwSettings.No_Filter;
-        public SortingSettings SortingSetting { get; set; } = SortingSettings.Newest;
+        public RedditPostSortingSettings SortingSetting { get; set; } = RedditPostSortingSettings.Newest_Added;
         public bool IsMobile { get; set; } = false;
         public List<bool> ContentTypes { get; set; }
+        public bool UseDateRange { get; set; } = false;
+        public DateTime StartDate { get; set; } = DateTime.Now;
+        public DateTime EndDate { get; set; } = DateTime.Now;
 
         public RedditViewModel()
         {
