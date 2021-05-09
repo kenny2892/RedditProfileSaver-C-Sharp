@@ -7,9 +7,22 @@
 <h1>Subreddits</h1>
 
 <form asp-controller="Subreddits" asp-action="Index" method="get">
-    Sorting: @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(SubredditSortingSettings)))) | 
-    Nsfw Filter: @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings))))
-    <input type="submit" value="Submit">
+    @if(!Model.IsMobile)
+    {
+        <p>
+            <span for="SortingSetting">Sorting: </span> @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(SubredditSortingSettings))))
+            |
+            <span for="NsfwSetting">Nsfw Filter: </span> @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings))))
+            <input type="submit" value="Submit">
+        </p>
+    }
+
+    else
+    {
+        <p><span for="SortingSetting">Sorting: </span> @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(SubredditSortingSettings))))</p>
+        <p><span for="NsfwSetting">Nsfw Filter: </span> @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings))))</p>
+        <p><input type="submit" value="Submit"></p>
+    }
 </form>
 
 <div id="subredditGrid">

@@ -27,8 +27,9 @@ namespace RedditPosts.Controllers
             if(!HasPasswordAlready())
             {
                 return RedirectToAction("Index", "Password", new { redirectTo = "Subreddits" });
-            }  
+            }
 
+            vm.IsMobile = IsMobile();
             return View(vm);
         }
 

@@ -10,5 +10,6 @@ namespace RedditPosts.ViewModels
     {
         public SubredditSortingSettings SortingSetting { get; set; }
         public NsfwSettings NsfwSetting { get; set; } = NsfwSettings.No_Filter;
+        public bool IsMobile { get; set; } = false;
     }
 }

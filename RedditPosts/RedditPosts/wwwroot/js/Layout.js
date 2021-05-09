@@ -85,7 +85,7 @@ function SetupPinToggle()
 
 function SetupMobileChanges()
 {
-    var isMobile = IsMobile();
+    var isMobile = false;
 
     function updateMobileStatus()
     {

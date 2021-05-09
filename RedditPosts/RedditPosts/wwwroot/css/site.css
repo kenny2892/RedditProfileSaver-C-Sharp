@@ -299,7 +299,6 @@ btn:hover {
 .grid-container {
     display: grid;
     grid-template-columns: var(--icons-grid-colms);
-    width: 75%;
     margin: auto;
 }
 
@@ -307,6 +306,8 @@ btn:hover {
     font-size: 30px;
     text-align: center;
     width: 75%;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 .grid-line {
