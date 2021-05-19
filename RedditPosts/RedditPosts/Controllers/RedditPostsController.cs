@@ -161,7 +161,7 @@ namespace RedditPosts.Controllers
             _redditPostContext.Update(redditPost);
             _redditPostContext.SaveChangesAsync();
 
-            System.Diagnostics.Debug.WriteLine("Hide Toggled for Post Id:" + id + " Post Hidden Value: " + redditPost.Hidden);
+            Utility.Print("Hide Toggled for Post Id:" + id + " Post Hidden Value: " + redditPost.Hidden);
             return redditPost.Hidden;
         }
 
@@ -182,7 +182,7 @@ namespace RedditPosts.Controllers
             _redditPostContext.Update(redditPost);
             _redditPostContext.SaveChangesAsync();
 
-            System.Diagnostics.Debug.WriteLine("Favorite Toggled for Post Id:" + id + " Post Favorite Value: " + redditPost.IsFavorited);
+            Utility.Print("Favorite Toggled for Post Id:" + id + " Post Favorite Value: " + redditPost.IsFavorited);
             return redditPost.IsFavorited;
         }
 

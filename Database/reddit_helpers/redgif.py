@@ -7,19 +7,7 @@ def convert_redgif(url):
     start_index = html.index("og:video\" content=\"") + 19
     html = html[start_index:]
     
-    end_index = start_index + 1
-    if "\" /><meta" in html:
-        end_index = html.index("\" /><meta")
-
-    elif "\"/><meta" in html:
-        end_index = html.index("\"/><meta")
-
-    elif "\"><meta" in html:
-        end_index = html.index("\"><meta")
-
-    else:
-        return url
-
+    end_index = html.index("\"")
     new_url = html[:end_index]
     new_url = new_url.replace("-mobile.mp4", ".mp4")
     

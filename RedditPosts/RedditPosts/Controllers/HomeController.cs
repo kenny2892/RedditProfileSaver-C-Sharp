@@ -57,7 +57,7 @@ namespace RedditPosts.Controllers
         {
             if(RunningScript)
             {
-                System.Diagnostics.Debug.WriteLine("Already running script!");
+                Utility.Print("Already running script!");
                 return;
             }
 
@@ -80,7 +80,7 @@ namespace RedditPosts.Controllers
         {
             if (RetrievingUpvotes)
             {
-                System.Diagnostics.Debug.WriteLine("Already active!");
+                Utility.Print("Already active!");
                 return;
             }
 
@@ -117,7 +117,7 @@ namespace RedditPosts.Controllers
             }
 
             Console.WriteLine(e.Data);
-            System.Diagnostics.Debug.WriteLine(e.Data);
+            Utility.Print(e.Data);
 
             if(e.Data.Contains("as been stored."))
             {

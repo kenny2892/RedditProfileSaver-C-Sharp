@@ -267,7 +267,7 @@ namespace RedditPosts.Models
 
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                Utility.Print(e.Message);
             }
 
             return width;
@@ -287,7 +287,7 @@ namespace RedditPosts.Models
 
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                Utility.Print(e.Message);
             }
 
             return height;
@@ -353,7 +353,7 @@ namespace RedditPosts.Models
 
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                Utility.Print(e.Message);
             }
 
             return toReturn;

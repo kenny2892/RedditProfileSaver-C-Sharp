@@ -31,12 +31,14 @@ for details on configuring this project to bundle and minify static web assets. 
 
 :root {
     --subreddit-logo-diameter: 100px;
+    --subreddit-logo-letter-size: 50px;
     --subreddit-name-top-margin: 30px;
     --icons-grid-colms: auto auto auto;
 }
 
 [data-device="mobile"] {
     --subreddit-logo-diameter: 50px;
+    --subreddit-logo-letter-size: 25px;
     --subreddit-name-top-margin: 15px;
     --icons-grid-colms: auto auto;
 }
@@ -292,7 +294,7 @@ btn:hover {
     line-height: var(--subreddit-logo-diameter);
     margin-right: 5px;
     text-align: center;
-    font-size: 50px;
+    font-size: var(--subreddit-logo-letter-size);
     width: var(--subreddit-logo-diameter);
 }
 

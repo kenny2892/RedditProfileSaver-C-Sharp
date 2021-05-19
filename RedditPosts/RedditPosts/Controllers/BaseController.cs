@@ -127,7 +127,7 @@ namespace RedditPosts.Controllers
 
             catch(Exception e)
             {
-                System.Diagnostics.Debug.WriteLine(e.Message);
+                Utility.Print(e.Message);
                 return false;
             }
 
@@ -199,7 +199,7 @@ namespace RedditPosts.Controllers
                 System.Threading.Thread.Sleep(700); // Sleep to avoid overloading the Reddit Api
             }
 
-            System.Diagnostics.Debug.WriteLine("Finished updating Subreddits");
+            Utility.Print("Finished updating Subreddits");
             return true;
         }
 
@@ -212,7 +212,7 @@ namespace RedditPosts.Controllers
 
             try
             {
-                System.Diagnostics.Debug.WriteLine("GETTING SUBREDDIT: " + subredditName);
+                Utility.Print("GETTING SUBREDDIT: " + subredditName);
 
                 Subreddit subredditAbout = RedditClient.Subreddit(subredditName).About();
 
@@ -259,7 +259,7 @@ namespace RedditPosts.Controllers
 
             catch(Exception)
             {
-                System.Diagnostics.Debug.WriteLine("Could not get Subreddit: " + subredditName + ". Will be using backup");
+                Utility.Print("Could not get Subreddit: " + subredditName + ". Will be using backup");
             }
 
             // Only to be used if the subreddit was unable to be reached

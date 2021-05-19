@@ -56,5 +56,11 @@ namespace RedditPosts
                 PrimaryColor = "#000001"
             };
         }
+
+        public static void Print(string str)
+        {
+            System.Diagnostics.Debug.WriteLine(str);
+            Console.WriteLine(str);
+        }
     }
 }
