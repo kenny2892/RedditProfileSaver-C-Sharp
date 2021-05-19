@@ -23,7 +23,8 @@
                 case ContentType.UrlPreview:
                     @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_UrlPreview.cshtml", item)
                     break;
-
+                    
+                case ContentType.ImgurImage:
                 case ContentType.Image:
                     @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_Image.cshtml", item)
                     break;

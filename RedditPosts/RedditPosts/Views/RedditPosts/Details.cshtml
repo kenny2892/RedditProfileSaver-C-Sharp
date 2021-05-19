@@ -1,5 +1,12 @@
 ﻿@model RedditPosts.ViewModels.RedditPostsViewModel
 
+@section Header
+{
+    @* Source: https://www.w3schools.com/bootstrap4/bootstrap_icons.asp *@
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/css/favorite-btn.css" asp-append-version="true"/>
+}
+
 @{
     ViewData["Title"] = "Details";
     var modelItem = Model.Posts[0];
@@ -79,6 +86,12 @@
             </dt>
             <dd class="col-sm-10">
                 @Html.DisplayFor(temp => modelItem.IsNsfw)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(temp => modelItem.IsFavorited)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(temp => modelItem.IsFavorited)
             </dd>
         </dl>
     </div>

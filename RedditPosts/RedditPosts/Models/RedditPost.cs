@@ -190,6 +190,11 @@ namespace RedditPosts.Models
                 type = ContentType.Gallery;
             }
 
+            else if(UrlContent.Contains("//imgur.com/"))
+            {
+                type = ContentType.ImgurImage;
+            }
+
             else if(UrlContent.Contains(".jpg") || UrlContent.Contains(".png") || UrlContent.Contains(".jpeg"))
             {
                 type = ContentType.Image;

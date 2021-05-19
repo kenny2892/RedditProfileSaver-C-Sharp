@@ -12,6 +12,8 @@ namespace RedditPosts.Models
         Twitter,
         Youtube,
         Image,
+        [Description("Imgur Image")]
+        ImgurImage,
         Gif,
         Gifv,
         [Description("Imgur Gallery")]
