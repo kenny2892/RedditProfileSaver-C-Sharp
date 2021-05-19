@@ -81,8 +81,6 @@
         }, 1000);
     }
 
-
-
     function updateIcons()
     {
         iconDisplay.textContent = "Updating Icons";

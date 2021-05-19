@@ -19,7 +19,6 @@ namespace RedditPosts.Controllers
     {
         private static bool RetrievingUpvotes { get; set; } = false;
         private static bool RunningScript { get; set; } = false;
-        private static bool FinishedScript { get; set; } = false;
         private static int UpvoteCount { get; set; }
 
         public HomeController(RedditPostContext redditPostContext, SubredditInfoContext subredditInfoContext, IConfiguration configuration) : base(redditPostContext, subredditInfoContext, configuration)
@@ -111,12 +110,11 @@ namespace RedditPosts.Controllers
 
         private void Process_OutputDataReceived(object sender, DataReceivedEventArgs e)
         {
-            if(e is null || e.Data is null || FinishedScript)
+            if(e is null || e.Data is null)
             {
                 return;
             }
 
-            Console.WriteLine(e.Data);
             Utility.Print(e.Data);
 
             if(e.Data.Contains("as been stored."))
@@ -127,7 +125,8 @@ namespace RedditPosts.Controllers
             else if(e.Data.Contains("Completed"))
             {
                 RetrievingUpvotes = false;
-                FinishedScript = true;
+                RunningScript = false;
+                UpvoteCount = 0;
             }
         }
 
