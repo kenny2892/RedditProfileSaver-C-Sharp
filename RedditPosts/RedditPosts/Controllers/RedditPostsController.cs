@@ -32,7 +32,15 @@ namespace RedditPosts.Controllers
             }
 
             vm.IsMobile = IsMobile();
-            vm.PostCount = RetrieveFilteredPosts(vm).Count();
+
+            var posts = RetrieveFilteredPosts(vm);
+
+            if(!vm.ShowHidden)
+            {
+                posts = posts.Where(post => !post.Hidden);
+            }
+
+            vm.PostCount = posts.Count();
             return View(vm);
         }
 
@@ -63,7 +71,7 @@ namespace RedditPosts.Controllers
 
             if(!vm.ShowHidden)
             {
-                filteredPosts = filteredPosts.Where(s => s.Hidden == false);
+                filteredPosts = filteredPosts.Where(post => !post.Hidden);
             }
 
             List<RedditPost> postsModel = filteredPosts.Take(BATCH_SIZE).ToList();
