@@ -14,18 +14,25 @@ namespace RedditPosts.Models
         private RedditViewModel Vm { get; set; }
         private IEnumerable<RedditPost> PostsToFilter { get; set; }
         private bool DenyNsfw { get; set; }
+        private List<SubredditInfo> Subreddits { get; set; }
 
-        public RedditPostFilter(RedditViewModel vm, bool denyNsfw)
+        public RedditPostFilter(RedditViewModel vm, bool denyNsfw, List<SubredditInfo> subreddits = null)
         {
+            if(subreddits is null)
+            {
+                subreddits = new List<SubredditInfo>();
+            }
+
             Vm = vm;
             DenyNsfw = denyNsfw;
+            Subreddits = subreddits;
         }
 
         public IEnumerable<RedditPost> FilterPosts(IEnumerable<RedditPost> postsToFilter)
         {
             PostsToFilter = postsToFilter;
 
-            MaxPostNumber();
+            MaxPostNumberFilter();
             Sort();
             TitleFilter();
             AuthorFilter();
@@ -35,11 +42,12 @@ namespace RedditPosts.Models
             FavoriteFilter();
             DateRangeFilter();
             ContentTypeFilter();
+            SubredditTypeFilter();
 
             return PostsToFilter;
         }
 
-        private void MaxPostNumber()
+        private void MaxPostNumberFilter()
         {
             if(Vm.MaxPostNumber >= 0)
             {
@@ -176,6 +184,28 @@ namespace RedditPosts.Models
             if(Vm.UseDateRange && Vm.StartDate.Date <= Vm.EndDate.Date)
             {
                 PostsToFilter = PostsToFilter.Where(post => Vm.StartDate.Date <= post.Date.Date && post.Date.Date <= Vm.EndDate.Date);
+            }
+        }
+
+        private void SubredditTypeFilter()
+        {
+            if(!(Subreddits is null))
+            {
+                List<string> sfwSubs = Subreddits.Where(sub => !sub.IsNsfw).Select(sub => sub.SubredditName).ToList();
+
+                switch(Vm.SubredditTypes)
+                {
+                    case SubredditTypes.All:
+                        break;
+
+                    case SubredditTypes.Sfw:
+                        PostsToFilter = PostsToFilter.Where(posts => sfwSubs.Contains(posts.Subreddit));
+                        break;
+
+                    case SubredditTypes.Nsfw:
+                        PostsToFilter = PostsToFilter.Where(posts => !sfwSubs.Contains(posts.Subreddit));
+                        break;
+                }
             }
         }
 

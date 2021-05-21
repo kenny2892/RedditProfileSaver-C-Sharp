@@ -19,6 +19,7 @@ namespace RedditPosts.ViewModels
         public int RandomizeSeed { get; set; } = 0;
         public NsfwSettings NsfwSetting { get; set; } = NsfwSettings.No_Filter;
         public RedditPostSortingSettings SortingSetting { get; set; } = RedditPostSortingSettings.Newest_Added;
+        public SubredditTypes SubredditTypes { get; set; } = SubredditTypes.All;
         public bool IsMobile { get; set; } = false;
         public List<bool> ContentTypes { get; set; }
         public bool UseDateRange { get; set; } = false;

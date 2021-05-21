@@ -98,8 +98,15 @@ namespace RedditPosts.Controllers
         {
             IQueryable<RedditPost> postsQuery = from m in _redditPostContext.RedditPost select m;
             IEnumerable<RedditPost> postsEnumerable = postsQuery.ToList().AsEnumerable();
+            List<SubredditInfo> subreddits = null;
 
-            RedditPostFilter filter = new RedditPostFilter(vm, GetCookieString("AllowNsfw") == "false");
+            if(vm.SubredditTypes != SubredditTypes.All)
+            {
+                IQueryable<SubredditInfo> subsQuery = from m in _subredditInfoContext.SubredditInfo select m;
+                subreddits = subsQuery.ToList();
+            }
+
+            RedditPostFilter filter = new RedditPostFilter(vm, GetCookieString("AllowNsfw") == "false", subreddits);
             return filter.FilterPosts(postsEnumerable);
         }
 

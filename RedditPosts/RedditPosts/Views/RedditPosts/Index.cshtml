@@ -40,7 +40,7 @@
 
         <hr />
         <h3>Dropdowns</h3>
-        <p>Nsfw Filter: @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings)))) | Sorting: @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(RedditPostSortingSettings)))) <span id="randomSeedDisplay"> | Current Seed: @Html.EditorFor(vm => vm.RandomizeSeed)</span></p>
+        <p>Nsfw Filter: @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings)))) | Subreddit Type: @Html.DropDownListFor(vm => vm.SubredditTypes, new SelectList(Enum.GetValues(typeof(SubredditTypes)))) | Sorting: @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(RedditPostSortingSettings)))) <span id="randomSeedDisplay"> | Current Seed: @Html.EditorFor(vm => vm.RandomizeSeed)</span></p>
         
         <hr />
         <h3>Date Range</h3>
