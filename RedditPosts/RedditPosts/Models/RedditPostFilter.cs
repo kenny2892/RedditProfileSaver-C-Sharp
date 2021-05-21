@@ -25,6 +25,7 @@ namespace RedditPosts.Models
         {
             PostsToFilter = postsToFilter;
 
+            MaxPostNumber();
             Sort();
             TitleFilter();
             AuthorFilter();
@@ -36,6 +37,14 @@ namespace RedditPosts.Models
             ContentTypeFilter();
 
             return PostsToFilter;
+        }
+
+        private void MaxPostNumber()
+        {
+            if(Vm.MaxPostNumber >= 0)
+            {
+                PostsToFilter = PostsToFilter.Where(post => post.Number <= Vm.MaxPostNumber);
+            }
         }
 
         private void TitleFilter()

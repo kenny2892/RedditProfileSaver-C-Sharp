@@ -20,6 +20,7 @@
 
 <div id="inputFields" class="collapse">
     <form asp-controller="RedditPosts" asp-action="Index" method="get" autocomplete="off">
+        <input type="hidden" id="MaxPostNumber" name="MaxPostNumber" value="@Model.MaxPostNumber">
         <h3>Text Searches</h3>
         @if(Model.IsMobile)
         {
@@ -80,7 +81,6 @@
 
 <button type="button" id="autoScrollBtn">Auto Scroll</button>
 <button onclick="topFunction()" id="topScrollBtn" title="Go to top">Top</button>
-
 
 <table id="postTable" class="table" style="width:100%">
     <tbody>

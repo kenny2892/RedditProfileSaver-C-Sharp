@@ -41,6 +41,12 @@ namespace RedditPosts.Controllers
             }
 
             vm.PostCount = posts.Count();
+            
+            if(vm.PostCount > 0 && vm.MaxPostNumber < 0)
+            {
+                vm.MaxPostNumber = posts.Max(post => post.Number);
+            }
+
             return View(vm);
         }
 

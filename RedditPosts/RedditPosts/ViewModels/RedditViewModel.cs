@@ -24,6 +24,7 @@ namespace RedditPosts.ViewModels
         public bool UseDateRange { get; set; } = false;
         public DateTime StartDate { get; set; } = DateTime.Now;
         public DateTime EndDate { get; set; } = DateTime.Now;
+        public int MaxPostNumber { get; set; } = -1;
 
         public RedditViewModel()
         {
