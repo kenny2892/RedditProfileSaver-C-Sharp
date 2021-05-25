@@ -1,6 +1,6 @@
 ﻿@model RedditPosts.Models.RedditPost
 
-<video class="mp4-video" controls muted loop poster="@Model.UrlThumbnail">
+<video class="mp4-video" controls muted loop playsinline poster="@Model.UrlThumbnail" onpause="VideoPause(this)">
     <source src="@Url.Content(Model.GetContentUrls()[0])" type="video/mp4">
     Your browser does not support the video tag.
 </video>

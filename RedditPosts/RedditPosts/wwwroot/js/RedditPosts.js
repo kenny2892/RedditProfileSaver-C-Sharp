@@ -274,17 +274,28 @@ function SetupMp4VideoAutoPlay()
     {
         $(".mp4-video").each(function()
         {
-            var isInView = isScrolledIntoView(this);
-            var isVidPlaying = isPlaying(this);
+            var video = this;
+            var isInView = isScrolledIntoView(video);
+            var isVidPlaying = isPlaying(video);
 
             if(!isVidPlaying && isInView)
             {
-                this.play();
+                if(!("ManualPause" in video && video.ManualPause))
+                {
+                    video.play();
+                }
+                
             }
 
             else if(isVidPlaying && !isInView)
             {
-                this.pause()
+                video.ProgramaticallyPaused = true;
+                video.pause();
+
+                setTimeout(function()
+                {
+                    video.ProgramaticallyPaused = false;
+                }, 100);
             }
         });
     })
@@ -293,5 +304,13 @@ function SetupMp4VideoAutoPlay()
     {
         // Source: https://stackoverflow.com/a/6877530
         return video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
+    }
+}
+
+function VideoPause(videoElement)
+{
+    if(!("ProgramaticallyPaused" in videoElement && videoElement.ProgramaticallyPaused))
+    {
+        videoElement.ManualPause = true;
     }
 }
