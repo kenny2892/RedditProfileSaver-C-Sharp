@@ -1,7 +1,7 @@
 ﻿// Infinite Scroll Source: https://stackoverflow.com/a/64730174
 // To the Top Button: https://www.w3schools.com/howto/howto_js_scroll_to_top.asp
 
-function Scrolling(iTable, iAction, iParams) 
+function SetupInfiniteScrolling(iTable, iAction, iParams) 
 {
     this.table = iTable;        // Reference to the table where data should be added
     this.action = iAction;      // Name of the conrtoller action
@@ -120,7 +120,7 @@ function SetSelect(jsonObj)
     }
 }
 
-function AutoScrollSetup() // Source: https://stackoverflow.com/a/9837823
+function SetupAutoScroll() // Source: https://stackoverflow.com/a/9837823
 {
     var autoScrollBtn = document.getElementById("autoScrollBtn");
     autoScrollBtn.onclick = function()
@@ -146,12 +146,12 @@ function AutoScrollSetup() // Source: https://stackoverflow.com/a/9837823
         {
             window.scrollBy(0, 3);
             scrolldelay = setTimeout(AutoScroll, 10);
-            autoScrollBtn.textContent = "Stop Scroll"
+            autoScrollBtn.textContent = "Stop Scroll";
         }
 
         else
         {
-            autoScrollBtn.textContent = "Auto Scroll"
+            autoScrollBtn.textContent = "Auto Scroll";
         }
     }
 
@@ -160,8 +160,8 @@ function AutoScrollSetup() // Source: https://stackoverflow.com/a/9837823
     {
         if(isAutoScrolling && isBodyClickEnabled)
         {
-            autoScrollBtn.click();
             isBodyClickEnabled = false;
+            autoScrollBtn.click();
         }
     }
 }
@@ -234,4 +234,28 @@ function SetupDateRangeDisplay()
     }
 
     updatedateRangesDisplay();
+}
+
+function ImageOnClick(id)
+{
+    var imgIdToFind = "";
+
+    if(id.includes("-right"))
+    {
+        imgIdToFind = id.replace("-right", "");
+        console.log("right");
+    }
+
+    else if(id.includes("-left"))
+    {
+        imgIdToFind = id.replace("-left", "");
+        console.log("left");
+    }
+
+    else
+    {
+        return;
+    }
+
+    var idToFind = '#' + imgIdToFind;
 }

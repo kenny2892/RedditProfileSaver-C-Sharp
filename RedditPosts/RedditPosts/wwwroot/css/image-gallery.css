@@ -1,0 +1,33 @@
+﻿.image-gallery {
+    position: relative;
+    border: solid 2px red;
+}
+
+.image-gallery img {
+    object-fit: cover;
+    height: auto;
+    width: auto;
+    max-height: 720px;
+    max-width: 100%;
+    cursor: pointer;
+}
+
+.image-gallery [data-gallery-control] {
+    position: absolute;
+    text-indent: -10000px;
+    display: block;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background-color: orange;
+    opacity: 0.5;
+}
+
+.image-gallery [data-gallery-control="right"] {
+    right: 0;
+}
+
+.image-gallery [data-gallery-control="left"] {
+    left: 0;
+    background-color: green;
+}

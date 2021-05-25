@@ -95,11 +95,11 @@
     <script async src="//embed.redditmedia.com/widgets/platform.js" charset="UTF-8"></script>
 
     <script>
-        var scrolling = new Scrolling("postTable", "/RedditPosts/_RedditPosts", { vm:@Html.Raw(Json.Serialize(Model)) });
         var contentTypeEnum = @(Utility.EnumToString<ContentType>());
-        var selectTypes = new SetSelect(contentTypeEnum);
-        var autoScroll = new AutoScrollSetup();
-        var randomSeedDisplay = new SetupRandomSeedDisplay();
-        var dateRangeDisplay = new SetupDateRangeDisplay();
+        SetupInfiniteScrolling("postTable", "/RedditPosts/_RedditPosts", { vm:@Html.Raw(Json.Serialize(Model)) });
+        SetSelect(contentTypeEnum);
+        SetupAutoScroll();
+        SetupRandomSeedDisplay();
+        SetupDateRangeDisplay();
     </script>
 }

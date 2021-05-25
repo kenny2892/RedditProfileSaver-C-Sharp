@@ -328,3 +328,11 @@ btn:hover {
     overflow: hidden;
     padding-bottom: 5px;
 }
+
+.post-image {
+    height: auto;
+    width: auto;
+    max-height: 720px;
+    max-width: 100%;
+    cursor: pointer;
+}
