@@ -259,3 +259,39 @@ function ImageOnClick(id)
 
     var idToFind = '#' + imgIdToFind;
 }
+
+function SetupMp4VideoAutoPlay()
+{
+    function isScrolledIntoView(element)
+    {
+        var elementTop = element.getBoundingClientRect().top,
+            elementBottom = element.getBoundingClientRect().bottom;
+
+        return elementTop >= 0 && elementBottom <= window.innerHeight;
+    }
+
+    window.addEventListener("scroll", function()
+    {
+        $(".mp4-video").each(function()
+        {
+            var isInView = isScrolledIntoView(this);
+            var isVidPlaying = isPlaying(this);
+
+            if(!isVidPlaying && isInView)
+            {
+                this.play();
+            }
+
+            else if(isVidPlaying && !isInView)
+            {
+                this.pause()
+            }
+        });
+    })
+
+    function isPlaying(video)
+    {
+        // Source: https://stackoverflow.com/a/6877530
+        return video.currentTime > 0 && !video.paused && !video.ended && video.readyState > 2;
+    }
+}

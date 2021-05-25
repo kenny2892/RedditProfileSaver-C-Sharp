@@ -336,3 +336,13 @@ btn:hover {
     max-width: 100%;
     cursor: pointer;
 }
+
+.mp4-video {
+    height: auto;
+    width: auto;
+    max-height: 720px;
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}

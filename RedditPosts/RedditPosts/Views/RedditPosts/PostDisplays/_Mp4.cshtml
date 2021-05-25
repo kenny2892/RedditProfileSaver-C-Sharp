@@ -1,6 +1,6 @@
 ﻿@model RedditPosts.Models.RedditPost
 
-<video style="height: auto; width: auto; max-height: 720px; max-width: 100%; margin-left: auto; margin-right: auto; display: block;" controls muted loop poster="@Model.UrlThumbnail">
+<video class="mp4-video" controls muted loop poster="@Model.UrlThumbnail">
     <source src="@Url.Content(Model.GetContentUrls()[0])" type="video/mp4">
     Your browser does not support the video tag.
 </video>
