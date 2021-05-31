@@ -79,9 +79,18 @@ namespace RedditPosts.Models
                 toReturn = UrlContent.Split(" ");
             }
 
+            else if(UrlContent.Contains("https://rule34video.com/videos/"))
+            {
+                string vidId = toReturn[0].Replace("https://rule34video.com/videos/", "");
+                vidId = vidId.Substring(0, vidId.IndexOf("/"));
+
+                toReturn[0] = "https://rule34video.com/embed/" + vidId;
+            }
+
             else if(UrlContent.Contains(".gifv"))
             {
                 toReturn[0] = toReturn[0].Replace(".gifv", ".mp4");
+                toReturn[0] = toReturn[0].Replace("//imgur.com/", "//i.imgur.com/");
             }
 
             else if(UrlContent.Contains("https://gfycat.com/"))
@@ -124,6 +133,14 @@ namespace RedditPosts.Models
                 toReturn[0] = UrlContent.Split(" ")[1];
             }
 
+            else if(UrlContent.Contains("https://rule34.xxx//samples/") && UrlContent.Contains("?"))
+            {
+                toReturn[0] = toReturn[0].Replace("https://rule34.xxx//samples/", "https://us.rule34.xxx//images/");
+                toReturn[0] = toReturn[0].Replace("sample_", "");
+                toReturn[0] = toReturn[0].Substring(0, toReturn[0].LastIndexOf("?"));
+                toReturn[0] = toReturn[0].Replace("jpg", "jpeg");
+            }
+
             return toReturn;
         }
 
@@ -142,6 +159,11 @@ namespace RedditPosts.Models
                 {
                     type = ContentType.VredditPostOnly;
                 }
+            }
+
+            else if(UrlContent.Contains("https://rule34video.com/videos/"))
+            {
+                type = ContentType.R34Video;
             }
 
             else if(UrlContent.Contains("imgur.com/a/"))
@@ -175,7 +197,7 @@ namespace RedditPosts.Models
                 }
             }
 
-            else if(UrlContent.Contains(" ") && UrlContent.Contains("i.imgur.com"))
+            else if(UrlContent.Contains(" ") && UrlContent.Contains("i.imgur.com") && !UrlContent.Contains(".gifv") && !UrlContent.Contains(".mp4"))
             {
                 type = ContentType.Image;
 
@@ -190,7 +212,7 @@ namespace RedditPosts.Models
                 type = ContentType.Gallery;
             }
 
-            else if(UrlContent.Contains("//imgur.com/"))
+            else if(UrlContent.Contains("//imgur.com/") && !UrlContent.Contains(".gifv") && !UrlContent.Contains(".mp4"))
             {
                 type = ContentType.ImgurImage;
             }

@@ -69,6 +69,11 @@
                 case ContentType.VredditPostOnly:
                     @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_VredditPostOnly.cshtml", item)
                     break;
+
+                case ContentType.R34Video:
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_R34Video.cshtml", item)
+                    break;
+
             }
 
             @* POST DATA *@

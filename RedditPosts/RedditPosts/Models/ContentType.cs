@@ -21,6 +21,8 @@ namespace RedditPosts.Models
         GfyCat,
         [Description("RedGif Watch Link")]
         RedGifWatch,
+        [Description("Rule 34 Video")]
+        R34Video,
         Gallery,
         Vreddit,
         [Description("Vreddit Post")]

@@ -282,7 +282,15 @@ function SetupMp4VideoAutoPlay()
             {
                 if(!("ManualPause" in video && video.ManualPause))
                 {
-                    video.play();
+                    try
+                    {
+                        video.play();
+                    }
+
+                    catch(error)
+                    {
+
+                    }
                 }
                 
             }
@@ -290,7 +298,16 @@ function SetupMp4VideoAutoPlay()
             else if(isVidPlaying && !isInView)
             {
                 video.ProgramaticallyPaused = true;
-                video.pause();
+
+                try
+                {
+                    video.pause();
+                }
+
+                catch(error)
+                {
+
+                }
 
                 setTimeout(function()
                 {
