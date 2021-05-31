@@ -24,32 +24,46 @@
         <h3>Text Searches</h3>
         @if(Model.IsMobile)
         {
-            <p>Title: @Html.TextBoxFor(vm => vm.TitleFilter)</p>
-            <p>Author: @Html.TextBoxFor(vm => vm.AuthorFilter)</p>
-            <p>Subreddit: @Html.TextBoxFor(vm => vm.SubredditFilter)</p>
+            <label>Title: @Html.TextBoxFor(vm => vm.TitleFilter)</label>
+            <label>Author: @Html.TextBoxFor(vm => vm.AuthorFilter)</label>
+            <label>Subreddit: @Html.TextBoxFor(vm => vm.SubredditFilter)</label>
         }
 
         else
         {
-            <p>Title: @Html.TextBoxFor(vm => vm.TitleFilter) | Author: @Html.TextBoxFor(vm => vm.AuthorFilter) | Subreddit: @Html.TextBoxFor(vm => vm.SubredditFilter)</p>
+            <p>
+                <label>Title: @Html.TextBoxFor(vm => vm.TitleFilter)</label>
+                <label>Author: @Html.TextBoxFor(vm => vm.AuthorFilter)</label>
+                <label>Subreddit: @Html.TextBoxFor(vm => vm.SubredditFilter)</label>
+            </p>
         }
 
         <hr />
         <h3>Toggles</h3>
-        <p>Saved Only: @Html.CheckBoxFor(vm => vm.SavedOnly) | Favorited Only: @Html.CheckBoxFor(vm => vm.FavoritedOnly) | Show Hidden: @Html.CheckBoxFor(vm => vm.ShowHidden)</p>
+        <p>
+            <label>Saved Only: @Html.CheckBoxFor(vm => vm.SavedOnly)</label> | 
+            <label>Favorited Only: @Html.CheckBoxFor(vm => vm.FavoritedOnly)</label> | 
+            <label>Show Hidden: @Html.CheckBoxFor(vm => vm.ShowHidden)</label>
+        </p>
 
         <hr />
         <h3>Dropdowns</h3>
-        <p>Nsfw Filter: @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings)))) | Subreddit Type: @Html.DropDownListFor(vm => vm.SubredditTypes, new SelectList(Enum.GetValues(typeof(SubredditTypes)))) | Sorting: @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(RedditPostSortingSettings)))) <span id="randomSeedDisplay"> | Current Seed: @Html.EditorFor(vm => vm.RandomizeSeed)</span></p>
+        <p>
+            <label>Nsfw Filter: @Html.DropDownListFor(vm => vm.NsfwSetting, new SelectList(Enum.GetValues(typeof(NsfwSettings))))</label> | 
+            <label>Subreddit Type: @Html.DropDownListFor(vm => vm.SubredditTypes, new SelectList(Enum.GetValues(typeof(SubredditTypes))))</label> | 
+            <label>Sorting: @Html.DropDownListFor(vm => vm.SortingSetting, new SelectList(Enum.GetValues(typeof(RedditPostSortingSettings))))</label>
+            <label><span id="randomSeedDisplay"> | Current Seed: @Html.EditorFor(vm => vm.RandomizeSeed)</span></label>
+        </p>
         
         <hr />
         <h3>Date Range</h3>
-        <p>Use Date Range: @Html.CheckBoxFor(vm => vm.UseDateRange) 
+        <p>
+            <label>Use Date Range: @Html.CheckBoxFor(vm => vm.UseDateRange) </label>
             <span id="dateRanges">
                  | 
-                Start Date: <input type="date" id="StartDate" name="StartDate" value=@Model.StartDate.ToString("yyyy-MM-dd") min="1970-01-01" max="2999-12-31">
+                <label>Start Date: <input type="date" id="StartDate" name="StartDate" value=@Model.StartDate.ToString("yyyy-MM-dd") min="1970-01-01" max="2999-12-31"></label>
                  | 
-                End Date: <input type="date" id="EndDate" name="EndDate" value=@Model.EndDate.ToString("yyyy-MM-dd") min="1970-01-01" max="2999-12-31">
+                <label>End Date: <input type="date" id="EndDate" name="EndDate" value=@Model.EndDate.ToString("yyyy-MM-dd") min="1970-01-01" max="2999-12-31"></label>
             </span>
         </p>
 
