@@ -154,10 +154,19 @@ namespace RedditPosts.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ID,Number,Title,Author,Subreddit,Date,UrlContent,UrlPost,UrlThumbnail,IsSaved,IsNsfw")] RedditPost redditPost)
+        public async Task<IActionResult> Create([Bind("Title, Author, Subreddit, Hidden, Date, UrlContent, UrlPost, UrlThumbnail, IsSaved, IsNsfw, IsFavorited")] RedditPost redditPost)
         {
-            if (ModelState.IsValid)
+            if(ModelState.IsValid)
             {
+                int num = 1;
+                DbSet<RedditPost> posts = _redditPostContext.RedditPost;
+
+                if(posts.Count() > 0)
+                {
+                    num += posts.Max(post => post.Number);
+                }
+
+                redditPost.Number = num;
                 _redditPostContext.Add(redditPost);
                 await _redditPostContext.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
