@@ -123,30 +123,21 @@ function SetSelect(jsonObj)
 function SetupAutoScroll() // Source: https://stackoverflow.com/a/9837823
 {
     var autoScrollBtn = document.getElementById("autoScrollBtn");
+    var isAutoScrolling = false;
+
     autoScrollBtn.onclick = function()
     {
         isAutoScrolling = !isAutoScrolling;
         AutoScroll();
-
-        if(isAutoScrolling)
-        {
-            window.setTimeout(function()
-            {
-                isBodyClickEnabled = true;
-            }, 100);
-        }
     }
-
-    var isAutoScrolling = false;
-    var isBodyClickEnabled = false;
 
     function AutoScroll()
     {
         if(isAutoScrolling)
         {
             window.scrollBy(0, 3);
-            scrolldelay = setTimeout(AutoScroll, 10);
             autoScrollBtn.textContent = "Stop Scroll";
+            scrolldelay = setTimeout(AutoScroll, 10);
         }
 
         else
@@ -155,15 +146,14 @@ function SetupAutoScroll() // Source: https://stackoverflow.com/a/9837823
         }
     }
 
-    var body = document.getElementById("main-body");
-    body.onclick = function()
+    $(document).click(function(event) // Source: https://stackoverflow.com/a/3028037
     {
-        if(isAutoScrolling && isBodyClickEnabled)
+        var $target = $(event.target);
+        if(!$target.closest('#autoScrollBtn').length && isAutoScrolling)
         {
-            isBodyClickEnabled = false;
             autoScrollBtn.click();
         }
-    }
+    });
 }
 
 function HidePostToggle(id)
