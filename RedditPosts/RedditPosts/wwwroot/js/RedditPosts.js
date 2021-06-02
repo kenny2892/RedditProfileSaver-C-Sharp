@@ -37,6 +37,7 @@ function SetupInfiniteScrolling(iTable, iAction, iParams)
         .always(function() 
         {
             loadingPostsDisplay.textContent = ""; // hide loading info
+            ShowAutoScrollBtn();
         });
     }
 
@@ -336,5 +337,21 @@ function AutoplayCarousel(carouselId)
     {
         $('#' + carouselId).carousel('pause');
         $('#' + carouselId + '-autoplay-btn').text('Start Autoplay');
+    }
+}
+
+function ShowAutoScrollBtn()
+{
+    var autoScrollBtn = document.getElementById("autoScrollBtn");
+
+    if(document.documentElement.scrollHeight > document.documentElement.clientHeight)
+    {
+
+        autoScrollBtn.style.display = "block";
+    }
+
+    else
+    {
+        autoScrollBtn.style.display = "none";
     }
 }
