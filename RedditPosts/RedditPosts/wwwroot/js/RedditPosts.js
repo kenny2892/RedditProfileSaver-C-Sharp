@@ -331,3 +331,20 @@ function VideoPause(videoElement)
         videoElement.ManualPause = true;
     }
 }
+
+function AutoplayCarousel(carouselId)
+{
+    var btnTxt = $('#' + carouselId + '-autoplay-btn').text();
+
+    if(btnTxt.includes("Start"))
+    {
+        $('#' + carouselId).carousel('cycle');
+        $('#' + carouselId + '-autoplay-btn').text('Stop Autoplay');
+    }
+
+    else
+    {
+        $('#' + carouselId).carousel('pause');
+        $('#' + carouselId + '-autoplay-btn').text('Start Autoplay');
+    }
+}

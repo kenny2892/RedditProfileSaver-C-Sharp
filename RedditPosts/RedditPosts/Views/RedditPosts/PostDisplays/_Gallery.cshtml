@@ -1,7 +1,7 @@
 ﻿@model RedditPosts.Models.RedditPost
 
 @{ 
-    string num = "a" + Model.ID;
+    string num = "carousel-" + Model.ID;
     string hashNum = "#" + num;
     int count = 0;
     int total = Model.GetContentUrls().Count() - 1;
@@ -17,7 +17,7 @@ Source: https://stackoverflow.com/a/53785595
 </div>    
 *@
 
-<div id="@num" class="carousel slide" data-interval="false" data-touch="true">
+<div id="@num" class="carousel slide" data-interval="5000" data-pause="true" data-touch="true">
     <!-- Indicators -->
     <ul class="carousel-indicators">
         @for(int i = 0; i < total; i++)
@@ -63,6 +63,8 @@ Source: https://stackoverflow.com/a/53785595
         <span class="carousel-control-next-icon"></span>
     </a>
 </div>
+
+<button class="gallery-autoplay-btn" id="@num-autoplay-btn" onclick="AutoplayCarousel('@num')">Start Autoplay</button>
 
 @*<script>
     $(document).ready(function() 

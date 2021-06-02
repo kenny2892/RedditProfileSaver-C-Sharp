@@ -356,3 +356,15 @@ btn:hover {
     margin-right: auto;
     display: block;
 }
+
+.gallery-autoplay-btn {
+    width: 100%;
+    outline: none !important;
+    background: var(--btn-bg-color);
+    color: var(--btn-txt-color);
+}
+
+.gallery-autoplay-btn:hover {
+    background: #bdbdbd;
+    color: black;
+}
