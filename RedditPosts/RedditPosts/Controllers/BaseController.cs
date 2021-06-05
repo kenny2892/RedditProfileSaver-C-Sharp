@@ -184,7 +184,8 @@ namespace RedditPosts.Controllers
             var postsQuery = from m in _redditPostContext.RedditPost select m;
             var subredditQuery = from m in _subredditInfoContext.SubredditInfo select m;
 
-            var subredditsToCheck = postsQuery.Select(post => post.Subreddit).Distinct().OrderBy(name => name.ToLower()).ToList();
+            var deadSubreddits = subredditQuery.Where(sub => sub.IsDead).Select(sub => sub.SubredditName).ToList();
+            var subredditsToCheck = postsQuery.Select(post => post.Subreddit).Distinct().OrderBy(name => name.ToLower()).Where(name => !deadSubreddits.Contains(name)).ToList();
 
             Thread updatingThread = new Thread(() => RetrieveUpdatedSubredditIcons(subredditsToCheck));
             updatingThread.Start();
@@ -303,6 +304,7 @@ namespace RedditPosts.Controllers
             backup.SubredditName = subredditName;
             backup.PrimaryColor = GenerateSubredditColor(subredditName);
             backup.IconUrl = Utility.DefaultSubredditIcon;
+            backup.IsDead = true;
 
             return backup;
         }

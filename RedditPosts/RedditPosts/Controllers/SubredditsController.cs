@@ -46,6 +46,7 @@ namespace RedditPosts.Controllers
             var iconQuery = from m in _subredditInfoContext.SubredditInfo select m;
             var subredditsAlreadyStored = iconQuery.Select(subreddit => subreddit.SubredditName).ToList();
             var subredditsToRetrieve = subredditNames.Where(subName => !subredditsAlreadyStored.Contains(subName)).ToList();
+
             foreach(string subredditName in subredditsToRetrieve)
             {
                 GetSubredditInfo(subredditName);

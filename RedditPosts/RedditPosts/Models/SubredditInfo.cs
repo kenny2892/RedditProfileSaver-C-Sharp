@@ -13,6 +13,7 @@ namespace RedditPosts.Models
         public string IconUrl { get; set; }
         public string PrimaryColor { get; set; }
         public bool IsNsfw { get; set; } = false;
+        public bool IsDead { get; set; } = false;
 
         public string DisplaySubreddit // If word is to long, split it to avoid the table being to wide for mobile display
         {
