@@ -1,11 +1,12 @@
 ﻿function HomeSetup() // Source for using method: https://stackoverflow.com/a/25605074
 {
-    var count = 1;
+    var upvoteCounter = 1;
     var words = "Retrieving Upvotes";
     var textArea = document.getElementById("loadingMsg");
     var upvoteDisplay = document.getElementById("upvoteCounter");
     var iconDisplay = document.getElementById("iconRetrieving");
-    var isRetrieving = false;
+    var isRetrievingUpvotes = false;
+    var isRetrievingSubreddits = false;
 
     var retrieveUpvotesBtn = document.getElementById("retrieveUpvoteBtn");
     var updateIconsBtn = document.getElementById("updateIconsBtn");
@@ -22,13 +23,13 @@
 
     function retrieveUpvotes()
     {
-        if(isRetrieving)
+        if(isRetrievingUpvotes)
         {
             console.log("Button not active");
             return;
         }
 
-        isRetrieving = true;
+        isRetrievingUpvotes = true;
         $.ajax // Launch the retrieval Python Script
         ({
             url: "/Home/Retrieve",
@@ -57,23 +58,23 @@
                     if(data)
                     {
                         textArea.textContent = words;
-                        for(var i = 0; i < count; i++)
+                        for(var i = 0; i < upvoteCounter; i++)
                         {
                             textArea.textContent += ".";
                         }
 
-                        count++;
+                        upvoteCounter++;
 
-                        if(count == 4)
+                        if(upvoteCounter == 4)
                         {
-                            count = 0;
+                            upvoteCounter = 0;
                         }
                     }
 
                     else
                     {
                         setTimeout(() => { textArea.textContent = ""; upvoteDisplay.textContent = ""; }, 10); // Need to have it delayed to properly display
-                        isRetrieving = false;
+                        isRetrievingUpvotes = false;
                         clearInterval(interval);
                     }
                 },
@@ -83,29 +84,70 @@
 
     function updateIcons()
     {
+        if(isRetrievingSubreddits)
+        {
+            console.log("Button not active");
+            return;
+        }
+
+        var subredditCounter = 1;
+        var defaultTxt = "Updating Subreddits";
+        isRetrievingSubreddits = true;
         iconDisplay.textContent = "Updating Icons";
 
-        $.ajax // Launch the retrieval Python Script
+        $.ajax // Launch the start method
         ({
-            url: "/Home/UpdateSubredditIcons",
+            url: "/Home/StartUpdateSubredditIcons",
             data: {}
-        })
-        .done(function(result) 
-        {
-            if(result) 
-            {
-                iconDisplay.textContent = "";
-            }
-
-            else
-            {
-                iconDisplay.textContent = "FAILED";
-            }
         })
         .fail(function(xhr, ajaxOptions, thrownError) 
         {
             iconDisplay.textContent = "FAILED";
             console.log("Error in updateIcons:", thrownError);
+            return;
         });
+
+        const interval = setInterval(function()
+        {
+            $.ajax
+            ({
+                url: "/Home/IsGettingSubreddits",
+                data: {},
+                success: function(data)
+                {
+                    if(data)
+                    {
+                        iconDisplay.textContent = defaultTxt;
+                        for(var i = 0; i < subredditCounter; i++)
+                        {
+                            iconDisplay.textContent += ".";
+                        }
+
+                        subredditCounter++;
+
+                        if(subredditCounter == 4)
+                        {
+                            subredditCounter = 0;
+                        }
+                    }
+
+                    else
+                    {
+                        iconDisplay.textContent = "Applying Updates";
+                        $.ajax // Apply the updated subreddits
+                        ({
+                            url: "/Home/ApplyUpdatedSubreddits",
+                            data: {}
+                        })
+                        .done(function() 
+                        {
+                            setTimeout(() => {iconDisplay.textContent = "";}, 10); // Need to have it delayed to properly display
+                            isRetrievingSubreddits = false;
+                            clearInterval(interval);
+                        });
+                    }
+                },
+            });
+        }, 1000);
     }
 }

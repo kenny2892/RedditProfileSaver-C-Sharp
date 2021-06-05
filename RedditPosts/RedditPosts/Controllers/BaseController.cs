@@ -13,6 +13,7 @@ using Reddit;
 using System.IO;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System.Threading;
 
 namespace RedditPosts.Controllers
 {
@@ -22,6 +23,10 @@ namespace RedditPosts.Controllers
         protected readonly SubredditInfoContext _subredditInfoContext;
         protected readonly IConfiguration _configuration;
         private RedditClient RedditClient { get; set; }
+
+        private static bool IsUpdatingSubredditIcons { get; set; } = false;
+        private static bool IsGettingSubredditIcons { get; set; } = false;
+        private static List<SubredditInfo> UpdatedSubreddits { get; set; } = new List<SubredditInfo>();
 
         public BaseController(RedditPostContext redditPostContext, SubredditInfoContext subredditInfoContext, IConfiguration configuration)
         {
@@ -167,40 +172,71 @@ namespace RedditPosts.Controllers
             return toReturn;
         }
 
-        public bool UpdateSubredditIcons()
+        public void StartUpdateSubredditIcons()
         {
-            if(_subredditInfoContext is null || !CreateRedditClient())
+            if(IsUpdatingSubredditIcons)
             {
-                return false;
+                Utility.Print("Already getting Subreddits");
+                return;
             }
 
+            IsUpdatingSubredditIcons = true;
             var postsQuery = from m in _redditPostContext.RedditPost select m;
             var subredditQuery = from m in _subredditInfoContext.SubredditInfo select m;
 
             var subredditsToCheck = postsQuery.Select(post => post.Subreddit).Distinct().OrderBy(name => name.ToLower()).ToList();
-            var subredditsAlreadyExist = subredditQuery.Select(sub => sub.SubredditName).Distinct().OrderBy(name => name.ToLower()).ToList();
 
+            Thread updatingThread = new Thread(() => RetrieveUpdatedSubredditIcons(subredditsToCheck));
+            updatingThread.Start();
+        }
+
+        public bool IsGettingSubreddits()
+        {
+            return IsGettingSubredditIcons;
+        }
+        
+        public void RetrieveUpdatedSubredditIcons(List<string> subredditsToCheck)
+        {
+            if(subredditsToCheck is null || !CreateRedditClient())
+            {
+                IsUpdatingSubredditIcons = false;
+                Utility.Print("Error Updating Subreddits");
+                return;
+            }
+
+            IsGettingSubredditIcons = true;
             foreach(string subredditName in subredditsToCheck)
             {
                 SubredditInfo subInfo = RetrieveSubredditInfo(subredditName);
+                UpdatedSubreddits.Add(subInfo);
+                System.Threading.Thread.Sleep(700); // Sleep to avoid overloading the Reddit Api
+            }
 
-                if(subredditsAlreadyExist.Contains(subredditName))
+            IsGettingSubredditIcons = false;
+        }
+
+        public void ApplyUpdatedSubreddits()
+        {
+            Utility.Print("Applying Updated Subreddits");
+            var subredditQuery = from m in _subredditInfoContext.SubredditInfo select m;
+            var subredditsAlreadyExist = subredditQuery.Select(sub => sub.SubredditName).Distinct().OrderBy(name => name.ToLower()).ToList();
+
+            foreach(SubredditInfo sub in UpdatedSubreddits)
+            {
+                if(subredditsAlreadyExist.Contains(sub.SubredditName))
                 {
-                    _subredditInfoContext.Update(subInfo);
+                    _subredditInfoContext.Update(sub);
                 }
 
                 else
                 {
-                    _subredditInfoContext.Add(subInfo);
+                    _subredditInfoContext.Add(sub);
                 }
 
                 _subredditInfoContext.SaveChanges();
-
-                System.Threading.Thread.Sleep(700); // Sleep to avoid overloading the Reddit Api
             }
 
-            Utility.Print("Finished updating Subreddits");
-            return true;
+            IsUpdatingSubredditIcons = false;
         }
 
         private SubredditInfo RetrieveSubredditInfo(string subredditName)
