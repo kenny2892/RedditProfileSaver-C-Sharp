@@ -17,7 +17,7 @@
             @switch(item.GetContentType())
             {
                 case ContentType.Blank:
-                    /* TEXT POST */
+                    @await Html.PartialAsync("~/Views/RedditPosts/PostDisplays/_Blank.cshtml", item)
                     break;
 
                 case ContentType.UrlPreview:

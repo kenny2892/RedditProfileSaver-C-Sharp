@@ -11,6 +11,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace RedditPosts
@@ -44,6 +46,77 @@ namespace RedditPosts
             using(StreamReader reader = new StreamReader(stream))
             {
                 return reader.ReadToEnd();
+            }
+        }
+
+        // Source for Getting Image Metadata: https://www.codeproject.com/Articles/1120681/Generating-Facebook-Like-Preview-using-Regular-Exp
+        public static MatchCollection GetWebPageMetaData(string urlContent)
+        {
+            Regex regex = new Regex("<meta[\\s]+[^>]*?content[\\s]?=[\\s\"\']+(.*?)[\"\']+.*?>");
+            MatchCollection mc = regex.Matches(urlContent);
+
+            return mc;
+        }
+
+        public static string ValidateImageUrl(string url, string sourceUrl)
+        {
+            if(!url.StartsWith("/")) // Not relative url
+            {
+                return IsValidUrl(url) ? url : "";
+            }
+
+            string toCheck = sourceUrl + url;
+            if(IsValidUrl(toCheck))
+            {
+                return toCheck;
+            }
+
+            string plainSourceUrl = sourceUrl.Replace("http://www.", "").Replace("https://www.", "").Replace("http://", "").Replace("https://", "");
+
+            // Have to check for each combo of "http", "https", and "www."
+            toCheck = "http://" + plainSourceUrl + url;
+            if(IsValidUrl(toCheck))
+            {
+                return toCheck;
+            }
+
+            Thread.Sleep(5);
+            toCheck = "https://" + plainSourceUrl + url;
+            if(IsValidUrl(toCheck))
+            {
+                return toCheck;
+            }
+
+            Thread.Sleep(5);
+            toCheck = "http://www." + plainSourceUrl + url;
+            if(IsValidUrl(toCheck))
+            {
+                return toCheck;
+            }
+
+            Thread.Sleep(5);
+            toCheck = "https://www." + plainSourceUrl + url;
+            if(IsValidUrl(toCheck))
+            {
+                return toCheck;
+            }
+
+            return "";
+        }
+
+        public static bool IsValidUrl(string url)
+        {
+            try
+            {
+                HttpWebRequest request = HttpWebRequest.Create(url) as HttpWebRequest;
+                var response = request.GetResponse() as HttpWebResponse;
+
+                return response.StatusCode.ToString().ToLower() == "ok";
+            }
+
+            catch(Exception)
+            {
+                return false;
             }
         }
 

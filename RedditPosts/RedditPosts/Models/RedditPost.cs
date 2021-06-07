@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace RedditPosts.Models
 {
@@ -381,6 +382,50 @@ namespace RedditPosts.Models
             catch(Exception e)
             {
                 Utility.Print(e.Message);
+            }
+
+            return toReturn;
+        }
+
+        public string GetLinkImgPreview()
+        {
+            string toReturn = "";
+
+            if(Utility.IsValidUrl(UrlContent))
+            {
+                string htmlStr = Utility.GetContentsOfUrl(UrlContent);
+                var metadata = Utility.GetWebPageMetaData(htmlStr);
+
+                if(metadata != null)
+                {
+                    foreach(Match item in metadata)
+                    {
+                        for(int i = 0; i <= item.Groups.Count; i++)
+                        {
+                            if(item.Groups[i].Value.ToString().ToLower().Contains("og:image"))
+                            {
+                                if(string.IsNullOrEmpty(toReturn))
+                                {
+                                    toReturn = Utility.ValidateImageUrl(item.Groups[i + 1].Value, UrlContent);
+                                }
+
+                                break;
+                            }
+                            else if(item.Groups[i].Value.ToString().ToLower().Contains("image") && item.Groups[i].Value.ToString().ToLower().Contains("itemprop"))
+                            {
+                                toReturn = Utility.ValidateImageUrl(item.Groups[i + 1].Value, UrlContent);
+
+                                if(toReturn.Length < 5)
+                                {
+                                    toReturn = "";
+                                }
+
+                                break;
+                            }
+
+                        }
+                    }
+                }
             }
 
             return toReturn;

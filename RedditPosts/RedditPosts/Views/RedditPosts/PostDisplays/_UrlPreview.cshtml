@@ -1,9 +1,14 @@
 ﻿@model RedditPosts.Models.RedditPost
 
-<a href="@Url.Content(Model.GetContentUrls()[0])" target="_blank">
-    <div class="urlBox">
-        <div>
-            <img src="@Url.Content(Model.UrlThumbnail)" alt="@Html.DisplayFor(modelItem => Model.Title)" style="width:190px; height:190px; object-fit:cover; display:block; margin-left:auto; margin-right: auto;" />
+@{ 
+    string imgUrl = Model.GetLinkImgPreview();
+}
+
+@if(!String.IsNullOrEmpty(imgUrl))
+{
+    <a href="@imgUrl" target="_blank">
+        <div class="text-center">
+            <img src="@imgUrl" alt="@imgUrl" class="post-image" />
         </div>
-    </div>
-</a>
+    </a>
+}
