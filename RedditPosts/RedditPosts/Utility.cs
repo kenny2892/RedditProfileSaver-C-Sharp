@@ -49,6 +49,19 @@ namespace RedditPosts
             }
         }
 
+        public static async Task<string> GetContentsOfUrlAsync(string url)
+        {
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(url);
+            request.AutomaticDecompression = DecompressionMethods.GZip | DecompressionMethods.Deflate;
+
+            using(HttpWebResponse response = (HttpWebResponse)request.GetResponse())
+            using(Stream stream = response.GetResponseStream())
+            using(StreamReader reader = new StreamReader(stream))
+            {
+                return await reader.ReadToEndAsync();
+            }
+        }
+
         // Source for Getting Image Metadata: https://www.codeproject.com/Articles/1120681/Generating-Facebook-Like-Preview-using-Regular-Exp
         public static MatchCollection GetWebPageMetaData(string urlContent)
         {

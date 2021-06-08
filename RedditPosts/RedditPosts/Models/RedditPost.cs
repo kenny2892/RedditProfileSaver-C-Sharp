@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace RedditPosts.Models
 {
@@ -387,13 +388,13 @@ namespace RedditPosts.Models
             return toReturn;
         }
 
-        public string GetLinkImgPreview()
+        public async Task<string> GetLinkImgPreview()
         {
             string toReturn = "";
 
             if(Utility.IsValidUrl(UrlContent))
             {
-                string htmlStr = Utility.GetContentsOfUrl(UrlContent);
+                string htmlStr = await Utility.GetContentsOfUrlAsync(UrlContent);
                 var metadata = Utility.GetWebPageMetaData(htmlStr);
 
                 if(metadata != null)
@@ -428,7 +429,7 @@ namespace RedditPosts.Models
                 }
             }
 
-            return toReturn;
+            return await Task.FromResult<string>(toReturn);
         }
     }
 }

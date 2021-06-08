@@ -1,7 +1,7 @@
 ﻿@model RedditPosts.Models.RedditPost
 
 @{ 
-    string imgUrl = Model.GetLinkImgPreview();
+    string imgUrl = await Model.GetLinkImgPreview();
 }
 
 @if(!String.IsNullOrEmpty(imgUrl))
